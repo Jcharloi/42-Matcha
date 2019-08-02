@@ -2,8 +2,8 @@ import {
   createStore,
   applyMiddleware,
   compose,
-  Store,
-  combineReducers
+  Store
+  // combineReducers
 } from "redux";
 import thunk from "redux-thunk";
 import { insertUserProfileReducer } from "./reducers/reducers";
