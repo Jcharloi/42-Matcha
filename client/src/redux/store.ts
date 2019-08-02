@@ -38,18 +38,3 @@ Axios.post("http://localhost:5000/get-user-profile")
   .catch(error => {
     console.log("Error : ", error.message);
   });
-
-/*
-Cas à tester
-Objectif : Creer un back, //done
-relier le back avec mon front et //done
-lier le back et la bdd //done
-obtenir les infos de la bdd //done
-les retourner au front //done
-les stocker dans le store //done
-
-
-
-Mettre à jour à chaque reload le Store
-Async
-*/
