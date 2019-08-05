@@ -1,3 +1,8 @@
+export interface VerifiedUser {
+  isAuth: boolean;
+  isCompleted: boolean;
+}
+
 export interface User {
   user_id: string;
   mail: string;
