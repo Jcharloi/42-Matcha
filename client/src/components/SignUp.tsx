@@ -1,0 +1,291 @@
+import * as React from "react";
+import { Link } from "react-router-dom";
+import {
+  Input,
+  Form,
+  Button,
+  Icon,
+  Card,
+  Message,
+  Header
+} from "semantic-ui-react";
+// import Axios from "axios";
+import { User, Pictures, UserTags } from "../models/models";
+import { connect } from "react-redux";
+import { store } from "../redux/store";
+import { insertUserProfile } from "../redux/actions/actions";
+
+interface Props {
+  user_id: string;
+  mail: string;
+  user_name: string;
+  last_name: string;
+  first_name: string;
+  birthday: string;
+  gender: string;
+  orientation: string;
+  presentation: string;
+  score: string;
+  city: string;
+  pictures: Pictures[];
+  tags: UserTags[];
+}
+
+interface State {
+  day: string;
+  month: string;
+  year: string;
+  message: string | null;
+  loading: boolean;
+  validated: boolean;
+}
+
+class SignUp extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      day: "",
+      month: "",
+      year: "",
+      message: null,
+      loading: false,
+      validated: false
+    };
+  }
+
+  register = async () => {
+    this.setState({ loading: true });
+    // const { valid, messageValidForm } = validForm(this.state);
+  };
+  // if (valid) {
+  //   let { message, ...body } = { ...this.state };
+  //   await Axios.post("http://localhost:5000/inscription", body)
+  //     .then(({ data: { message, validated } }) => {
+  //       this.setState({ message, validated });
+  //     })
+  //     .catch(error => console.error(error));
+  // } else {
+  //   this.setState({ message: messageValidForm });
+  // this.setState({ loading: false });
+  // };
+
+  public render() {
+    const months = [
+      "January",
+      "February",
+      "Mars",
+      "April",
+      "Mai",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ].map(month => ({
+      text: month,
+      value: month
+    }));
+    let days = [];
+    for (let i = 1; i < 32; i++) {
+      days[i - 1] = {
+        text: i,
+        value: i
+      };
+    }
+    let years = [];
+    for (let i = 2001, j = 0; i > 1918; i--, j++) {
+      years[j] = {
+        text: i,
+        value: i
+      };
+    }
+
+    return (
+      <Form onSubmit={this.register}>
+        {this.state.validated ? (
+          <Card className="form" fluid>
+            <Card.Content>
+              <Header as="h1">Thank you for your registration !</Header>
+              <Message positive>{this.state.message}</Message>
+            </Card.Content>
+          </Card>
+        ) : (
+          <Card className="form" fluid>
+            <Card.Content>
+              <div className="paddingForm">
+                <Header as="h1">Get started !</Header>
+                <Form.Group widths="equal">
+                  <Form.Input
+                    type="text"
+                    required
+                    fluid
+                    placeholder="First name"
+                    onChange={({ target: { value } }) => {
+                      const newData = { ...this.props, first_name: value };
+                      store.dispatch(insertUserProfile(newData));
+                      // console.log(store.getState());
+                    }}
+                  />
+                  <Form.Input
+                    type="text"
+                    required
+                    fluid
+                    placeholder="Last name"
+                    onChange={({ target: { value } }) => {
+                      const newData = { ...this.props, last_name: value };
+                      store.dispatch(insertUserProfile(newData));
+                      // console.log(store.getState());
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group widths="equal">
+                  <Form.Dropdown
+                    fluid
+                    required
+                    placeholder="Month"
+                    selection
+                    options={months}
+                    onChange={(e, { name, value }) => {
+                      this.setState({ month: String(value) });
+                    }}
+                  />
+                  <Form.Dropdown
+                    fluid
+                    required
+                    placeholder="Day"
+                    selection
+                    options={days}
+                    onChange={(e, { name, value }) => {
+                      this.setState({ day: String(value) });
+                    }}
+                  />
+                  <Form.Dropdown
+                    fluid
+                    required
+                    placeholder="Year"
+                    selection
+                    options={years}
+                    onChange={(e, { name, value }) => {
+                      this.setState({ year: String(value) });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Input
+                  type="text"
+                  required
+                  fluid
+                  placeholder="Username"
+                  icon="user"
+                  onChange={({ target: { value } }) => {
+                    // this.setState({ userName: value });
+                  }}
+                  maxLength="20"
+                />
+                <Form.Field>
+                  <Input
+                    type="email"
+                    required
+                    placeholder="Email address"
+                    icon="mail"
+                    onChange={({ target: { value } }) => {
+                      // this.setState({ mail: value });
+                    }}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Input
+                    type="password"
+                    required
+                    placeholder="Password"
+                    icon="lock"
+                    onChange={({ target: { value } }) => {
+                      // this.setState({ password: value });
+                    }}
+                  />
+                </Form.Field>
+              </div>
+            </Card.Content>
+            <Card.Content extra>
+              <div className="formButtonContainer">
+                <Button
+                  disabled={this.state.loading}
+                  loading={this.state.loading}
+                  className="mFormButton"
+                  type="submit"
+                  animated
+                >
+                  <Button.Content visible>Register</Button.Content>
+                  <Button.Content hidden>
+                    Time to <Icon name="heart" color="red" />
+                  </Button.Content>
+                </Button>
+                {this.state.message && (
+                  <Message negative>{this.state.message}</Message>
+                )}
+                <div className="formOptionalRoutes">
+                  <Link to="/sign-in">
+                    Your account already exists ? Sign in
+                  </Link>
+                </div>
+              </div>
+            </Card.Content>
+          </Card>
+        )}
+      </Form>
+    );
+  }
+}
+
+// function validForm({
+//   userName,
+//   mail,
+//   password,
+//   firstName,
+//   lastName,
+//   day,
+//   month,
+//   year
+// }: State): { valid: boolean; messageValidForm: string } {
+//   if (
+//     !userName ||
+//     userName.length > 20 ||
+//     !firstName ||
+//     !lastName ||
+//     !day ||
+//     !month ||
+//     !year
+//   ) {
+//     return {
+//       valid: false,
+//       messageValidForm: "You need to fill the fields correctly"
+//     };
+//   }
+//   let regex = new RegExp(
+//     /^(([^<>()\],;:\s@]+(\.[^<>()\],;:\s@]+)*)|(.+))@(([^<>()[\],;:\s@]+)+[^<>()[\],;:\s@]{2,})$/i
+//   );
+//   if (!mail || !regex.test(String(mail).toLowerCase())) {
+//     return {
+//       valid: false,
+//       messageValidForm: "You need to provide a valid email address"
+//     };
+//   }
+//   regex = new RegExp(
+//     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
+//   );
+//   if (!password || !regex.test(password)) {
+//     return {
+//       valid: false,
+//       messageValidForm:
+//         "Your password needs to be 8+ characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
+//     };
+//   }
+//   return { valid: true, messageValidForm: "" };
+// }
+
+const mapStateToProps = (state: User): Props => {
+  return state;
+};
+
+export default connect(mapStateToProps)(SignUp);

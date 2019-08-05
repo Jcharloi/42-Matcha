@@ -1,33 +1,47 @@
-import React from "react";
-import Axios from "axios";
-import "./App.css";
+import * as React from "react";
+import { Router, Switch, Route } from "react-router-dom";
+import history from "./helpers/history";
 import { connect } from "react-redux";
-import { insertUserProfile } from "./redux/actions/actions";
-import { store } from "./redux/store";
-import { User, Pictures, UserTags } from "./models/models";
-import Test from "./Test";
+
+import PrivateRoutes from "./components/PrivateRoutes";
+import CompletedRoutes from "./components/CompletedRoutes";
+import Authentification from "./views/Authentification";
+
+import Home from "./views/Home";
+import Profile from "./views/Profile";
+import { VerifiedUser } from "./models/models";
 
 interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: Pictures[];
-  tags: UserTags[];
+  isAuth: boolean;
+  isCompleted: boolean;
 }
 
 class App extends React.Component<Props> {
   render() {
     return (
       <div>
-        <Test />
+        <Router history={history}>
+          <Switch>
+            <Route
+              exact={true}
+              path="/"
+              component={this.props.isAuth ? Profile : Authentification}
+            />
+            <PrivateRoutes
+              exact={true}
+              isAuth={this.props.isAuth}
+              path="/profile"
+              component={Profile}
+            />
+            <CompletedRoutes
+              exact={true}
+              isAuth={this.props.isAuth}
+              isCompleted={this.props.isCompleted}
+              path="/home"
+              component={Home}
+            />
+          </Switch>
+          {/* <Test />
         <div>My birthday : {this.props.birthday}</div>
         <div>My presentation : {this.props.presentation}</div>
         <div>My city : {this.props.city}</div>
@@ -44,26 +58,14 @@ class App extends React.Component<Props> {
             store.dispatch(insertUserProfile(newData));
           }}
         />
-        <br />
-        <button
-          onClick={() => {
-            Axios.post("http://localhost:5000/get-user-profile")
-              .then(({ data }) => {
-                store.dispatch(insertUserProfile(data));
-              })
-              .catch(error => {
-                console.log("Error", error.message);
-              });
-          }}
-        >
-          Get user infos
-        </button>
+        <br />*/}
+        </Router>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: User): Props => {
+const mapStateToProps = (state: VerifiedUser): Props => {
   return state;
 };
 

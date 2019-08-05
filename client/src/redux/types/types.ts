@@ -8,10 +8,6 @@ export interface InsertProfileAction {
   payload: User;
 }
 
-// export type ProfileAction = GetProfileAction | InsertProfileAction;
-
 //nom des retours pour le fichier action
+// export type ProfileAction = GetProfileAction | InsertProfileAction;
 // export type CounterAction = IncrementAction | DecrementAction;
-// export type StringAction = ChangeStringAction;
-// export type UserProfileAction = ChangeUserProfileAction;
-// export type

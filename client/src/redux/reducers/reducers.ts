@@ -1,5 +1,5 @@
 import { InsertProfileAction } from "../types/types";
-import { User } from "../../models/models";
+import { User, VerifiedUser } from "../../models/models";
 
 let initialState = {
   user_id: "",
@@ -23,6 +23,7 @@ export const insertUserProfileReducer = (
 ): User => {
   switch (action.type) {
     case "INSERT_USER_PROFILE": {
+      // console.log("payload", action.state);
       return {
         user_id: action.payload.user_id,
         mail: action.payload.mail,
@@ -42,4 +43,13 @@ export const insertUserProfileReducer = (
     default:
       return state;
   }
+};
+
+let verifiedState = {
+  isAuth: false,
+  isCompleted: true
+};
+
+export const verifiedUserReducer = (state = verifiedState): VerifiedUser => {
+  return state;
 };
