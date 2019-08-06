@@ -1,9 +1,9 @@
-import { INSERT_USER_PROFILE, InsertProfileAction } from "../types/types";
+import { UPDATE_USER_PROFILE, UpdateProfileAction } from "../types/types";
 import { User } from "../../models/models";
 
-export function insertUserProfile(data: User): InsertProfileAction {
+export function updateUserProfile(data: User): UpdateProfileAction {
   return {
-    type: INSERT_USER_PROFILE,
+    type: UPDATE_USER_PROFILE,
     payload: data
   };
 }
