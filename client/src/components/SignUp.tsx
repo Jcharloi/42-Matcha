@@ -9,29 +9,14 @@ import {
   Message,
   Header
 } from "semantic-ui-react";
-// import Axios from "axios";
-import { User, Pictures, UserTags } from "../models/models";
-import { connect } from "react-redux";
-import { store } from "../redux/store";
-import { insertUserProfile } from "../redux/actions/actions";
-
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: Pictures[];
-  tags: UserTags[];
-}
+import Axios from "axios";
 
 interface State {
+  userName: string;
+  mail: string;
+  password: string;
+  firstName: string;
+  lastName: string;
   day: string;
   month: string;
   year: string;
@@ -40,10 +25,15 @@ interface State {
   validated: boolean;
 }
 
-class SignUp extends React.Component<Props, State> {
-  constructor(props: Props) {
+class SignUp extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props);
     this.state = {
+      userName: "",
+      mail: "",
+      password: "",
+      firstName: "",
+      lastName: "",
       day: "",
       month: "",
       year: "",
@@ -55,19 +45,19 @@ class SignUp extends React.Component<Props, State> {
 
   register = async () => {
     this.setState({ loading: true });
-    // const { valid, messageValidForm } = validForm(this.state);
+    const { valid, messageValidForm } = validForm(this.state);
+    if (valid) {
+      let { message, loading, validated, ...body } = { ...this.state };
+      await Axios.post("http://localhost:5000/inscription", body)
+        .then(({ data: { message, validated } }) => {
+          this.setState({ message, validated, loading: false });
+        })
+        .catch(error => console.error(error));
+    } else {
+      this.setState({ message: messageValidForm });
+    }
+    this.setState({ loading: false });
   };
-  // if (valid) {
-  //   let { message, ...body } = { ...this.state };
-  //   await Axios.post("http://localhost:5000/inscription", body)
-  //     .then(({ data: { message, validated } }) => {
-  //       this.setState({ message, validated });
-  //     })
-  //     .catch(error => console.error(error));
-  // } else {
-  //   this.setState({ message: messageValidForm });
-  // this.setState({ loading: false });
-  // };
 
   public render() {
     const months = [
@@ -123,9 +113,7 @@ class SignUp extends React.Component<Props, State> {
                     fluid
                     placeholder="First name"
                     onChange={({ target: { value } }) => {
-                      const newData = { ...this.props, first_name: value };
-                      store.dispatch(insertUserProfile(newData));
-                      // console.log(store.getState());
+                      this.setState({ firstName: value });
                     }}
                   />
                   <Form.Input
@@ -134,9 +122,7 @@ class SignUp extends React.Component<Props, State> {
                     fluid
                     placeholder="Last name"
                     onChange={({ target: { value } }) => {
-                      const newData = { ...this.props, last_name: value };
-                      store.dispatch(insertUserProfile(newData));
-                      // console.log(store.getState());
+                      this.setState({ lastName: value });
                     }}
                   />
                 </Form.Group>
@@ -179,7 +165,7 @@ class SignUp extends React.Component<Props, State> {
                   placeholder="Username"
                   icon="user"
                   onChange={({ target: { value } }) => {
-                    // this.setState({ userName: value });
+                    this.setState({ userName: value });
                   }}
                   maxLength="20"
                 />
@@ -190,7 +176,7 @@ class SignUp extends React.Component<Props, State> {
                     placeholder="Email address"
                     icon="mail"
                     onChange={({ target: { value } }) => {
-                      // this.setState({ mail: value });
+                      this.setState({ mail: value });
                     }}
                   />
                 </Form.Field>
@@ -201,7 +187,7 @@ class SignUp extends React.Component<Props, State> {
                     placeholder="Password"
                     icon="lock"
                     onChange={({ target: { value } }) => {
-                      // this.setState({ password: value });
+                      this.setState({ password: value });
                     }}
                   />
                 </Form.Field>
@@ -238,54 +224,50 @@ class SignUp extends React.Component<Props, State> {
   }
 }
 
-// function validForm({
-//   userName,
-//   mail,
-//   password,
-//   firstName,
-//   lastName,
-//   day,
-//   month,
-//   year
-// }: State): { valid: boolean; messageValidForm: string } {
-//   if (
-//     !userName ||
-//     userName.length > 20 ||
-//     !firstName ||
-//     !lastName ||
-//     !day ||
-//     !month ||
-//     !year
-//   ) {
-//     return {
-//       valid: false,
-//       messageValidForm: "You need to fill the fields correctly"
-//     };
-//   }
-//   let regex = new RegExp(
-//     /^(([^<>()\],;:\s@]+(\.[^<>()\],;:\s@]+)*)|(.+))@(([^<>()[\],;:\s@]+)+[^<>()[\],;:\s@]{2,})$/i
-//   );
-//   if (!mail || !regex.test(String(mail).toLowerCase())) {
-//     return {
-//       valid: false,
-//       messageValidForm: "You need to provide a valid email address"
-//     };
-//   }
-//   regex = new RegExp(
-//     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
-//   );
-//   if (!password || !regex.test(password)) {
-//     return {
-//       valid: false,
-//       messageValidForm:
-//         "Your password needs to be 8+ characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
-//     };
-//   }
-//   return { valid: true, messageValidForm: "" };
-// }
+function validForm({
+  userName,
+  mail,
+  password,
+  firstName,
+  lastName,
+  day,
+  month,
+  year
+}: State): { valid: boolean; messageValidForm: string } {
+  if (
+    !userName ||
+    userName.length > 20 ||
+    !firstName ||
+    !lastName ||
+    !day ||
+    !month ||
+    !year
+  ) {
+    return {
+      valid: false,
+      messageValidForm: "You need to fill the fields correctly"
+    };
+  }
+  let regex = new RegExp(
+    /^(([^<>()\],;:\s@]+(\.[^<>()\],;:\s@]+)*)|(.+))@(([^<>()[\],;:\s@]+)+[^<>()[\],;:\s@]{2,})$/i
+  );
+  if (!mail || !regex.test(String(mail).toLowerCase())) {
+    return {
+      valid: false,
+      messageValidForm: "You need to provide a valid email address"
+    };
+  }
+  regex = new RegExp(
+    /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
+  );
+  if (!password || !regex.test(password)) {
+    return {
+      valid: false,
+      messageValidForm:
+        "Your password needs to be 8+ characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
+    };
+  }
+  return { valid: true, messageValidForm: "" };
+}
 
-const mapStateToProps = (state: User): Props => {
-  return state;
-};
-
-export default connect(mapStateToProps)(SignUp);
+export default SignUp;

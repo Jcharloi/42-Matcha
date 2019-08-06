@@ -1,4 +1,4 @@
-import { InsertProfileAction } from "../types/types";
+import { UpdateProfileAction, UPDATE_USER_PROFILE } from "../types/types";
 import { User, VerifiedUser } from "../../models/models";
 
 let initialState = {
@@ -17,28 +17,13 @@ let initialState = {
   tags: [{ tag_id: "", name: "", custom: false }]
 };
 
-export const insertUserProfileReducer = (
+export const userProfileReducer = (
   state = initialState,
-  action: InsertProfileAction
+  action: UpdateProfileAction
 ): User => {
   switch (action.type) {
-    case "INSERT_USER_PROFILE": {
-      // console.log("payload", action.state);
-      return {
-        user_id: action.payload.user_id,
-        mail: action.payload.mail,
-        user_name: action.payload.user_name,
-        last_name: action.payload.last_name,
-        first_name: action.payload.first_name,
-        birthday: action.payload.birthday,
-        gender: action.payload.gender,
-        orientation: action.payload.orientation,
-        presentation: action.payload.presentation,
-        score: action.payload.score,
-        city: action.payload.city,
-        pictures: action.payload.pictures,
-        tags: action.payload.tags
-      };
+    case UPDATE_USER_PROFILE: {
+      return Object.assign({}, state, action.payload);
     }
     default:
       return state;

@@ -9,7 +9,7 @@ import Authentification from "./views/Authentification";
 
 import Home from "./views/Home";
 import Profile from "./views/Profile";
-import { VerifiedUser } from "./models/models";
+import { State } from "./redux/types/types";
 
 interface Props {
   isAuth: boolean;
@@ -65,8 +65,11 @@ class App extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: VerifiedUser): Props => {
-  return state;
+const mapStateToProps = (state: State): Props => {
+  return {
+    isAuth: state.verified.isAuth,
+    isCompleted: state.verified.isCompleted
+  };
 };
 
 /*

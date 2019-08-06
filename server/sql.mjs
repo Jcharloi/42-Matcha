@@ -1,14 +1,14 @@
 import pg from "pg";
 
-// import keys from "./dbKeys.json";
-// const { user, password } = keys;
+import keys from "./dbKeys.json";
+const { user, password } = keys;
 
 const { Client } = pg;
 const client = new Client({
-  user: "",
+  user,
   host: "localhost",
   database: "matcha",
-  password: "",
+  password,
   port: 5432
 });
 client.connect();

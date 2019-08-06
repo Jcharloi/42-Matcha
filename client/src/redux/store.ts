@@ -8,9 +8,11 @@ import {
 import thunk from "redux-thunk";
 import {
   verifiedUserReducer,
-  insertUserProfileReducer
+  userProfileReducer
+  // updateProfileReducer
 } from "./reducers/reducers";
 // import Axios from "axios";
+// import { insertUserProfile } from "./actions/actions";
 
 declare global {
   interface Window {
@@ -21,8 +23,9 @@ declare global {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-  verifiedUserReducer,
-  user: insertUserProfileReducer
+  verified: verifiedUserReducer,
+  // update: updateProfileReducer,
+  user: userProfileReducer
 });
 
 //typer mapStatetoProps when many reducers
