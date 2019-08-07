@@ -1,4 +1,9 @@
-import { UpdateProfileAction, UPDATE_USER_PROFILE } from "../types/types";
+import {
+  UpdateProfileAction,
+  UPDATE_USER_PROFILE,
+  UPDATE_USER_AUTH,
+  UpdateAuthAction
+} from "../types/types";
 import { User, VerifiedUser } from "../../models/models";
 
 let initialState = {
@@ -32,9 +37,16 @@ export const userProfileReducer = (
 
 let verifiedState = {
   isAuth: false,
-  isCompleted: true
+  isCompleted: false
 };
 
-export const verifiedUserReducer = (state = verifiedState): VerifiedUser => {
-  return state;
+export const verifiedUserReducer = (
+  state = verifiedState,
+  action: UpdateAuthAction
+): VerifiedUser => {
+  if (action.type === UPDATE_USER_AUTH) {
+    return Object.assign({}, state, action.payload);
+  } else {
+    return state;
+  }
 };
