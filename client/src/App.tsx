@@ -23,7 +23,7 @@ class App extends React.Component<Props> {
         <Router history={history}>
           <Switch>
             <Route
-              exact={true}
+              // exact={true}
               path="/"
               component={this.props.isAuth ? Profile : Authentification}
             />
@@ -42,9 +42,6 @@ class App extends React.Component<Props> {
             />
           </Switch>
           {/* <Test />
-        <div>My birthday : {this.props.birthday}</div>
-        <div>My presentation : {this.props.presentation}</div>
-        <div>My city : {this.props.city}</div>
         <div>
           My tags :
           {this.props.tags.map(({ tag_id, name, custom }) => (
