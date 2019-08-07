@@ -69,7 +69,7 @@ class ResetPassword extends React.Component<{}, State> {
     this.setState({ loading: true });
     const { valid, message } = validPassword(this.state.password);
     if (valid) {
-      let { message, passwordDisplay, mail, ...body } = {
+      let { message, passwordDisplay, mail, loading, validated, ...body } = {
         ...this.state
       };
       await Axios.put("http://localhost:5000/new-password", body)
