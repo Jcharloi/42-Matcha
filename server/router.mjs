@@ -1,11 +1,12 @@
 import express from "express";
-import path from "path";
+// import path from "path";
 
 const router = express.Router();
 
 // import homeRoutes from "./helpers/home.mjs";
-// import signInRoutes from "./helpers/signIn.mjs";
-import signUpRoutes from "./helpers/signUp.mjs";
+import signInRoutes from "./helpers/auth/signIn.mjs";
+import signUpRoutes from "./helpers/auth/signUp.mjs";
+import passwordRoutes from "./helpers/auth/resetPassword.mjs";
 // import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
 // import profileRoutes from "./helpers/profile/profile.mjs";
 // import picturesRoutes from "./helpers/profile/pictures.mjs";
@@ -13,13 +14,12 @@ import signUpRoutes from "./helpers/signUp.mjs";
 
 // router.put("/verify-token", homeRoutes.verifyToken);
 
-// router.post("/connection", signInRoutes.connection);
-// router.put("/reset-password", signInRoutes.resetPassword);
-// router.get("/reset-password/:id", signInRoutes.resetPasswordId);
-// router.put("/new-password", signInRoutes.newPassword);
-
 router.post("/inscription", signUpRoutes.inscription);
-// router.get("/validate-account/:id", signUpRoutes.validateAccount);
+router.get("/validate-account/:id", signUpRoutes.validateAccount);
+router.put("/reset-password", passwordRoutes.resetPassword);
+router.get("/reset-password/:id", passwordRoutes.resetPasswordId);
+router.put("/new-password", passwordRoutes.newPassword);
+router.post("/connection", signInRoutes.connection);
 
 // router.all("/profile/*", homeRoutes.tokenMiddleware);
 // router.post("/profile/check-profile", getUserRoutes.checkFullProfile);
