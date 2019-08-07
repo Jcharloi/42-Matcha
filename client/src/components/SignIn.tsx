@@ -9,11 +9,11 @@ import {
   Message,
   Header
 } from "semantic-ui-react";
-// import Axios from "axios";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
-// import { login } from "../redux/actions/auth";
 import history from "../helpers/history";
+import Axios from "axios";
+import { updateUserProfile, updateUserAuth } from "../redux/actions/actions";
+import { Dispatch } from "redux";
 
 interface Props {
   dispatch: Dispatch;
@@ -56,22 +56,29 @@ class SignIn extends React.Component<Props, State> {
   }
 
   logIn = async () => {
-    // this.props.dispatch(login(this.state.userName, this.state.password));
-    history.push("/profile");
     this.setState({ loading: true });
-    // const { valid, message } = validForm(this.state);
-    // if (valid) {
-    //   let { message, ...body } = { ...this.state };
-
-    //         this.setState({ message, validated: true, loading: false });
-    //       } else {
-    //         this.setState({ message, validated: false, loading: false });
-    //       }
-    //     })
-    //     .catch(error => console.error(error));
-    // } else {
-    //   this.setState({ message, validated: false, loading: false });
-    // }
+    const { valid, message } = validForm(this.state);
+    if (valid) {
+      let { message, ...body } = { ...this.state };
+      await Axios.post("http://localhost:5000/connection", body)
+        .then(({ data: { message, token, userInfos } }) => {
+          if (message === "Connected") {
+            localStorage.setItem("token", token);
+            localStorage.setItem("user_name", this.state.userName);
+            this.props.dispatch(updateUserProfile(userInfos));
+            this.props.dispatch(
+              updateUserAuth({ isAuth: true, isCompleted: false })
+            );
+            history.push("/profile");
+            this.setState({ message, validated: true, loading: false });
+          } else {
+            this.setState({ message, validated: false, loading: false });
+          }
+        })
+        .catch(error => console.error(error));
+    } else {
+      this.setState({ message, validated: false, loading: false });
+    }
   };
 
   public render() {
@@ -145,14 +152,14 @@ class SignIn extends React.Component<Props, State> {
   }
 }
 
-// function validForm({
-//   userName,
-//   password
-// }: State): { valid: boolean; message: string } {
-//   if (!userName || !password) {
-//     return { valid: false, message: "You need to fill the fields correctly" };
-//   }
-//   return { valid: true, message: "" };
-// }
+function validForm({
+  userName,
+  password
+}: State): { valid: boolean; message: string } {
+  if (!userName || !password) {
+    return { valid: false, message: "You need to fill the fields correctly" };
+  }
+  return { valid: true, message: "" };
+}
 
 export default connect()(SignIn);
