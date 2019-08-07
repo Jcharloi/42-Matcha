@@ -1,44 +1,9 @@
 import cuid from "cuid";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
-import keys from "../keys.json";
-const { mail_password } = keys;
+import client from "../../sql/sql.mjs";
 
-import {
-  createRandomId,
-  validBirthday,
-  validMail,
-  validPassword
-} from "../common.mjs";
-
-import client from "../sql.mjs";
-
-async function __sendMail(userInfo, uniqueLinkId) {
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "matcha.gestion@gmail.com",
-      pass: mail_password
-    }
-  });
-  const response = await transporter
-    .sendMail({
-      from: '"Matcha\'s team" <matcha.gestion@gmail.com>',
-      to: `${userInfo.userName}, ${userInfo.mail}`,
-      subject: "Welcome, matcher ! 💕",
-      html: `<div>Hello ${
-        userInfo.userName
-      } 👋<br/><br/> I've noticed that you wanna join our community ? Awesome ! I really appreciate that, you won't be disappointed, I promise. You just have to click on the link below, and here we go : <br/> http://localhost:5000/validate-account/${uniqueLinkId}<br/><br/> Hope I see you soon ! 🤓</div>`
-    })
-    .then(() => {
-      return "Ok";
-    })
-    .catch(error => {
-      console.error(error);
-      return "Fail";
-    });
-  return response;
-}
+import { sendMail, createRandomId } from "../../common.mjs";
+import { validBirthday, validMail, validPassword } from "./validInfos.mjs";
 
 const inscription = async (req, res) => {
   if (
@@ -77,7 +42,9 @@ const inscription = async (req, res) => {
           await client
             .query(text, values)
             .then(async () => {
-              const response = await __sendMail(req.body, uniqueLinkId);
+              const subject = `Welcome Matcher`;
+              const text = `I've noticed that you wanna join our community ? Awesome ! I really appreciate that, you won't be disappointed, I promise. You just have to click on the link below, and here we go : <br/> http://localhost:5000/validate-account/${uniqueLinkId}<br/><br/> Hope I see you soon ! 🤓</div>`;
+              const response = await sendMail(req.body, subject, text);
               response === "Ok"
                 ? res.send({
                     validated: true,
