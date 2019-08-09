@@ -1,6 +1,23 @@
 import jwt from "jsonwebtoken";
-import keys from "keys.json";
+import client from "./sql/sql.mjs";
+import keys from "./keys.json";
 const { secret } = keys;
+
+const verifyToken = async (req, res) => {
+  if (req.body.token && req.body.userName) {
+    const response = await checkAuthToken(req.body.token, req.body.userName);
+    response.validated
+      ? res.send({ authToken: true })
+      : res.send({ authToken: false });
+  } else {
+    res.send({ authToken: false });
+  }
+};
+
+const tokenMiddleware = async (req, res, next) => {
+  const response = await checkAuthToken(req.body.token, req.body.userName);
+  response.validated ? next() : res.send(response);
+};
 
 async function checkAuthToken(token, userName) {
   if (!token || !userName) {
@@ -43,4 +60,4 @@ async function checkAuthToken(token, userName) {
   });
 }
 
-export { checkAuthToken };
+export default { verifyToken, tokenMiddleware, checkAuthToken };

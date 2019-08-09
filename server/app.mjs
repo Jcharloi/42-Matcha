@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 
-import router from "./router";
+import router from "./router.mjs";
 
 const app = express();
 const port = process.env.PORT || 5000;
