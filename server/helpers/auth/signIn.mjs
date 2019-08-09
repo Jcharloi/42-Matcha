@@ -13,11 +13,12 @@ import {
 
 const connection = async (req, res) => {
   if (req.body.userName && validPassword(req.body.password)) {
-    const text = `SELECT validated_account, password_hash FROM users WHERE user_name = $1`;
+    const text = `SELECT user_id, validated_account, password_hash FROM users WHERE user_name = $1`;
     const values = [req.body.userName];
     await client
       .query(text, values)
       .then(async ({ rowCount, rows }) => {
+        const userId = rows[0].user_id;
         if (rowCount === 1 && rows[0].validated_account === true) {
           await bcrypt
             .compare(req.body.password, rows[0].password_hash)
@@ -29,9 +30,9 @@ const connection = async (req, res) => {
                   { expiresIn: "24h" }
                 );
                 let userInfos = {};
-                userInfos = await getUserInfos();
-                userInfos.pictures = await getUserPictures();
-                userInfos.tags = await getUserTags();
+                userInfos = await getUserInfos(userId);
+                userInfos.pictures = await getUserPictures(userId);
+                userInfos.tags = await getUserTags(userId);
                 res.json({
                   userInfos,
                   message: "Connected",
