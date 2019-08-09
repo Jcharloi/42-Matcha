@@ -1,5 +1,5 @@
 import express from "express";
-// import path from "path";
+import path from "path";
 
 const router = express.Router();
 
@@ -45,10 +45,10 @@ router.post("/connection", signInRoutes.connection);
 // router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
 // router.put("/profile/change-password", profileRoutes.changePassword);
 
-// router.get("/public/profile-pictures/:id", (req, res) => {
-//   const pictureName = req.params.id;
-//   const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
-//   res.sendFile(absolutePath);
-// });
+router.get("/public/profile-pictures/:id", (req, res) => {
+  const pictureName = req.params.id;
+  const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
+  res.sendFile(absolutePath);
+});
 
 export default router;
