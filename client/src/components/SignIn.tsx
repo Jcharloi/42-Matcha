@@ -65,12 +65,19 @@ class SignIn extends React.Component<Props, State> {
           if (message === "Connected") {
             localStorage.setItem("token", token);
             localStorage.setItem("user_name", this.state.userName);
-            this.props.dispatch(updateUserProfile(userInfos));
-            this.props.dispatch(
-              updateUserAuth({ isAuth: true, isCompleted: false })
-            );
-            history.push("/profile");
-            this.setState({ message, validated: true, loading: false });
+            if (
+              !userInfos.message &&
+              !userInfos.pictures.message &&
+              !userInfos.tags.message
+            ) {
+              this.props.dispatch(updateUserProfile(userInfos));
+              this.props.dispatch(
+                updateUserAuth({ isAuth: true, isCompleted: false })
+              );
+              history.push("/profile");
+            } else {
+              this.setState({ message, validated: false, loading: false });
+            }
           } else {
             this.setState({ message, validated: false, loading: false });
           }
