@@ -31,8 +31,7 @@ export const store: Store = createStore(
   composeEnhancers(applyMiddleware(thunk))
 );
 
-//delete s'il fait joujou avec
-
+//en async
 if (localStorage.getItem("user_name") && localStorage.getItem("token")) {
   Axios.put("http://localhost:5000/verify-token", {
     userName: localStorage.getItem("user_name"),
@@ -69,6 +68,8 @@ if (localStorage.getItem("user_name") && localStorage.getItem("token")) {
           .catch(error => {
             console.log("Error : ", error.message);
           });
+      } else {
+        localStorage.clear();
       }
     })
     .catch(error => {

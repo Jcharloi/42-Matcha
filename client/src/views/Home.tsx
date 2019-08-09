@@ -1,8 +1,14 @@
 import * as React from "react";
+import TopMenu from "../components/TopMenu";
 
 class Home extends React.Component {
   public render() {
-    return <div>Home</div>;
+    return (
+      <div>
+        <TopMenu current="home" />
+        Je suis sur la page Home
+      </div>
+    );
   }
 }
 
