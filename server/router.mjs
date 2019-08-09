@@ -3,7 +3,9 @@ import express from "express";
 
 const router = express.Router();
 
-// import homeRoutes from "./helpers/home.mjs";
+import tokenRoutes from "./token.mjs";
+import userInfosRoutes from "./helpers/profile/getUserInfos.mjs";
+
 import signInRoutes from "./helpers/auth/signIn.mjs";
 import signUpRoutes from "./helpers/auth/signUp.mjs";
 import passwordRoutes from "./helpers/auth/resetPassword.mjs";
@@ -12,7 +14,9 @@ import passwordRoutes from "./helpers/auth/resetPassword.mjs";
 // import picturesRoutes from "./helpers/profile/pictures.mjs";
 // import tagRoutes from "./helpers/profile/tags.mjs";
 
-// router.put("/verify-token", homeRoutes.verifyToken);
+router.put("/verify-token", tokenRoutes.verifyToken);
+router.get("/get-user-infos?:id", userInfosRoutes.getUserAll);
+// router.all("/profile/*", homeRoutes.tokenMiddleware);
 
 router.post("/inscription", signUpRoutes.inscription);
 router.get("/validate-account/:id", signUpRoutes.validateAccount);
@@ -21,7 +25,6 @@ router.get("/reset-password/:id", passwordRoutes.resetPasswordId);
 router.put("/new-password", passwordRoutes.newPassword);
 router.post("/connection", signInRoutes.connection);
 
-// router.all("/profile/*", homeRoutes.tokenMiddleware);
 // router.post("/profile/check-profile", getUserRoutes.checkFullProfile);
 // router.post("/profile/get-user-pictures", getUserRoutes.getUserPictures);
 // router.post("/profile/get-user-progress-bar", getUserRoutes.getUserProgressBar);

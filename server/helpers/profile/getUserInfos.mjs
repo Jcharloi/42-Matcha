@@ -1,8 +1,27 @@
 import client from "../../sql/sql.mjs";
 
-async function getUserInfos() {
+const getUserAll = async (params, res) => {
+  let text = `SELECT user_id FROM users WHERE user_name = $1`;
+  let values = [params.query.userName];
+  await client
+    .query(text, values)
+    .then(async ({ rows }) => {
+      const userId = rows[0].user_id;
+      let userInfos = {};
+      userInfos = await getUserInfos(userId);
+      userInfos.pictures = await getUserPictures(userId);
+      userInfos.tags = await getUserTags(userId);
+      res.send({ userInfos });
+    })
+    .catch(e => {
+      console.error(e);
+      res.send("We got a problem with our database, please try again");
+    });
+};
+
+export async function getUserInfos(userId) {
   return await client
-    .query("SELECT * FROM users WHERE user_id = 'cjvyxcuq30000zzrh6ci11clr'")
+    .query(`SELECT * FROM users WHERE user_id = '${userId}'`)
     .then(({ rows }) => {
       const userInfos = {
         user_id: rows[0].user_id,
@@ -18,13 +37,19 @@ async function getUserInfos() {
         city: rows[0].city
       };
       return userInfos;
+    })
+    .catch(e => {
+      console.error(e);
+      return {
+        message: "We got a problem with our database, please try again"
+      };
     });
 }
 
-async function getUserPictures() {
+export async function getUserPictures(userId) {
   return await client
     .query(
-      "SELECT path, date, main FROM profile_picture INNER JOIN users ON(profile_picture.user_id = users.user_id) WHERE users.user_id = 'cjvyxcuq30000zzrh6ci11clr' ORDER BY date DESC"
+      `SELECT path, date, main FROM profile_picture INNER JOIN users ON(profile_picture.user_id = users.user_id) WHERE users.user_id = '${userId}' ORDER BY date DESC`
     )
     .then(({ rows, rowCount }) => {
       let userPictures = [];
@@ -36,13 +61,19 @@ async function getUserPictures() {
         });
       }
       return userPictures;
+    })
+    .catch(e => {
+      console.error(e);
+      return {
+        message: "We got a problem with our database, please try again"
+      };
     });
 }
 
-async function getUserTags() {
+export async function getUserTags(userId) {
   return await client
     .query(
-      "SELECT tag.tag_id, name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = 'cjvyxcuq30000zzrh6ci11clr'"
+      `SELECT tag.tag_id, name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = '${userId}'`
     )
     .then(({ rows, rowCount }) => {
       let userTags = [];
@@ -54,7 +85,13 @@ async function getUserTags() {
         });
       }
       return userTags;
+    })
+    .catch(e => {
+      console.error(e);
+      return {
+        message: "We got a problem with our database, please try again"
+      };
     });
 }
 
-export { getUserInfos, getUserPictures, getUserTags };
+export default { getUserAll };
