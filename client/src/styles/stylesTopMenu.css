@@ -1,0 +1,11 @@
+.logo {
+  width: 60px;
+}
+
+.home {
+  color: black !important;
+}
+
+.home:active {
+  color: black !important;
+}

@@ -1,15 +1,16 @@
 import * as React from "react";
-import { Router, Switch, Route } from "react-router-dom";
+import { Router, Switch } from "react-router-dom";
 import history from "./helpers/history";
 import { connect } from "react-redux";
+import { State } from "./redux/types/types";
 
+import PublicRoutes from "./components/PublicRoutes";
 import PrivateRoutes from "./components/PrivateRoutes";
 import CompletedRoutes from "./components/CompletedRoutes";
-import Authentification from "./views/Authentification";
 
-import Home from "./views/Home";
+import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
-import { State } from "./redux/types/types";
+import Home from "./views/Home";
 
 interface Props {
   isAuth: boolean;
@@ -22,40 +23,26 @@ class App extends React.Component<Props> {
       <div>
         <Router history={history}>
           <Switch>
-            <Route
-              // exact={true}
+            <PublicRoutes
+              exact={true}
               path="/"
-              component={this.props.isAuth ? Profile : Authentification}
+              component={Authentication}
+              isAuth={this.props.isAuth}
             />
             <PrivateRoutes
               exact={true}
-              isAuth={this.props.isAuth}
               path="/profile"
               component={Profile}
+              isAuth={this.props.isAuth}
             />
             <CompletedRoutes
               exact={true}
-              isAuth={this.props.isAuth}
-              isCompleted={this.props.isCompleted}
               path="/home"
               component={Home}
+              isAuth={this.props.isAuth}
+              isCompleted={this.props.isCompleted}
             />
           </Switch>
-          {/* <Test />
-        <div>
-          My tags :
-          {this.props.tags.map(({ tag_id, name, custom }) => (
-            <div key={tag_id}>{name}</div>
-          ))}
-        </div>
-        My new presentation :
-        <input
-          onChange={({ target: { value } }) => {
-            const newData = { ...this.props, presentation: value };
-            store.dispatch(insertUserProfile(newData));
-          }}
-        />
-        <br />*/}
         </Router>
       </div>
     );
