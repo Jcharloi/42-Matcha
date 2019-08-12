@@ -70,9 +70,19 @@ class SignIn extends React.Component<Props, State> {
               !userInfos.pictures.message &&
               !userInfos.tags.message
             ) {
+              let isCompleted = false;
+              if (
+                userInfos.city &&
+                userInfos.gender &&
+                userInfos.presentation &&
+                userInfos.pictures.length > 0 &&
+                userInfos.tags.length > 0
+              ) {
+                isCompleted = true;
+              }
               this.props.dispatch(updateUserProfile(userInfos));
               this.props.dispatch(
-                updateUserAuth({ isAuth: true, isCompleted: false })
+                updateUserAuth({ isAuth: true, isCompleted })
               );
               history.push("/profile");
             } else {
