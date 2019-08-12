@@ -9,10 +9,6 @@ interface Props {
 }
 
 class TopMenu extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   public render() {
     return (
       <div>
