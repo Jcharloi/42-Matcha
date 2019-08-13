@@ -30,15 +30,3 @@ export interface UserTags {
   name: string;
   custom: boolean;
 }
-
-interface Tags {
-  name: string;
-}
-
-export interface CounterState {
-  testNumber: number;
-}
-
-export interface StringState {
-  testString: string;
-}

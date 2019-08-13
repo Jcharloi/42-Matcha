@@ -27,6 +27,7 @@ router.put("/new-password", passwordRoutes.newPassword);
 router.post("/connection", signInRoutes.connection);
 
 router.put("/profile/get-user-city", getUserRoutes.getUserCity);
+router.put("/profile/get-tags", getUserRoutes.getTags);
 router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
 router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
 router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
