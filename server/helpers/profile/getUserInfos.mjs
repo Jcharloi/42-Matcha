@@ -143,4 +143,51 @@ const getUserCity = async (req, res) => {
     });
 };
 
-export default { getUserAll, getUserCity };
+const getTags = async (req, res) => {
+  // const userId = await getUserId(req.body.userName);
+  // if (!userId) {
+  //   return { validated: false };
+  // } else {
+  //   let userInfos = {};
+  //   let text = `SELECT name FROM tag WHERE custom=false`;
+  //   return await client
+  //     .query(text)
+  //     .then(async ({ rowCount, rows }) => {
+  //       let tagsList = {};
+  //       for (let i = 0; i < rowCount; i++) {
+  //         tagsList[uuidv1()] = {
+  //           name: rows[i].name
+  //         };
+  //       }
+  //       text = `SELECT name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = $1`;
+  //       let values = [userId];
+  //       return await client
+  //         .query(text, values)
+  //         .then(({ rowCount, rows }) => {
+  //           if (rowCount > 0) {
+  //             let userTags = {};
+  //             for (let i = 0; i < rowCount; i++) {
+  //               tagsList = compareTag(tagsList, rows[i].name);
+  //               userTags[uuidv1()] = {
+  //                 name: rows[i].name,
+  //                 custom: rows[i].custom
+  //               };
+  //             }
+  //             userInfos.userTags = userTags;
+  //           }
+  //           userInfos.tagsList = tagsList;
+  //           return { validated: true, userInfos };
+  //         })
+  //         .catch(e => {
+  //           console.error(e);
+  //           return { validated: false };
+  //         });
+  //     })
+  //     .catch(e => {
+  //       console.error(e);
+  //       return { validated: false };
+  //     });
+  // }
+};
+
+export default { getUserAll, getUserCity, getTags };
