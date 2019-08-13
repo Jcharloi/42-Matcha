@@ -5,7 +5,7 @@ import history from "./helpers/history";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
-import { updateUserProfile, updateUserAuth } from "./redux/actions/actions";
+import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
 
 import PublicRoutes from "./components/PublicRoutes";
 import PrivateRoutes from "./components/PrivateRoutes";
@@ -60,7 +60,7 @@ class App extends React.Component<Props, AppState> {
                   ) {
                     isCompleted = true;
                   }
-                  store.dispatch(updateUserProfile(userInfos));
+                  store.dispatch(insertUserProfile(userInfos));
                   store.dispatch(
                     updateUserAuth({ isAuth: authToken, isCompleted })
                   );
@@ -86,11 +86,6 @@ class App extends React.Component<Props, AppState> {
         <Router history={history}>
           {!this.state.isLoading && (
             <Switch>
-              {/* {console.log(
-                "Props when loading app",
-                this.props.isAuth,
-                this.props.isCompleted
-              )} */}
               <PublicRoutes
                 exact={true}
                 path="/"

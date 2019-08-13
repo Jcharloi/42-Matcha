@@ -1,0 +1,70 @@
+.title-container {
+  padding-top: 10rem;
+  width: 20rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  margin-right: 1rem;
+}
+
+.edit-button {
+  cursor: pointer !important;
+  height: 2.5rem;
+}
+
+.edit-text {
+  font-size: 1.3rem;
+  padding: 0.2rem;
+  margin-right: 0.2rem;
+}
+
+.edit-icon {
+  position: relative;
+  top: -4px !important;
+}
+
+.personal-container {
+  padding-top: 2rem;
+}
+
+.divider {
+  width: 20rem;
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.input-value {
+  border: none;
+  background: transparent;
+  outline: 0;
+  margin: 0.2em 0 0 0.5rem;
+  width: 17rem;
+}
+
+.dropdown-placeholder > div {
+  font-size: 1.2rem;
+  margin-left: 0.6rem;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.ui.dropdown .menu > .item {
+  padding: 5px !important;
+  margin-left: -12px !important;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.button-valid-edit {
+  margin: 2rem 0 1rem 2rem !important;
+}
+
+.media-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

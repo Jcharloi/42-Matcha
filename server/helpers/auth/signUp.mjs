@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import client from "../../sql/sql.mjs";
 
 import { sendMail, createRandomId } from "../../common.mjs";
-import { validBirthday, validMail, validPassword } from "./validInfos.mjs";
+import { validBirthday, validMail, validPassword } from "../validInfos.mjs";
 
 const inscription = async (req, res) => {
   if (

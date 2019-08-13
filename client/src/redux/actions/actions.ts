@@ -1,14 +1,14 @@
 import {
-  UPDATE_USER_PROFILE,
+  INSERT_USER_PROFILE,
   UPDATE_USER_AUTH,
-  UpdateProfileAction,
+  InsertProfileAction,
   UpdateAuthAction
 } from "../types/types";
 import { User, VerifiedUser } from "../../models/models";
 
-export function updateUserProfile(data: User): UpdateProfileAction {
+export function insertUserProfile(data: User): InsertProfileAction {
   return {
-    type: UPDATE_USER_PROFILE,
+    type: INSERT_USER_PROFILE,
     payload: data
   };
 }

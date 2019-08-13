@@ -1,10 +1,10 @@
 import { User, VerifiedUser } from "../../models/models";
 
-export const UPDATE_USER_PROFILE = "UPDATE_USER_PROFILE";
+export const INSERT_USER_PROFILE = "INSERT_USER_PROFILE";
 export const UPDATE_USER_AUTH = "UPDATE_USER_AUTH";
 
-export interface UpdateProfileAction {
-  type: typeof UPDATE_USER_PROFILE;
+export interface InsertProfileAction {
+  type: typeof INSERT_USER_PROFILE;
   payload: User;
 }
 
