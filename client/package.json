@@ -11,6 +11,7 @@
     "@types/react-router-dom": "^4.3.4",
     "@types/redux": "^3.6.0",
     "axios": "^0.19.0",
+    "form-data": "^2.5.0",
     "node": "^12.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -20,7 +21,8 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.3",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

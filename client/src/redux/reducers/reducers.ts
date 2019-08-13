@@ -1,8 +1,8 @@
 import {
-  UpdateProfileAction,
-  UPDATE_USER_PROFILE,
-  UPDATE_USER_AUTH,
-  UpdateAuthAction
+  InsertProfileAction,
+  INSERT_USER_PROFILE,
+  UpdateAuthAction,
+  UPDATE_USER_AUTH
 } from "../types/types";
 import { User, VerifiedUser } from "../../models/models";
 
@@ -24,10 +24,10 @@ let initialState = {
 
 export const userProfileReducer = (
   state = initialState,
-  action: UpdateProfileAction
+  action: InsertProfileAction
 ): User => {
   switch (action.type) {
-    case UPDATE_USER_PROFILE: {
+    case INSERT_USER_PROFILE: {
       return Object.assign({}, state, action.payload);
     }
     default:

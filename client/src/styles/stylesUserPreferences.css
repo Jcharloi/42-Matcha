@@ -1,0 +1,56 @@
+.title-container-preferences {
+  width: 110%;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.container-preferences {
+  width: 110%;
+  margin-top: 0.5rem;
+}
+
+.preferences {
+  display: flex;
+  justify-content: space-evenly;
+  height: 2rem;
+  margin-top: 4rem;
+  font-size: 1.5rem;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.text-preferences {
+  margin-left: 0.5rem;
+}
+
+select {
+  margin-left: 0.5rem;
+}
+
+.form-textarea {
+  width: 100%;
+}
+
+.bio {
+  width: 100% !important;
+  margin-top: 4rem !important;
+}
+
+.button-edit-preferences {
+  margin: 4rem 0 0 15rem !important;
+}
+
+.edit-text {
+  margin: 2rem 0 0 10rem;
+}
+
+@media screen and (max-width: 1024px) {
+  .title-container-preferences {
+    padding-top: 10%;
+    margin: unset !important;
+    width: unset !important;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  }
+
+  .button-edit-preferences {
+    margin: 4rem 0 0 40% !important;
+  }
+}

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import client from "../../sql/sql.mjs";
+import client from "../sql/sql.mjs";
 
 function compareTag(tagsList, potentialUserTag) {
   Object.entries(tagsList).forEach(([key, { name }]) => {
