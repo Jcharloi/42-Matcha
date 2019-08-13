@@ -9,14 +9,15 @@ import userInfosRoutes from "./helpers/profile/getUserInfos.mjs";
 import signInRoutes from "./helpers/auth/signIn.mjs";
 import signUpRoutes from "./helpers/auth/signUp.mjs";
 import passwordRoutes from "./helpers/auth/resetPassword.mjs";
-// import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
-// import profileRoutes from "./helpers/profile/profile.mjs";
-// import picturesRoutes from "./helpers/profile/pictures.mjs";
+import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
+import profileRoutes from "./helpers/profile/profile.mjs";
+import picturesRoutes from "./helpers/profile/pictures.mjs";
 // import tagRoutes from "./helpers/profile/tags.mjs";
 
+//A verifier !!
+// router.all("/profile/*", tokenRoutes.tokenMiddleware);
 router.put("/verify-token", tokenRoutes.verifyToken);
 router.get("/get-user-infos?:id", userInfosRoutes.getUserAll);
-// router.all("/profile/*", homeRoutes.tokenMiddleware);
 
 router.post("/inscription", signUpRoutes.inscription);
 router.get("/validate-account/:id", signUpRoutes.validateAccount);
@@ -25,25 +26,19 @@ router.get("/reset-password/:id", passwordRoutes.resetPasswordId);
 router.put("/new-password", passwordRoutes.newPassword);
 router.post("/connection", signInRoutes.connection);
 
-// router.post("/profile/check-profile", getUserRoutes.checkFullProfile);
-// router.post("/profile/get-user-pictures", getUserRoutes.getUserPictures);
-// router.post("/profile/get-user-progress-bar", getUserRoutes.getUserProgressBar);
-// router.put("/profile/get-user-city", getUserRoutes.getUserCity);
-// router.post("/profile/get-user-personal", getUserRoutes.getUserPersonal);
-// router.post("/profile/get-user-preferences", getUserRoutes.getUserPreferences);
-// router.post("/profile/get-user-tags", getUserRoutes.getUserTags);
-// router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
-// router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
-// router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
-// router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos);
-// router.put(
-//   "/profile/change-preference-infos",
-//   profileRoutes.changePreferenceInfos
-// );
+router.put("/profile/get-user-city", getUserRoutes.getUserCity);
+router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
+router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
+router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
+router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos);
+router.put(
+  "/profile/change-preference-infos",
+  profileRoutes.changePreferenceInfos
+);
 // router.put("/profile/select-tags", tagRoutes.selectTags);
 // router.put("/profile/delete-tags", tagRoutes.deleteTags);
 // router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
-// router.put("/profile/change-password", profileRoutes.changePassword);
+router.put("/profile/change-password", profileRoutes.changePassword);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;

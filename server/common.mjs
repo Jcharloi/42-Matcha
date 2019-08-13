@@ -32,7 +32,7 @@ async function sendMail(userInfo, subject, text) {
 async function getUserId(userName) {
   let text = `SELECT user_id FROM users WHERE user_name = $1`;
   let values = [userName];
-  const user_id = await client
+  return await client
     .query(text, values)
     .then(({ rowCount, rows }) => {
       if (rowCount === 1) {
@@ -45,7 +45,6 @@ async function getUserId(userName) {
       console.error(e);
       return false;
     });
-  return user_id;
 }
 
 function createRandomId(length) {
