@@ -1,0 +1,52 @@
+.title-container-tag {
+  margin-top: 4rem;
+  width: 110%;
+}
+.title {
+  font-size: 2rem !important;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.tag-container {
+  margin-top: 3rem;
+  width: 38rem;
+}
+
+.tag-value {
+  cursor: pointer;
+  margin: 0.7rem !important;
+  font-size: 1rem !important;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.custom-tag-container {
+  width: 90%;
+  margin-top: 2rem;
+}
+
+.add-custom-tag {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-value-tag {
+  width: 15rem;
+  margin: 0.5rem 0 0.5rem 0;
+}
+
+.button-valid-edit-tag {
+  margin: 1rem 0 0 10rem !important;
+  width: 40%;
+}
+
+@media screen and (max-width: 1024px) {
+  .title-container-tag {
+    width: unset;
+  }
+
+  .tag-container {
+    width: 45%;
+  }
+}

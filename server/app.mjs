@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import fileUpload from "express-fileupload";
 import morgan from "morgan";
 import cors from "cors";
 
@@ -10,13 +11,15 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(morgan("dev"));
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true
   })
 );
-// app.use(fileUpload());
+
+app.use(fileUpload());
 
 app.use(async (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");

@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import client from "../../sql/sql.mjs";
 
 import { sendMail, createRandomId } from "../../common.mjs";
-import { validMail, validPassword } from "./validInfos.mjs";
+import { validMail, validPassword } from "../validInfos.mjs";
 
 const resetPassword = async (req, res) => {
   if (validMail(req.body.mail)) {

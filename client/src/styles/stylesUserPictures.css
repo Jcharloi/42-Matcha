@@ -1,0 +1,106 @@
+.body-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 155%;
+  height: 20rem;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  top: -4rem;
+  cursor: pointer;
+  user-select: none;
+  width: 256px;
+  height: 256px;
+}
+
+.picture-upload-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.picture-upload {
+  display: flex !important;
+}
+
+.file-upload {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.message-picture {
+  display: flex;
+  align-items: center;
+}
+
+.hidden-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1;
+}
+
+.display-image-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.picture-arrows {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.picture-arrow-left {
+  color: white;
+  cursor: pointer;
+}
+
+.managing-picture {
+  display: flex;
+  align-items: flex-start;
+}
+
+.trash-icon {
+  position: relative;
+  left: -3rem;
+  top: 1rem;
+  color: white;
+}
+
+.image-inside {
+  top: 0.1rem;
+  max-height: 70rem;
+}
+
+.star-icon {
+  position: relative;
+  top: 1rem;
+  right: -3rem;
+  z-index: 2;
+  color: white;
+}
+
+.picture-arrow-right {
+  color: white;
+  cursor: pointer;
+}

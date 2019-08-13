@@ -4,7 +4,7 @@ import client from "../../sql/sql.mjs";
 import keys from "../../keys.json";
 const { secret } = keys;
 
-import { validPassword } from "./validInfos.mjs";
+import { validPassword } from "../validInfos.mjs";
 import {
   getUserInfos,
   getUserPictures,

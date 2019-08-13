@@ -12,7 +12,7 @@ import {
 import { connect } from "react-redux";
 import history from "../helpers/history";
 import Axios from "axios";
-import { updateUserProfile, updateUserAuth } from "../redux/actions/actions";
+import { updateUserAuth, insertUserProfile } from "../redux/actions/actions";
 import { Dispatch } from "redux";
 
 interface Props {
@@ -80,7 +80,7 @@ class SignIn extends React.Component<Props, State> {
               ) {
                 isCompleted = true;
               }
-              this.props.dispatch(updateUserProfile(userInfos));
+              this.props.dispatch(insertUserProfile(userInfos));
               this.props.dispatch(
                 updateUserAuth({ isAuth: true, isCompleted })
               );
