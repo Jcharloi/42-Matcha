@@ -1,12 +1,13 @@
 import * as React from "react";
 import Axios from "axios";
 
-import { Button, Icon, Header } from "semantic-ui-react";
-import "../styles/stylesUserTags.css";
-
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
-const uuidv1 = require("uuid/v1");
+import { store } from "../redux/store";
+import { insertUserProfile } from "../redux/actions/actions";
+
+import { Button, Icon, Header, Input } from "semantic-ui-react";
+import "../styles/stylesUserTags.css";
 
 interface Props {
   user_id: string;
@@ -25,8 +26,7 @@ interface Props {
 }
 
 interface TState {
-  tags: { [key: string]: { name: string } };
-  userTags: [{ tag_id: string; name: string; custom: boolean }];
+  tagsList: { [key: string]: { name: string } };
   displayCustom: boolean;
   customTag: string;
   messageTags?: string | null;
@@ -37,21 +37,21 @@ class Tags extends React.Component<Props, TState> {
     super(props);
     this.state = {
       displayCustom: false,
-      tags: {},
-      userTags: this.props.tags,
+      tagsList: {},
       customTag: ""
     };
   }
 
   async componentDidMount() {
-    await Axios.post("http://localhost:5000/profile/get-tags", {
-      token: localStorage.getItem("token"),
-      userName: localStorage.getItem("user_name")
-    })
+    await Axios.get(
+      `http://localhost:5000/profile/get-tags/${localStorage.getItem(
+        "user_name"
+      )}/${localStorage.getItem("token")}`
+    )
       .then(({ data: { validated, userInfos } }) => {
         if (validated) {
           this.setState({
-            tags: userInfos.tagsList
+            tagsList: userInfos.tagsList
           });
         }
       })
@@ -67,49 +67,57 @@ class Tags extends React.Component<Props, TState> {
           </Header>
         </div>
         <div className="tag-container">
-          {this.state.userTags &&
-            this.state.userTags.map(tag => (
+          {this.props.tags &&
+            this.props.tags.map((tag: any) => (
               <div key={tag.tag_id} className="tag-value ui tag label large ">
                 <span>{tag.name}</span>
-                {/* <Icon
-                    name="close"
-                    onClick={async () => {
-                      if (this.state.userTags.length > 1) {
-                        await Axios.put(
-                          "http://localhost:5000/profile/delete-tags",
-                          {
-                            tagName: name,
-                            userName: localStorage.getItem("user_name"),
-                            token: localStorage.getItem("token")
-                          }
-                        )
-                          .then(({ data: { validated, message } }) => {
-                            if (validated) {
-                              const { userTags, tags } = this.state;
-                              delete userTags[key];
-                              if (!custom) {
-                                tags[uuidv1()] = {
-                                  name
-                                };
+                <Icon
+                  name="close"
+                  onClick={async () => {
+                    if (this.props.tags.length > 1) {
+                      await Axios.put(
+                        "http://localhost:5000/profile/delete-tags",
+                        {
+                          tagName: tag.name,
+                          userName: localStorage.getItem("user_name"),
+                          token: localStorage.getItem("token")
+                        }
+                      )
+                        .then(({ data: { validated, tagId, message } }) => {
+                          if (validated) {
+                            const tagIndex = this.props.tags.findIndex(
+                              (tag: any) => {
+                                return tag.tag_id === tagId;
                               }
-                              this.setState({
-                                tags,
-                                userTags: this.state.userTags
-                              });
+                            );
+                            this.props.tags.splice(tagIndex, 1);
+                            if (!tag.custom) {
+                              this.state.tagsList[tagId] = {
+                                name: tag.name
+                              };
                             }
-                            this.setState({ messageTags: message });
-                          })
-                          .catch(error => console.error(error));
-                      } else {
-                        this.setState({
-                          messageTags: "You can't delete your only tag"
-                        });
-                      }
-                    }}
-                  /> */}
+                            const newData = {
+                              ...this.props,
+                              tags: this.props.tags
+                            };
+                            store.dispatch(insertUserProfile(newData));
+                            this.setState({
+                              tagsList: this.state.tagsList
+                            });
+                          }
+                          this.setState({ messageTags: message });
+                        })
+                        .catch(error => console.error(error));
+                    } else {
+                      this.setState({
+                        messageTags: "You can't delete your only tag"
+                      });
+                    }
+                  }}
+                />
               </div>
             ))}
-          {/* <button className="circular ui icon blue button">
+          <button className="circular ui icon blue button">
             <i
               className="icon plus"
               onClick={() => {
@@ -120,8 +128,8 @@ class Tags extends React.Component<Props, TState> {
           {this.state.displayCustom && (
             <div className="custom-tag-container">
               <h1 className="title">Wanna add more ?</h1>
-              {this.state.tags &&
-                Object.entries(this.state.tags).map(([key, { name }]) => (
+              {this.state.tagsList &&
+                Object.entries(this.state.tagsList).map(([key, { name }]) => (
                   <span key={key} className="tag-value ui tag label">
                     <span
                       onClick={async () => {
@@ -135,12 +143,19 @@ class Tags extends React.Component<Props, TState> {
                         )
                           .then(({ data: { validated, message } }) => {
                             if (validated) {
-                              const { userTags, tags } = this.state;
-                              delete tags[key];
-                              userTags[uuidv1()] = {
-                                name,
-                                custom: false
+                              const newData = {
+                                ...this.props,
+                                tags: [
+                                  ...this.props.tags,
+                                  {
+                                    tag_id: key,
+                                    name,
+                                    custom: false
+                                  }
+                                ]
                               };
+                              delete this.state.tagsList[key];
+                              store.dispatch(insertUserProfile(newData));
                             }
                             this.setState({
                               messageTags: message
@@ -156,9 +171,10 @@ class Tags extends React.Component<Props, TState> {
               <div className="add-custom-tag">
                 <div className="block">
                   <Icon name="paperclip" size="large" />
-                  <input
+                  <Input
                     className="input-value-tag"
                     placeholder="Custom tag"
+                    maxLength="15"
                     onChange={({ target: { value } }) => {
                       this.setState({ customTag: value });
                     }}
@@ -180,18 +196,20 @@ class Tags extends React.Component<Props, TState> {
                           token: localStorage.getItem("token")
                         }
                       )
-                        .then(({ data: { validated, message } }) => {
+                        .then(({ data: { validated, message, randomId } }) => {
                           if (validated) {
-                            let userTags = {
-                              ...this.state.userTags
+                            const newData = {
+                              ...this.props,
+                              tags: [
+                                ...this.props.tags,
+                                {
+                                  tag_id: randomId,
+                                  name: this.state.customTag,
+                                  custom: true
+                                }
+                              ]
                             };
-                            userTags[uuidv1()] = {
-                              name: this.state.customTag,
-                              custom: true
-                            };
-                            this.setState({
-                              userTags: userTags
-                            });
+                            store.dispatch(insertUserProfile(newData));
                           }
                           this.setState({
                             messageTags: message
@@ -213,7 +231,7 @@ class Tags extends React.Component<Props, TState> {
                 )}
               </div>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     );

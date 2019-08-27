@@ -1,6 +1,9 @@
 import opencage from "opencage-api-client";
 import client from "../../sql/sql.mjs";
 
+import { getUserId } from "../../common.mjs";
+import { compareTag } from "../validInfos.mjs";
+
 import keys from "../../keys.json";
 const { odg_api_key, ip_city } = keys;
 
@@ -144,50 +147,44 @@ const getUserCity = async (req, res) => {
 };
 
 const getTags = async (req, res) => {
-  // const userId = await getUserId(req.body.userName);
-  // if (!userId) {
-  //   return { validated: false };
-  // } else {
-  //   let userInfos = {};
-  //   let text = `SELECT name FROM tag WHERE custom=false`;
-  //   return await client
-  //     .query(text)
-  //     .then(async ({ rowCount, rows }) => {
-  //       let tagsList = {};
-  //       for (let i = 0; i < rowCount; i++) {
-  //         tagsList[uuidv1()] = {
-  //           name: rows[i].name
-  //         };
-  //       }
-  //       text = `SELECT name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = $1`;
-  //       let values = [userId];
-  //       return await client
-  //         .query(text, values)
-  //         .then(({ rowCount, rows }) => {
-  //           if (rowCount > 0) {
-  //             let userTags = {};
-  //             for (let i = 0; i < rowCount; i++) {
-  //               tagsList = compareTag(tagsList, rows[i].name);
-  //               userTags[uuidv1()] = {
-  //                 name: rows[i].name,
-  //                 custom: rows[i].custom
-  //               };
-  //             }
-  //             userInfos.userTags = userTags;
-  //           }
-  //           userInfos.tagsList = tagsList;
-  //           return { validated: true, userInfos };
-  //         })
-  //         .catch(e => {
-  //           console.error(e);
-  //           return { validated: false };
-  //         });
-  //     })
-  //     .catch(e => {
-  //       console.error(e);
-  //       return { validated: false };
-  //     });
-  // }
+  const userId = await getUserId(req.params.userName);
+  if (!userId) {
+    res.send({ validated: false });
+  } else {
+    let userInfos = {};
+    let text = `SELECT name, tag_id FROM tag WHERE custom=false`;
+    await client
+      .query(text)
+      .then(async ({ rowCount, rows }) => {
+        let tagsList = {};
+        for (let i = 0; i < rowCount; i++) {
+          tagsList[rows[i].tag_id] = {
+            name: rows[i].name
+          };
+        }
+        text = `SELECT name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = $1`;
+        let values = [userId];
+        await client
+          .query(text, values)
+          .then(({ rowCount, rows }) => {
+            if (rowCount > 0) {
+              for (let i = 0; i < rowCount; i++) {
+                tagsList = compareTag(tagsList, rows[i].name);
+              }
+            }
+            userInfos.tagsList = tagsList;
+            res.send({ validated: true, userInfos });
+          })
+          .catch(e => {
+            console.error(e);
+            res.send({ validated: false });
+          });
+      })
+      .catch(e => {
+        console.error(e);
+        res.send({ validated: false });
+      });
+  }
 };
 
 export default { getUserAll, getUserCity, getTags };
