@@ -40,15 +40,6 @@ class Profile extends React.Component {
             <Tags />
           </div>
         </div>
-        {/*
-        verifier l'user
-        <div>
-          My tags :
-          {this.props.tags.map(({ tag_id, name, custom }) => (
-            <div key={tag_id}>{name}</div>
-          ))}
-        </div>
-        <br />*/}
       </div>
     );
   }
