@@ -90,6 +90,11 @@ class Personal extends React.Component<Props, PState> {
             this.setState({
               city: userInfos.city
             });
+            const newData = {
+              ...this.props,
+              city: this.state.city
+            };
+            store.dispatch(insertUserProfile(newData));
           }
         })
         .catch(error => console.error(error));
