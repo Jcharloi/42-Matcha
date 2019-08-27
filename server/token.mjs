@@ -6,7 +6,7 @@ const { secret } = keys;
 const verifyToken = async (req, res) => {
   if (req.body.token && req.body.userName) {
     const response = await checkAuthToken(req.body.token, req.body.userName);
-    response.validated
+    response.validToken
       ? res.send({ authToken: true })
       : res.send({ authToken: false });
   } else {
