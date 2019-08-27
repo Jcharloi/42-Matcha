@@ -90,6 +90,7 @@ class App extends React.Component<Props, AppState> {
   render() {
     //A faire : - Reparer la suppression d'images.
     //- Faire les tests avec Postman et refaire tous les tests du coté front.
+    //- Reparer le CSS pour la partie My Password
     return (
       <div>
         <Router history={history}>

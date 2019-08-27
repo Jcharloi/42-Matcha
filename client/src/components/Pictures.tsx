@@ -145,9 +145,9 @@ class Pictures extends React.Component<Props, PicturesState> {
   //         userName: localStorage.getItem("user_name")
   //       })
   //         .then(async ({ data: {validToken, validated, message } }) => {
-  // if (validToken === false) {
-  //   deleteUser()
-  // }
+  //            if (validToken === false) {
+  //              deleteUser()
+  //            }
   //           if (validated) {
   //             // if (picturesNb === 2 || pictures[pictureIndex].main) {
   //             // let newIndex = pictureIndex === 0 ? 1 : 0;

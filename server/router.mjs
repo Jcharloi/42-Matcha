@@ -26,19 +26,19 @@ router.put("/new-password", passwordRoutes.newPassword);
 router.post("/connection", signInRoutes.connection);
 
 router.put("/profile/get-user-city", getUserRoutes.getUserCity);
-router.post("/profile/get-tags", getUserRoutes.getTags);
+router.post("/profile/get-tags", getUserRoutes.getTags); //
 router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
 router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
 // router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
-router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos);
+router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos); //
 router.put(
   "/profile/change-preference-infos",
   profileRoutes.changePreferenceInfos
-);
-router.put("/profile/select-tags", tagRoutes.selectTags);
-router.put("/profile/delete-tags", tagRoutes.deleteTags);
-router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
-router.put("/profile/change-password", profileRoutes.changePassword);
+); //
+router.put("/profile/select-tags", tagRoutes.selectTags); //
+router.put("/profile/delete-tags", tagRoutes.deleteTags); //
+router.post("/profile/add-custom-tags", tagRoutes.addCustomTags); //
+router.put("/profile/change-password", profileRoutes.changePassword); //
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
