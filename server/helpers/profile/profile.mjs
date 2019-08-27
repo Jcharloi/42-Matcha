@@ -15,6 +15,7 @@ const changePersonalInfos = async (req, res) => {
   if (
     req.body.firstName &&
     req.body.lastName &&
+    req.body.city &&
     validMail(req.body.mail) &&
     validBirthday(req.body.day, req.body.month, req.body.year)
   ) {
