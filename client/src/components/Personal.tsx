@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { store } from "../redux/store";
 import { insertUserProfile } from "../redux/actions/actions";
+import { deleteUser } from "../App";
 
 interface Props {
   user_id: string;
@@ -258,7 +259,10 @@ class Personal extends React.Component<Props, PState> {
                     token: localStorage.getItem("token")
                   }
                 )
-                  .then(({ data: { message } }) => {
+                  .then(({ data: { validToken, message } }) => {
+                    if (validToken === false) {
+                      deleteUser();
+                    }
                     const newData = {
                       ...this.props,
                       last_name: this.state.lastName,
