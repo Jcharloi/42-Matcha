@@ -16,20 +16,20 @@ const verifyToken = async (req, res) => {
 
 const tokenMiddleware = async (req, res, next) => {
   const response = await checkAuthToken(req.body.token, req.body.userName);
-  response.validated ? next() : res.send(response);
+  response.validToken ? next() : res.send(response);
 };
 
 async function checkAuthToken(token, userName) {
   if (!token || !userName) {
     return {
-      validated: false,
+      validToken: false,
       message: "Stop playing with our localStorage 😤"
     };
   }
   return await jwt.verify(token, secret, async (err, decoded) => {
     if (err) {
       return {
-        validated: false,
+        validToken: false,
         message: "Stop playing with our localStorage 😤"
       };
     } else {
@@ -40,18 +40,18 @@ async function checkAuthToken(token, userName) {
         .then(async ({ rowCount }) => {
           if (rowCount === 1) {
             return {
-              validated: true
+              validToken: true
             };
           }
           return {
-            validated: false,
+            validToken: false,
             message: "Stop playing with our localStorage 😤"
           };
         })
         .catch(e => {
           console.error(e);
           return {
-            validated: false,
+            validToken: false,
             message: "Stop playing with our localStorage 😤"
           };
         });

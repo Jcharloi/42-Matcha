@@ -1,5 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
+import { deleteUser } from "../App";
 
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
@@ -43,16 +44,19 @@ class Tags extends React.Component<Props, TState> {
   }
 
   async componentDidMount() {
-    await Axios.get(
-      `http://localhost:5000/profile/get-tags/${localStorage.getItem(
-        "user_name"
-      )}/${localStorage.getItem("token")}`
-    )
-      .then(({ data: { validated, userInfos } }) => {
-        if (validated) {
-          this.setState({
-            tagsList: userInfos.tagsList
-          });
+    await Axios.post(`http://localhost:5000/profile/get-tags`, {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token")
+    })
+      .then(({ data: { validToken, validated, userInfos } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({
+              tagsList: userInfos.tagsList
+            });
+          }
         }
       })
       .catch(error => console.error(error));
@@ -83,30 +87,38 @@ class Tags extends React.Component<Props, TState> {
                           token: localStorage.getItem("token")
                         }
                       )
-                        .then(({ data: { validated, tagId, message } }) => {
-                          if (validated) {
-                            const tagIndex = this.props.tags.findIndex(
-                              (tag: any) => {
-                                return tag.tag_id === tagId;
+                        .then(
+                          ({
+                            data: { validToken, validated, tagId, message }
+                          }) => {
+                            if (validToken === false) {
+                              deleteUser();
+                            } else {
+                              if (validated) {
+                                const tagIndex = this.props.tags.findIndex(
+                                  (tag: any) => {
+                                    return tag.tag_id === tagId;
+                                  }
+                                );
+                                this.props.tags.splice(tagIndex, 1);
+                                if (!tag.custom) {
+                                  this.state.tagsList[tagId] = {
+                                    name: tag.name
+                                  };
+                                }
+                                const newData = {
+                                  ...this.props,
+                                  tags: this.props.tags
+                                };
+                                store.dispatch(insertUserProfile(newData));
+                                this.setState({
+                                  tagsList: this.state.tagsList
+                                });
                               }
-                            );
-                            this.props.tags.splice(tagIndex, 1);
-                            if (!tag.custom) {
-                              this.state.tagsList[tagId] = {
-                                name: tag.name
-                              };
+                              this.setState({ messageTags: message });
                             }
-                            const newData = {
-                              ...this.props,
-                              tags: this.props.tags
-                            };
-                            store.dispatch(insertUserProfile(newData));
-                            this.setState({
-                              tagsList: this.state.tagsList
-                            });
                           }
-                          this.setState({ messageTags: message });
-                        })
+                        )
                         .catch(error => console.error(error));
                     } else {
                       this.setState({
@@ -141,26 +153,32 @@ class Tags extends React.Component<Props, TState> {
                             token: localStorage.getItem("token")
                           }
                         )
-                          .then(({ data: { validated, message } }) => {
-                            if (validated) {
-                              const newData = {
-                                ...this.props,
-                                tags: [
-                                  ...this.props.tags,
-                                  {
-                                    tag_id: key,
-                                    name,
-                                    custom: false
-                                  }
-                                ]
-                              };
-                              delete this.state.tagsList[key];
-                              store.dispatch(insertUserProfile(newData));
+                          .then(
+                            ({ data: { validToken, validated, message } }) => {
+                              if (validToken === false) {
+                                deleteUser();
+                              } else {
+                                if (validated) {
+                                  const newData = {
+                                    ...this.props,
+                                    tags: [
+                                      ...this.props.tags,
+                                      {
+                                        tag_id: key,
+                                        name,
+                                        custom: false
+                                      }
+                                    ]
+                                  };
+                                  delete this.state.tagsList[key];
+                                  store.dispatch(insertUserProfile(newData));
+                                }
+                                this.setState({
+                                  messageTags: message
+                                });
+                              }
                             }
-                            this.setState({
-                              messageTags: message
-                            });
-                          })
+                          )
                           .catch(error => console.error(error));
                       }}
                     >
@@ -196,25 +214,33 @@ class Tags extends React.Component<Props, TState> {
                           token: localStorage.getItem("token")
                         }
                       )
-                        .then(({ data: { validated, message, randomId } }) => {
-                          if (validated) {
-                            const newData = {
-                              ...this.props,
-                              tags: [
-                                ...this.props.tags,
-                                {
-                                  tag_id: randomId,
-                                  name: this.state.customTag,
-                                  custom: true
-                                }
-                              ]
-                            };
-                            store.dispatch(insertUserProfile(newData));
+                        .then(
+                          ({
+                            data: { validToken, validated, message, randomId }
+                          }) => {
+                            if (validToken === false) {
+                              deleteUser();
+                            } else {
+                              if (validated) {
+                                const newData = {
+                                  ...this.props,
+                                  tags: [
+                                    ...this.props.tags,
+                                    {
+                                      tag_id: randomId,
+                                      name: this.state.customTag,
+                                      custom: true
+                                    }
+                                  ]
+                                };
+                                store.dispatch(insertUserProfile(newData));
+                              }
+                              this.setState({
+                                messageTags: message
+                              });
+                            }
                           }
-                          this.setState({
-                            messageTags: message
-                          });
-                        })
+                        )
                         .catch(error => console.error(error));
                     } else {
                       this.setState({

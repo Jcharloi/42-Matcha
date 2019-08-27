@@ -9,6 +9,7 @@ import { State } from "../redux/types/types";
 import { store } from "../redux/store";
 
 import { insertUserProfile } from "../redux/actions/actions";
+import { deleteUser } from "../App";
 
 interface PicturesState {
   displayPictures: boolean;
@@ -58,33 +59,37 @@ class Pictures extends React.Component<Props, PicturesState> {
           this.props.pictures[0].date === "1" ? "true" : "false"
         );
         await Axios.post("http://localhost:5000/profile/upload-pictures/", data)
-          .then(async ({ data: { fileName, date, message } }) => {
-            let newPictures = [{ date: "", path: "", main: false }];
-            if (this.props.pictures[0].date !== "1") {
-              newPictures = [
-                ...this.props.pictures,
-                {
+          .then(async ({ data: { validToken, fileName, date, message } }) => {
+            if (validToken === false) {
+              deleteUser();
+            } else {
+              let newPictures = [{ date: "", path: "", main: false }];
+              if (this.props.pictures[0].date !== "1") {
+                newPictures = [
+                  ...this.props.pictures,
+                  {
+                    path: fileName,
+                    date,
+                    main: false
+                  }
+                ];
+              } else {
+                newPictures[0] = {
                   path: fileName,
                   date,
-                  main: false
-                }
-              ];
-            } else {
-              newPictures[0] = {
-                path: fileName,
-                date,
-                main: true
+                  main: true
+                };
+              }
+              const newData = {
+                ...this.props,
+                pictures: newPictures
               };
+              store.dispatch(insertUserProfile(newData));
+              this.setState({
+                picturesNb: this.state.picturesNb + 1,
+                messagePictures: message
+              });
             }
-            const newData = {
-              ...this.props,
-              pictures: newPictures
-            };
-            store.dispatch(insertUserProfile(newData));
-            this.setState({
-              picturesNb: this.state.picturesNb + 1,
-              messagePictures: message
-            });
           })
           .catch(error => console.error(error));
       }
@@ -98,28 +103,33 @@ class Pictures extends React.Component<Props, PicturesState> {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name")
     })
-      .then(({ data: { validated, message } }) => {
-        if (validated) {
-          let newPictures = this.props.pictures;
-          newPictures.map((picture: any) => {
-            if (picture.main) {
-              picture.main = false;
-            }
-            if (
-              picture.path === this.props.pictures[this.state.pictureIndex].path
-            ) {
-              picture.main = true;
-            }
+      .then(({ data: { validToken, validated, message } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            let newPictures = this.props.pictures;
+            newPictures.map((picture: any) => {
+              if (picture.main) {
+                picture.main = false;
+              }
+              if (
+                picture.path ===
+                this.props.pictures[this.state.pictureIndex].path
+              ) {
+                picture.main = true;
+              }
+            });
+            const newData = {
+              ...this.props,
+              pictures: newPictures
+            };
+            store.dispatch(insertUserProfile(newData));
+          }
+          this.setState({
+            messagePictures: message
           });
-          const newData = {
-            ...this.props,
-            pictures: newPictures
-          };
-          store.dispatch(insertUserProfile(newData));
         }
-        this.setState({
-          messagePictures: message
-        });
       })
       .catch(error => console.error(error));
   };
@@ -134,7 +144,10 @@ class Pictures extends React.Component<Props, PicturesState> {
   //         token: localStorage.getItem("token"),
   //         userName: localStorage.getItem("user_name")
   //       })
-  //         .then(async ({ data: { validated, message } }) => {
+  //         .then(async ({ data: {validToken, validated, message } }) => {
+  // if (validToken === false) {
+  //   deleteUser()
+  // }
   //           if (validated) {
   //             // if (picturesNb === 2 || pictures[pictureIndex].main) {
   //             // let newIndex = pictureIndex === 0 ? 1 : 0;

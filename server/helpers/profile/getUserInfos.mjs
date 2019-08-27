@@ -147,7 +147,7 @@ const getUserCity = async (req, res) => {
 };
 
 const getTags = async (req, res) => {
-  const userId = await getUserId(req.params.userName);
+  const userId = await getUserId(req.body.userName);
   if (!userId) {
     res.send({ validated: false });
   } else {

@@ -24,6 +24,13 @@ interface Props {
   isCompleted: boolean;
 }
 
+export function deleteUser() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user_name");
+  store.dispatch(updateUserAuth({ isAuth: false, isCompleted: false }));
+  history.push("/");
+}
+
 class App extends React.Component<Props, AppState> {
   constructor(props: Props) {
     super(props);
@@ -82,12 +89,7 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //A faire : - Reparer la suppression d'images.
-    //- Obtenir la liste des tags complete et les afficher.
-    //- Gestion des tags.
-    //- Verifier l'user dans le front et appliquer le verify-token dans chaque route du back.
     //- Faire les tests avec Postman et refaire tous les tests du coté front.
-    //- Trouver un mate, eh oui hélas nous sommes bien seul...
-    //- Mais j'espère que tu as profité de tes vacances et réfléchi au delà de Matcha. Bonnes vacances, Shimi (:
     return (
       <div>
         <Router history={history}>
