@@ -88,9 +88,14 @@ class App extends React.Component<Props, AppState> {
   }
 
   render() {
-    //A faire : - Reparer la suppression d'images.
+    //  A faire : - Reparer la suppression d'images.
     //- Faire les tests avec Postman et refaire tous les tests du coté front.
     //- Reparer le CSS pour la partie My Password
+
+    //  Reparer les bugs suivants:
+    // -Mauvais message d'erreur quand on login avec un mauvais username
+    // -Age affiché 1 an de plus (Peut etre qu'il faut prendre en compte les mois)
+    
     return (
       <div>
         <Router history={history}>
