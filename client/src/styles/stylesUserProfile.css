@@ -32,7 +32,7 @@
   justify-content: center;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1300px) {
   .middle-container,
   .end-container {
     display: flex;
@@ -48,7 +48,7 @@
 .middle-container {
   display: flex;
   justify-content: space-evenly;
-  width: 80%;
+  width: 75%;
 }
 
 .end-container {
