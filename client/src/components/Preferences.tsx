@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { store } from "../redux/store";
 import { insertUserProfile } from "../redux/actions/actions";
+import { deleteUser } from "../App";
 
 interface Props {
   user_id: string;
@@ -114,17 +115,21 @@ class Preferences extends React.Component<Props, PState> {
                     token: localStorage.getItem("token")
                   }
                 )
-                  .then(({ data: { message } }) => {
-                    const newData = {
-                      ...this.props,
-                      gender: this.state.gender,
-                      orientation: this.state.orientation,
-                      presentation: this.state.bio
-                    };
-                    store.dispatch(insertUserProfile(newData));
-                    this.setState({
-                      messagePreference: message
-                    });
+                  .then(({ data: { validToken, message } }) => {
+                    if (validToken === false) {
+                      deleteUser();
+                    } else {
+                      const newData = {
+                        ...this.props,
+                        gender: this.state.gender,
+                        orientation: this.state.orientation,
+                        presentation: this.state.bio
+                      };
+                      store.dispatch(insertUserProfile(newData));
+                      this.setState({
+                        messagePreference: message
+                      });
+                    }
                   })
                   .catch(error => console.error(error));
               }

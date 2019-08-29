@@ -103,7 +103,7 @@ class Password extends React.Component<{}, State> {
         return {
           valid: false,
           message:
-            "Your new password needs to be 8+ characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
+            "Your new password needs to be 8+ characters and contain at least 1 caps, 1 lowercase AND 1 number or special char"
         };
       }
       return { valid: true };
