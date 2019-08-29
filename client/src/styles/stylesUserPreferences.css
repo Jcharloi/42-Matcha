@@ -42,7 +42,7 @@ select {
   margin: 2rem 0 0 10rem;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1300px) {
   .title-container-preferences {
     padding-top: 10%;
     margin: unset !important;
