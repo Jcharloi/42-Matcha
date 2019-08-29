@@ -55,6 +55,7 @@ const connection = async (req, res) => {
       .catch(e => {
         console.error(e.stack);
         res.send({ message: "There was a problem with our database" });
+        // To fix : This message is also sent when username doesnt exist
       });
   } else {
     res.send({ message: "You need to provide all the fields correctly" });
