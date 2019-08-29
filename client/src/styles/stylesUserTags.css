@@ -41,7 +41,7 @@
   width: 40%;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1300px) {
   .title-container-tag {
     width: unset;
   }
