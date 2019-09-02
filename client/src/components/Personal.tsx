@@ -110,7 +110,7 @@ class Personal extends React.Component<Props, PState> {
         }
       return -1;
       }
-
+      
     calculateAge(day : string, month : number, year: string) { 
       var dob = new Date(+year, +month - 1, +day);
       var diff_ms = Date.now() - dob.getTime();
