@@ -1,0 +1,28 @@
+import * as React from "react";
+import TopMenu from "../components/TopMenu";
+import history from "../helpers/history";
+import "../styles/stylesRedirect.css";
+
+class PleaseComplete extends React.Component {
+  render() {
+    return (
+      <div className="main-container">
+        <TopMenu current="home" />
+        <h1>You did not completed your profile :(</h1>
+        <h2>
+          We need you to complete your profile so we can match you with others !
+        </h2>
+        <button
+          className="ui button"
+          onClick={() => {
+            history.push("/profile");
+          }}
+        >
+          Complete my profile
+        </button>
+      </div>
+    );
+  }
+}
+
+export default PleaseComplete;
