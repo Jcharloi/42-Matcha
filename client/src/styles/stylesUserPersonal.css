@@ -28,6 +28,7 @@
 
 .personal-container {
   padding-top: 2rem;
+  -webkit-transition: -webkit-transform .5s linear;
 }
 
 .divider {
