@@ -39,7 +39,7 @@ class Pictures extends React.Component<Props, PicturesState> {
     super(props);
     this.state = {
       picturesNb: this.props.pictures.length,
-      pictureIndex: this.props.pictures.length - 1,
+      pictureIndex: 0,
       displayPictures: false
     };
   }
@@ -50,6 +50,8 @@ class Pictures extends React.Component<Props, PicturesState> {
       if (!valid.valid) {
         this.setState({ messagePictures: valid.message });
       } else {
+        const isUnknownPicture =
+          this.props.pictures[0].date === "1" ? true : false;
         const data = new FormData();
         data.append("file", target.files[0]);
         data.append("userName", String(localStorage.getItem("user_name")));
@@ -64,7 +66,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               deleteUser();
             } else {
               let newPictures = [{ date: "", path: "", main: false }];
-              if (this.props.pictures[0].date !== "1") {
+              if (!isUnknownPicture) {
                 newPictures = [
                   ...this.props.pictures,
                   {
@@ -86,7 +88,9 @@ class Pictures extends React.Component<Props, PicturesState> {
               };
               store.dispatch(insertUserProfile(newData));
               this.setState({
-                picturesNb: this.state.picturesNb + 1,
+                picturesNb: isUnknownPicture
+                  ? this.state.picturesNb
+                  : this.state.picturesNb + 1,
                 messagePictures: message
               });
             }
@@ -134,74 +138,65 @@ class Pictures extends React.Component<Props, PicturesState> {
       .catch(error => console.error(error));
   };
 
-  //   deletePicture = async (event: Event) => {
-  //     event.stopPropagation();
-  //     if (this.state.picturesNb > 1) {
-  //       const { pictureIndex, picturesNb } = this.state;
-  //       const { pictures } = this.props;
-  //       await Axios.put("http://localhost:5000/profile/delete-pictures", {
-  //         path: this.props.pictures[pictureIndex].path,
-  //         token: localStorage.getItem("token"),
-  //         userName: localStorage.getItem("user_name")
-  //       })
-  //         .then(async ({ data: {validToken, validated, message } }) => {
-  //            if (validToken === false) {
-  //              deleteUser()
-  //            }
-  //           if (validated) {
-  //             // if (picturesNb === 2 || pictures[pictureIndex].main) {
-  //             // let newIndex = pictureIndex === 0 ? 1 : 0;
-  //             //   console.log(newIndex);
-  //             //   let pathFile = pictures[newIndex].path;
-  //             //   pictures[newIndex].main = true;
-  //             //   await Axios.put(
-  //             //     "http://localhost:5000/profile/set-main-pictures",
-  //             //     {
-  //             //       path: pathFile,
-  //             //       token: localStorage.getItem("token"),
-  //             //       userName: localStorage.getItem("user_name")
-  //             //     }
-  //             //   )
-  //             //     .then(({ data: { validated, message } }) => {
-  //             //       if (validated) {
-  //             //         this.setState({
-  //             //           messagePictures: message
-  //             //         });
-  //             //       }
-  //             //     })
-  //             //     .catch(error => console.error(error));
-  //             // }
-  //             console.log(
-  //               "phto a delet",
-  //               pictures[pictureIndex].path,
-  //               pictureIndex
-  //             );
-  //             let newPictures = pictures;
-  //             newPictures.splice(pictureIndex, 1);
-  //             const newData = {
-  //               ...this.props,
-  //               pictures: newPictures
-  //             };
-  //             store.dispatch(insertUserProfile(newData));
-  //             this.setState({
-  //               pictureIndex: 0,
-  //               picturesNb: this.state.picturesNb - 1,
-  //               messagePictures: message
-  //             });
-  //             console.log(pictures[pictureIndex]);
-  //             console.log(
-  //               "index de la future photo",
-  //               pictures[pictureIndex].path
-  //             );
-  //           }
-  //         })
-  //         .catch(error => console.error(error));
-  //     } else {
-  //       this.setState({
-  //         messagePictures: "You can't delete your only picture"
-  //       });
-  //     }
-  //   };
+  deletePicture = async (event: Event) => {
+    event.stopPropagation();
+    if (this.state.picturesNb > 1) {
+      await Axios.put("http://localhost:5000/profile/delete-pictures", {
+        path: this.props.pictures[this.state.pictureIndex].path,
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name")
+      })
+        .then(async ({ data: { validToken, validated, message } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              let newPictures = this.props.pictures;
+              if (this.props.pictures[this.state.pictureIndex].main) {
+                newPictures[1].main = true;
+                const newMainPath = newPictures[1].path;
+                await Axios.put(
+                  "http://localhost:5000/profile/set-main-pictures",
+                  {
+                    path: newMainPath,
+                    token: localStorage.getItem("token"),
+                    userName: localStorage.getItem("user_name")
+                  }
+                )
+                  .then(({ data: { validToken, validated, message } }) => {
+                    if (validToken === false) {
+                      deleteUser();
+                    } else {
+                      if (validated) {
+                        this.setState({
+                          messagePictures: message
+                        });
+                      }
+                    }
+                  })
+                  .catch(error => console.error(error));
+              }
+              newPictures.splice(this.state.pictureIndex, 1);
+              const newData = {
+                ...this.props,
+                pictures: newPictures
+              };
+              this.setState({
+                pictureIndex: 0,
+                picturesNb: this.state.picturesNb - 1
+              });
+              store.dispatch(insertUserProfile(newData));
+            }
+            this.setState({ messagePictures: message });
+          }
+        })
+        .catch(error => console.error(error));
+    } else {
+      this.setState({
+        messagePictures: "You can't delete your only picture"
+      });
+    }
+  };
 
   public render() {
     return (
@@ -214,19 +209,9 @@ class Pictures extends React.Component<Props, PicturesState> {
             <Image
               className="image"
               circular
-              src={
-                this.props.pictures[this.props.pictures.length - 1].path
-                  ? `http://localhost:5000/public/profile-pictures/${
-                      this.props.pictures[this.props.pictures.length - 1].path
-                    }
-                `
-                  : `http://localhost:5000/public/profile-pictures/unknown.png`
-              }
+              src={`http://localhost:5000/public/profile-pictures/${this.props.pictures[0].path}`}
               onClick={() => {
-                if (
-                  this.props.pictures[this.props.pictures.length - 1].date !==
-                  "1"
-                ) {
+                if (this.props.pictures[0].date !== "1") {
                   this.setState({ displayPictures: true });
                 }
               }}
@@ -292,16 +277,13 @@ class Pictures extends React.Component<Props, PicturesState> {
                     key={this.props.pictures[this.state.pictureIndex].date}
                     className="image-inside"
                     size="big"
-                    src={`http://localhost:5000/public/profile-pictures/${
-                      this.props.pictures[this.state.pictureIndex].path
-                    }
-                    `}
+                    src={`http://localhost:5000/public/profile-pictures/${this.props.pictures[this.state.pictureIndex].path}`}
                   />
                   <Icon
                     name="trash alternate"
                     className="trash-icon"
                     size="big"
-                    // onClick={this.deletePicture}
+                    onClick={this.deletePicture}
                   />
                 </div>
                 <Icon
