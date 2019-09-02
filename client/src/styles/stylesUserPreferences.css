@@ -35,12 +35,13 @@ select {
 }
 
 .button-edit-preferences {
-  margin: 4rem 0 0 15rem !important;
+  width: 50%;
+  margin: 2rem 0 0 25% !important;
 }
 
 .edit-text {
   margin: 2rem 0 0 0rem;
-text-align:center;
+  text-align: center;
 }
 
 @media screen and (max-width: 1300px) {
@@ -48,7 +49,7 @@ text-align:center;
     padding-top: 10%;
     margin: unset !important;
     width: unset !important;
-    
+
     font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   }
 

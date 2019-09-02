@@ -18,8 +18,8 @@ const connection = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rowCount, rows }) => {
-        const userId = rows[0].user_id;
         if (rowCount === 1 && rows[0].validated_account === true) {
+          const userId = rows[0].user_id;
           await bcrypt
             .compare(req.body.password, rows[0].password_hash)
             .then(async response => {
@@ -55,7 +55,6 @@ const connection = async (req, res) => {
       .catch(e => {
         console.error(e.stack);
         res.send({ message: "There was a problem with our database" });
-        // To fix : This message is also sent when username doesnt exist
       });
   } else {
     res.send({ message: "You need to provide all the fields correctly" });

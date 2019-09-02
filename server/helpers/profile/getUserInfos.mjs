@@ -67,6 +67,8 @@ export async function getUserPictures(userId) {
           main: rows[i].main
         });
       }
+      userPictures.splice(0, 0, userPictures[userPictures.length - 1]);
+      userPictures.splice(userPictures.length - 1, 1);
       return userPictures;
     })
     .catch(e => {

@@ -61,7 +61,8 @@
 }
 
 .button-valid-edit {
-  margin: 2rem 0 1rem 2rem !important;
+  width: 75%;
+  margin: 10% !important;
 }
 
 .media-container {
