@@ -5,12 +5,12 @@
   "scripts": {
     "setup:database": "node sql/setup.mjs",
     "start": "nodemon --experimental-modules app.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "setup:database": "node sql/setup.mjs"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "jcharloi",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
