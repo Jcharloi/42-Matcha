@@ -29,7 +29,7 @@ router.put("/profile/get-user-city", getUserRoutes.getUserCity);
 router.post("/profile/get-tags", getUserRoutes.getTags); //
 router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
 router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
-// router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
+router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
 router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos); //
 router.put(
   "/profile/change-preference-infos",
