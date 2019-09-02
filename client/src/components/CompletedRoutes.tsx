@@ -1,6 +1,7 @@
-import { Redirect, Route } from "react-router";
+import { Route } from "react-router";
 import { FunctionComponent } from "react";
 import * as React from "react";
+import PleaseComplete from "./PleaseComplete";
 
 interface Props {
   exact: boolean;
@@ -24,7 +25,7 @@ export const CompletedRoutes: FunctionComponent<Props> = ({
           <Component {...props} />
         </div>
       ) : (
-        <Redirect to="/profile" />
+        <PleaseComplete />
       )
     }
   />
