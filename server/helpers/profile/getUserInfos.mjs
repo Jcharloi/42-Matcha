@@ -1,4 +1,5 @@
 import opencage from "opencage-api-client";
+import Axios from "axios";
 import client from "../../sql/sql.mjs";
 
 import { getUserId } from "../../common.mjs";
@@ -104,48 +105,62 @@ export async function getUserTags(userId) {
 }
 
 const getUserCity = async (req, res) => {
-  let userInfos = {};
-  if (req.body.latitude != 0 && req.body.longitude != 0) {
-    await opencage
-      .geocode({
-        q: `${req.body.latitude}, ${req.body.longitude}`,
-        key: odg_api_key,
-        language: "fr"
-      })
-      .then(async data => {
-        if (data.status.code == 200 && data.results.length > 0) {
-          userInfos.city = data.results[0].components.city;
-        }
-      })
-      .catch(error => {
-        console.error(error.message);
-        res.send({ validated: false });
-      });
-  } else if (req.body.ip) {
-    await fetch(`https://ip.city/api.php?ip=${req.body.ip}&key=${ip_city}`)
-      .then(response => response.json())
-      .then(data => {
-        userInfos.city = data.city;
-      })
-      .catch(e => {
-        console.error(e);
-        res.send({ validated: false });
-      });
-  }
+  if (!req.body.longitude && !req.body.latitude && !req.body.ip) {
+    res.send({ validated: false, message: "Not enough informations" });
+  } else {
+    let userInfos = {};
+    let next = false;
+    if (req.body.latitude != 0 && req.body.longitude != 0) {
+      await opencage
+        .geocode({
+          q: `${req.body.latitude}, ${req.body.longitude}`,
+          key: odg_api_key,
+          language: "fr"
+        })
+        .then(async data => {
+          if (data.status.code == 200 && data.results.length > 0) {
+            userInfos.city = data.results[0].components.city;
+            next = true;
+          }
+        })
+        .catch(error => {
+          console.error(error.message);
+          res.send({
+            validated: false,
+            message: "We got an error with opencage geocode"
+          });
+        });
+    } else if (req.body.ip) {
+      await Axios(`https://ip.city/api.php?ip=${req.body.ip}&key=${ip_city}`)
+        .then(({ city }) => {
+          userInfos.city = city;
+          next = true;
+        })
+        .catch(e => {
+          console.error(e.stack);
+          res.send({
+            validated: false,
+            message: "We got an error with ip city"
+          });
+        });
+    }
 
-  let text = `UPDATE users SET city = '${userInfos.city}' WHERE user_name = $1`;
-  let values = [req.body.userName];
-  await client
-    .query(text, values)
-    .then(() => {
-      res.send({ validated: true, userInfos });
-    })
-    .catch(e => {
-      console.error(e);
-      res.send({
-        validated: false
-      });
-    });
+    if (next) {
+      let text = `UPDATE users SET city = '${userInfos.city}' WHERE user_name = $1`;
+      let values = [req.body.userName];
+      await client
+        .query(text, values)
+        .then(() => {
+          res.send({ validated: true, userInfos });
+        })
+        .catch(e => {
+          console.error(e);
+          res.send({
+            validated: false
+          });
+        });
+    }
+  }
 };
 
 const getTags = async (req, res) => {
