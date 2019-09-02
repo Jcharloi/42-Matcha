@@ -158,7 +158,8 @@ const deletePictures = async (req, res) => {
                             console.error(err);
                             res.send({
                               validated: false,
-                              message: "We got a problem, please try again"
+                              message:
+                                "We got a problem while removing the picture, please try again"
                             });
                           }
                         });
