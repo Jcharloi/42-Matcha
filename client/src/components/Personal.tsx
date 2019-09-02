@@ -102,13 +102,30 @@ class Personal extends React.Component<Props, PState> {
     }
   }
 
+    getMonthFromString(mon : string){
+      
+      var d = Date.parse(mon + "2, 2019");
+        if(!isNaN(d)){
+          return new Date(d).getMonth() + 1;
+        }
+      return -1;
+      }
+
+    calculateAge(day : string, month : number, year: string) { 
+      var dob = new Date(+year, +month - 1, +day);
+      var diff_ms = Date.now() - dob.getTime();
+      var age_dt = new Date(diff_ms);     
+      return Math.abs(age_dt.getUTCFullYear() - 1970);
+    }
+  
+
   public render() {
     const months = [
       "January",
       "February",
       "Mars",
       "April",
-      "Mai",
+      "May",
       "June",
       "July",
       "August",
@@ -169,8 +186,8 @@ class Personal extends React.Component<Props, PState> {
           <div className="block">
             <Icon name="birthday" size="large" color="orange" />
             <span className="input-value">
-              {2019 - parseInt(this.state.year)} years old
-            </span>
+              {this.calculateAge(this.state.day, this.getMonthFromString(this.state.month) , this.state.year )} years old
+            </span> 
           </div>
           <div className="ui divider" />
           <div className="block">
