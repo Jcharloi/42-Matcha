@@ -89,6 +89,10 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
+    // - Fix le margin sur les preferences
+    // - Mettre a jour le store avec isCompleted
+    // - Revoir l'API city
+    // - Mettre en photo principale si on delete la photo main true avec Postman
     return (
       <div>
         <Router history={history}>
