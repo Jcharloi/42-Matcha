@@ -7,38 +7,63 @@ import { validFile } from "../validInfos.mjs";
 import { getUserId } from "../../common.mjs";
 
 const uploadPictures = async (req, res) => {
-  if (req.files && Object.keys(req.files).length > 0) {
+  if (req.files && Object.keys(req.files).length > 0 && req.body.main) {
     const { name, size, mimetype: type } = req.files.file;
     if (validFile(name, size, type)) {
       const userId = await getUserId(req.body.userName);
       if (!userId) {
         res.send({ validated: false });
       } else {
-        let file = req.files.file;
-        let date = moment().format("X");
-        file.mv(`public/profile-pictures/${name}`, err => {
-          if (err) {
-            return res.status(500).send(err);
-          }
-        });
-        let text = `INSERT INTO profile_picture (user_id, path, date, main) VALUES ($1, $2, $3, $4)`;
-        let values = [
-          userId,
-          name,
-          date,
-          req.body.main === "true" ? true : false
-        ];
+        let text = `
+        SELECT COUNT(*) FROM profile_picture WHERE user_id = '${userId}'`;
         await client
-          .query(text, values)
-          .then(() => {
-            res.send({
-              date,
-              fileName: name,
-              message: "Your picture is uploaded !"
-            });
+          .query(text)
+          .then(async ({ rows }) => {
+            if (rows[0].count < 5) {
+              let file = req.files.file;
+              let date = moment().format("X");
+              file.mv(`public/profile-pictures/${name}`, err => {
+                if (err) {
+                  return res.status(500).send(err);
+                }
+              });
+              let text = `INSERT INTO profile_picture (user_id, path, date, main) VALUES ($1, $2, $3, $4)`;
+              let values = [
+                userId,
+                name,
+                date,
+                req.body.main === "true" ? true : false
+              ];
+              await client
+                .query(text, values)
+                .then(() => {
+                  res.send({
+                    date,
+                    fileName: name,
+                    message: "Your picture is uploaded !"
+                  });
+                })
+                .catch(e => {
+                  console.error(e.stack);
+                  res.send({
+                    validated: false,
+                    message:
+                      "We got a problem with our database, please try again"
+                  });
+                });
+            } else {
+              res.send({
+                validated: false,
+                message: "You already have at least 5 pictures uploaded !"
+              });
+            }
           })
           .catch(e => {
             console.error(e.stack);
+            res.send({
+              validated: false,
+              message: "We got a problem with our database, please try again"
+            });
           });
       }
     } else {
@@ -48,7 +73,10 @@ const uploadPictures = async (req, res) => {
       });
     }
   } else {
-    res.send({ validated: false, message: "No file ?" });
+    res.send({
+      validated: false,
+      message: "No file ? Or perhaps main parameter is missing"
+    });
   }
 };
 
