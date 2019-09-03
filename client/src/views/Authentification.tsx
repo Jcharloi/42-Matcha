@@ -51,7 +51,7 @@ class Authentication extends React.Component {
               </span>
               <div className="auth-step">
                 You match them, it means that they are also interested by you
-                <span role="img" aria-label="wink">
+                <span role="img" aria-label="wink" className="icon">
                   😉
                 </span>
               </div>
