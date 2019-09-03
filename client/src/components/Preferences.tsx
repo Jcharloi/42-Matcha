@@ -80,9 +80,9 @@ class Preferences extends React.Component<Props, PState> {
                   })
                 }
               >
-                <option value="Heterosexual">Heterosexual</option>
-                <option value="Homosexual">Homosexual</option>
-                <option value="Bisexual">Bisexual</option>
+                <option value="Man">Man</option>
+                <option value="Woman">Woman</option>
+                <option value="Both">Both</option>
               </select>
             </div>
           </div>
