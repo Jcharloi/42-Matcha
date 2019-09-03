@@ -1,6 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
-import { Router, Switch } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import history from "./helpers/history";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
@@ -105,16 +105,15 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - Fix le margin sur les preferences
     // - Npm start pour les deux serveurs
     // - Mettre en photo principale si on delete la photo main true avec Postman
-    // - Fix padding sign-in page
-    // - Fix redirection quand on valide un compte ):
     return (
       <div>
         <Router history={history}>
           {!this.state.isLoading && (
             <Switch>
+              <Route path="/sign-in" component={Authentication}></Route>
+              <Route path="/sign-up" component={Authentication}></Route>
               <PublicRoutes
                 exact={true}
                 path="/"
