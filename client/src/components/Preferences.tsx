@@ -7,8 +7,8 @@ import { Button, TextArea, Form, Icon, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { store } from "../redux/store";
-import { insertUserProfile } from "../redux/actions/actions";
-import { deleteUser } from "../App";
+import { insertUserProfile, updateUserAuth } from "../redux/actions/actions";
+import { deleteUser, isProfileCompleted } from "../App";
 
 interface Props {
   user_id: string;
@@ -126,6 +126,16 @@ class Preferences extends React.Component<Props, PState> {
                         presentation: this.state.bio
                       };
                       store.dispatch(insertUserProfile(newData));
+                      let isCompleted = isProfileCompleted(
+                        this.props.city,
+                        this.props.gender,
+                        this.props.presentation,
+                        this.props.pictures,
+                        this.props.tags
+                      );
+                      store.dispatch(
+                        updateUserAuth({ isAuth: true, isCompleted })
+                      );
                       this.setState({
                         messagePreference: message
                       });
