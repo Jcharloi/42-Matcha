@@ -31,6 +31,25 @@ export function deleteUser() {
   history.push("/");
 }
 
+export function isProfileCompleted(
+  city: string,
+  gender: string,
+  presentation: string,
+  pictures: [],
+  tags: []
+): boolean {
+  if (
+    city &&
+    gender &&
+    presentation &&
+    pictures.length > 0 &&
+    tags.length > 0
+  ) {
+    return true;
+  }
+  return false;
+}
+
 class App extends React.Component<Props, AppState> {
   constructor(props: Props) {
     super(props);
@@ -57,16 +76,13 @@ class App extends React.Component<Props, AppState> {
                   !userInfos.pictures.message &&
                   !userInfos.tags.message
                 ) {
-                  let isCompleted = false;
-                  if (
-                    userInfos.city &&
-                    userInfos.gender &&
-                    userInfos.presentation &&
-                    userInfos.pictures.length > 0 &&
-                    userInfos.tags.length > 0
-                  ) {
-                    isCompleted = true;
-                  }
+                  let isCompleted = isProfileCompleted(
+                    userInfos.city,
+                    userInfos.gender,
+                    userInfos.presentation,
+                    userInfos.pictures,
+                    userInfos.tags
+                  );
                   store.dispatch(insertUserProfile(userInfos));
                   store.dispatch(
                     updateUserAuth({ isAuth: authToken, isCompleted })
@@ -90,9 +106,10 @@ class App extends React.Component<Props, AppState> {
   render() {
     //  A faire :
     // - Fix le margin sur les preferences
-    // - Mettre a jour le store avec isCompleted
-    // - Revoir l'API city
+    // - Npm start pour les deux serveurs
     // - Mettre en photo principale si on delete la photo main true avec Postman
+    // - Fix padding sign-in page
+    // - Fix redirection quand on valide un compte ):
     return (
       <div>
         <Router history={history}>

@@ -1,11 +1,11 @@
 import * as React from "react";
 import Axios from "axios";
-import { deleteUser } from "../App";
+import { deleteUser, isProfileCompleted } from "../App";
 
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { store } from "../redux/store";
-import { insertUserProfile } from "../redux/actions/actions";
+import { insertUserProfile, updateUserAuth } from "../redux/actions/actions";
 
 import { Button, Icon, Header, Input } from "semantic-ui-react";
 import "../styles/stylesUserTags.css";
@@ -172,6 +172,19 @@ class Tags extends React.Component<Props, TState> {
                                   };
                                   delete this.state.tagsList[key];
                                   store.dispatch(insertUserProfile(newData));
+                                  let isCompleted = isProfileCompleted(
+                                    this.props.city,
+                                    this.props.gender,
+                                    this.props.presentation,
+                                    this.props.pictures,
+                                    this.props.tags
+                                  );
+                                  store.dispatch(
+                                    updateUserAuth({
+                                      isAuth: true,
+                                      isCompleted
+                                    })
+                                  );
                                 }
                                 this.setState({
                                   messageTags: message
@@ -234,6 +247,19 @@ class Tags extends React.Component<Props, TState> {
                                   ]
                                 };
                                 store.dispatch(insertUserProfile(newData));
+                                let isCompleted = isProfileCompleted(
+                                  this.props.city,
+                                  this.props.gender,
+                                  this.props.presentation,
+                                  this.props.pictures,
+                                  this.props.tags
+                                );
+                                store.dispatch(
+                                  updateUserAuth({
+                                    isAuth: true,
+                                    isCompleted
+                                  })
+                                );
                               }
                               this.setState({
                                 messageTags: message
