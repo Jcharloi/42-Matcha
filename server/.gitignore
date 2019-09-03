@@ -22,3 +22,5 @@ yarn-error.log*
 
 dbKeys.json
 keys.json
+
+/public
