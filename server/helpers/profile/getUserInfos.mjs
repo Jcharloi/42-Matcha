@@ -131,7 +131,8 @@ const getUserCity = async (req, res) => {
           });
         });
     } else if (req.body.ip) {
-      await Axios(`https://ip.city/api.php?ip=${req.body.ip}&key=${ip_city}`)
+      await fetch(`http://ip.city/api.php?ip=${req.body.ip}&key=${ip_city}`)
+        .then(response => response.json())
         .then(({ city }) => {
           userInfos.city = city;
           next = true;
