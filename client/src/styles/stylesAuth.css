@@ -162,6 +162,7 @@
     height: 300px;
     margin-top: 20px;
     border-radius: 10px;
+    padding: 10%;
   }
 
   .auth-explication {
