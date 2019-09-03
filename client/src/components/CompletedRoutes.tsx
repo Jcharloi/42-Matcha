@@ -1,7 +1,7 @@
 import { Route } from "react-router";
 import { FunctionComponent } from "react";
 import * as React from "react";
-import PleaseComplete from "./PleaseComplete";
+import IsCompleted from "./IsCompleted";
 
 interface Props {
   exact: boolean;
@@ -25,7 +25,7 @@ export const CompletedRoutes: FunctionComponent<Props> = ({
           <Component {...props} />
         </div>
       ) : (
-        <PleaseComplete />
+        <IsCompleted />
       )
     }
   />
