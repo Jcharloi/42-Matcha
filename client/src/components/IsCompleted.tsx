@@ -1,9 +1,9 @@
 import * as React from "react";
-import TopMenu from "../components/TopMenu";
+import TopMenu from "./TopMenu";
 import history from "../helpers/history";
 import "../styles/stylesRedirect.css";
 
-class PleaseComplete extends React.Component {
+class IsCompleted extends React.Component {
   render() {
     return (
       <div className="main-container">
@@ -25,4 +25,4 @@ class PleaseComplete extends React.Component {
   }
 }
 
-export default PleaseComplete;
+export default IsCompleted;
