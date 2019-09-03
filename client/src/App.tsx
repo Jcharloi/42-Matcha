@@ -105,6 +105,10 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
+    // - max length - presentation
+    // - Seed
+    // - Inserer les photos et les tags par defaut
+    // - Faire la requete pour avoir les matchs en fonction de l'orientation
     return (
       <div>
         <Router history={history}>
