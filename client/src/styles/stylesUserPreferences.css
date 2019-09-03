@@ -9,6 +9,7 @@
 }
 
 .preferences {
+  width: 45rem;
   display: flex;
   justify-content: space-evenly;
   height: 2rem;
