@@ -10,7 +10,8 @@ class IsCompleted extends React.Component {
         <TopMenu current="home" />
         <h1>You did not completed your profile :(</h1>
         <h2>
-          We need you to complete your profile so we can match you with others !
+          We need you to complete your profile (with some tags and a picture of
+          you) so we can match you with others !
         </h2>
         <button
           className="ui button"

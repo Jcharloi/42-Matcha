@@ -8,8 +8,8 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { store } from "../redux/store";
 
-import { insertUserProfile } from "../redux/actions/actions";
-import { deleteUser } from "../App";
+import { insertUserProfile, updateUserAuth } from "../redux/actions/actions";
+import { deleteUser, isProfileCompleted } from "../App";
 
 interface PicturesState {
   displayPictures: boolean;
@@ -87,6 +87,14 @@ class Pictures extends React.Component<Props, PicturesState> {
                 pictures: newPictures
               };
               store.dispatch(insertUserProfile(newData));
+              let isCompleted = isProfileCompleted(
+                this.props.city,
+                this.props.gender,
+                this.props.presentation,
+                this.props.pictures,
+                this.props.tags
+              );
+              store.dispatch(updateUserAuth({ isAuth: true, isCompleted }));
               this.setState({
                 picturesNb: isUnknownPicture
                   ? this.state.picturesNb
