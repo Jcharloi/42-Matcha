@@ -1,5 +1,4 @@
 import opencage from "opencage-api-client";
-import Axios from "axios";
 import client from "../../sql/sql.mjs";
 
 import { getUserId } from "../../common.mjs";
