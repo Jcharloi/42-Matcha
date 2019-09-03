@@ -34,7 +34,7 @@ const inscription = async (req, res) => {
             req.body.firstName,
             birthday,
             hashedPassword,
-            "Bisexual",
+            "Both",
             "0",
             false,
             uniqueLinkId
