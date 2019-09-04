@@ -3,7 +3,7 @@ const pg = require("pg");
 const fs = require("fs");
 
 const { Client } = pg;
-const sql = fs.readFileSync("./sql/setup.sql").toString();
+const sql = fs.readFileSync("./setup.sql").toString();
 
 const { user, password } = require("../dbKeys.json");
 
