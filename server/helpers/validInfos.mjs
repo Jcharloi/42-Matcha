@@ -110,9 +110,9 @@ function validGender(gender) {
 
 function validOrientation(orientation) {
   if (
-    orientation === "Heterosexual" ||
-    orientation === "Homosexual" ||
-    orientation === "Bisexual"
+    orientation === "Man" ||
+    orientation === "Woman" ||
+    orientation === "Both"
   ) {
     return true;
   }

@@ -153,17 +153,24 @@ const setMainPictures = async (req, res) => {
   }
 };
 
-//mettre en photo principale si on delete la photo main true avec Postman
 const deletePictures = async (req, res) => {
   const userId = await getUserId(req.body.userName);
   if (!userId) {
     res.send({ validated: false });
   } else {
-    let text = `SELECT * FROM profile_picture WHERE user_id='${userId}'`;
+    let text = `SELECT * FROM profile_picture WHERE user_id='${userId}' ORDER BY date DESC`;
     await client
       .query(text)
-      .then(async ({ rowCount }) => {
+      .then(async ({ rows, rowCount }) => {
         if (rowCount > 1) {
+          let newMainPath;
+          if (req.body.main === "true") {
+            if (rows[0].main) {
+              newMainPath = rows[1].path;
+            } else {
+              newMainPath = rows[0].path;
+            }
+          }
           text = `DELETE FROM profile_picture WHERE path=$1 AND user_id = '${userId}'`;
           let values = [req.body.path];
           await client
@@ -192,6 +199,17 @@ const deletePictures = async (req, res) => {
                           }
                         });
                       }
+                    }
+                    if (req.body.main === "true") {
+                      text = `UPDATE profile_picture SET main=true WHERE path='${newMainPath}' AND user_id='${userId}'`;
+                      await client.query(text).catch(e => {
+                        console.error(e.stack);
+                        res.send({
+                          validated: false,
+                          message:
+                            "We got a problem with our database, please try again"
+                        });
+                      });
                     }
                     res.send({
                       validated: true,
