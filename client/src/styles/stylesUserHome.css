@@ -1,0 +1,16 @@
+.card .image {
+  top: 0px;
+  left: 0px;
+  width: 290px;
+}
+.card .profile-pic {
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+.card {
+  left: 20px;
+}
