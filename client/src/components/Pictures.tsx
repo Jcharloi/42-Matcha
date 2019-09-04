@@ -151,6 +151,9 @@ class Pictures extends React.Component<Props, PicturesState> {
     if (this.state.picturesNb > 1) {
       await Axios.put("http://localhost:5000/profile/delete-pictures", {
         path: this.props.pictures[this.state.pictureIndex].path,
+        main: this.props.pictures[this.state.pictureIndex].main
+          ? "true"
+          : "false",
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name")
       })
@@ -162,27 +165,6 @@ class Pictures extends React.Component<Props, PicturesState> {
               let newPictures = this.props.pictures;
               if (this.props.pictures[this.state.pictureIndex].main) {
                 newPictures[1].main = true;
-                const newMainPath = newPictures[1].path;
-                await Axios.put(
-                  "http://localhost:5000/profile/set-main-pictures",
-                  {
-                    path: newMainPath,
-                    token: localStorage.getItem("token"),
-                    userName: localStorage.getItem("user_name")
-                  }
-                )
-                  .then(({ data: { validToken, validated, message } }) => {
-                    if (validToken === false) {
-                      deleteUser();
-                    } else {
-                      if (validated) {
-                        this.setState({
-                          messagePictures: message
-                        });
-                      }
-                    }
-                  })
-                  .catch(error => console.error(error));
               }
               newPictures.splice(this.state.pictureIndex, 1);
               const newData = {

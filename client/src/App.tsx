@@ -105,15 +105,18 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - Npm start pour les deux serveurs
-    // - Mettre en photo principale si on delete la photo main true avec Postman
+    // - max length - presentation
+    // - Seed
+    // - Inserer les photos et les tags par defaut
+    // - Faire la requete pour avoir les matchs en fonction de l'orientation
     return (
       <div>
         <Router history={history}>
           {!this.state.isLoading && (
             <Switch>
-              <Route path="/sign-in" component={Authentication}></Route>
-              <Route path="/sign-up" component={Authentication}></Route>
+              <Route path="/sign-in" component={Authentication} />
+              <Route path="/sign-up" component={Authentication} />
+              <Route path="/reset-password" component={Authentication} />
               <PublicRoutes
                 exact={true}
                 path="/"
