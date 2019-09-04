@@ -1,34 +1,40 @@
-const pgtools = require("pgtools");
-const pg = require("pg");
-const fs = require("fs");
+import pgtools from "pgtools";
+import pg from "pg";
+import fs from "fs";
+import keys from "./dbKeys.json";
 
-const { Client } = pg;
-const sql = fs.readFileSync("./setup.sql").toString();
+const sql = fs.readFileSync("./sql/setup.sql").toString();
+const { user, password } = keys;
 
-const { user, password } = require("../dbKeys.json");
+const pool = new pg.Pool({
+  user: user,
+  host: "localhost",
+  database: "matcha",
+  password: password,
+  port: "5432"
+});
 
-console.log("Starting setting up database : dropping old database if existing");
-return pgtools
+pgtools
   .dropdb({ user, host: "localhost", password, port: 5432 }, "matcha")
   .then(() => {
     console.log("Old database dropped\nSetting up new database");
-    return pgtools.createdb(
-      { user, host: "localhost", password, port: 5432 },
-      "matcha"
-    );
+    pgtools
+      .createdb({ user, host: "localhost", password, port: 5432 }, "matcha")
+      .then(() => {
+        console.log(
+          "New database set up\nPopulating with columns and fakes profiles"
+        );
+        pool
+          .query(sql)
+          .then(() => {
+            console.log("Database populated\nAll done");
+            pool.end();
+          })
+          .catch(e => {
+            console.error(e.stack);
+          });
+      });
   })
-  .then(async () => {
-    console.log("New database set up\nPopulating with columns");
-    const client = new Client({
-      user,
-      host: "localhost",
-      database: "matcha",
-      password,
-      port: 5432
-    });
-    await client.connect();
-    await client.query(sql);
-    //add tags;
-    await client.end();
-    console.log("Database populated\nAll done");
+  .catch(e => {
+    console.error(e.stack);
   });
