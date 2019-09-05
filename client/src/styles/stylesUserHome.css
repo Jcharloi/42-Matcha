@@ -11,6 +11,11 @@
   max-width: 100%;
   max-height: 100%;
 }
-.card {
-  left: 20px;
+.ui.card {
+  /* left: 20px; */
+  display: block;
+  position: relative;
+  float: left;
+
+  margin-left: 30px;
 }
