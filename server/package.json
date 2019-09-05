@@ -7,7 +7,8 @@
     "start": "nodemon --experimental-modules app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server",
-    "client": "cd ../client && npm start"
+    "client": "cd ../client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "jcharloi",
   "license": "ISC",
