@@ -63,7 +63,7 @@ class SignUp extends React.Component<{}, State> {
     const months = [
       "January",
       "February",
-      "Mars",
+      "March",
       "April",
       "Mai",
       "June",
