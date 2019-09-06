@@ -4,6 +4,7 @@ import fs from "fs";
 import keys from "./dbKeys.json";
 import faker from "faker";
 import escape from "pg-escape";
+import cities from "all-the-cities";
 
 const sql = fs.readFileSync("./sql/setup.sql").toString();
 const pictures = fs.readdirSync("./public/fake-pictures/");
@@ -61,6 +62,7 @@ pgtools
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
               const indexTag2 = Math.floor(Math.random() * tags.length);
+              const indexCity = Math.floor(Math.random() * cities.length);
               const picturePath = pictures[indexPicture];
               const picturePath2 = pictures[indexPicture2];
               const userId = faker.random.uuid();
@@ -88,7 +90,7 @@ pgtools
               ])}', ${escape.literal(
                 faker.random.words(20)
               )}, ${faker.random.number(100)}, ${escape.literal(
-                faker.address.city()
+                cities[indexCity].name
               )}, '${new Date(
                 connectionDate[3] +
                   "/" +

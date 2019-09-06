@@ -13,6 +13,7 @@ import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
 import profileRoutes from "./helpers/profile/profile.mjs";
 import picturesRoutes from "./helpers/profile/pictures.mjs";
 import tagRoutes from "./helpers/profile/tags.mjs";
+import homeRoutes from "./helpers/home/match.mjs";
 
 router.all("/profile/*", tokenRoutes.tokenMiddleware);
 router.put("/verify-token", tokenRoutes.verifyToken);
@@ -39,6 +40,11 @@ router.put("/profile/select-tags", tagRoutes.selectTags);
 router.put("/profile/delete-tags", tagRoutes.deleteTags);
 router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
 router.put("/profile/change-password", profileRoutes.changePassword);
+
+router.get(
+  "/home/get-users-by-preference/:preference/:gender",
+  homeRoutes.getUsersByPreference
+);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
