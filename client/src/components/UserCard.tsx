@@ -7,6 +7,7 @@ class UserCard extends React.Component {
       <div className="ui card user">
         <div className="image">
           <img
+            alt="profile-pic"
             className="profile-pic"
             src="http://localhost:5000/public/profile-pictures/tracteur.jpg"
           />
