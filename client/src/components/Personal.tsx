@@ -52,7 +52,32 @@ class Personal extends React.Component<Props, PState> {
       firstName: this.props.first_name,
       mail: this.props.mail,
       day: this.props.birthday.split("/")[1],
-      month: this.props.birthday.split("/")[0],
+      month:
+        this.props.birthday.split("/")[0] === "Jan"
+          ? "January"
+          : this.props.birthday.split("/")[0] === "Feb"
+          ? "February"
+          : this.props.birthday.split("/")[0] === "Mar"
+          ? "March"
+          : this.props.birthday.split("/")[0] === "Apr"
+          ? "April"
+          : this.props.birthday.split("/")[0] === "May"
+          ? "May"
+          : this.props.birthday.split("/")[0] === "Jun"
+          ? "June"
+          : this.props.birthday.split("/")[0] === "Jul"
+          ? "July"
+          : this.props.birthday.split("/")[0] === "Aug"
+          ? "August"
+          : this.props.birthday.split("/")[0] === "Sep"
+          ? "September"
+          : this.props.birthday.split("/")[0] === "Oct"
+          ? "October"
+          : this.props.birthday.split("/")[0] === "Nov"
+          ? "November"
+          : this.props.birthday.split("/")[0] === "Dec"
+          ? "December"
+          : this.props.birthday.split("/")[0],
       year: this.props.birthday.split("/")[2]
     };
   }
@@ -121,7 +146,7 @@ class Personal extends React.Component<Props, PState> {
     const months = [
       "January",
       "February",
-      "Mars",
+      "March",
       "April",
       "May",
       "June",
@@ -272,7 +297,7 @@ class Personal extends React.Component<Props, PState> {
                     lastName: this.state.lastName,
                     firstName: this.state.firstName,
                     mail: this.state.mail,
-                    month: this.state.month,
+                    month: this.state.month.substring(0, 3),
                     day: this.state.day,
                     year: this.state.year,
                     userName: localStorage.getItem("user_name"),
@@ -289,7 +314,7 @@ class Personal extends React.Component<Props, PState> {
                       first_name: this.state.firstName,
                       mail: this.state.mail,
                       birthday:
-                        this.state.month +
+                        this.state.month.substring(0, 3) +
                         "/" +
                         this.state.day +
                         "/" +
