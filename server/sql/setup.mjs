@@ -86,6 +86,7 @@ pgtools
               )}', '${faker.random.arrayElement([
                 "Woman",
                 "Man",
+                "Other",
                 "Both"
               ])}', ${escape.literal(
                 faker.random.words(20)
