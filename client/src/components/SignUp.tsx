@@ -134,7 +134,7 @@ class SignUp extends React.Component<{}, State> {
                     selection
                     options={months}
                     onChange={(e, { name, value }) => {
-                      this.setState({ month: String(value) });
+                      this.setState({ month: String(value).substring(0, 3) });
                     }}
                   />
                   <Form.Dropdown
