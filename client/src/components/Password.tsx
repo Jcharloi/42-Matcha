@@ -21,7 +21,7 @@ class Password extends React.Component<{}, State> {
 
   public render() {
     return (
-      <div className="media-container">
+      <div className="media-container-password">
         <div className="title-container">
           <Header as="h1" dividing>
             My password
