@@ -29,24 +29,25 @@ const getUsersByPreference = async (req, res) => {
     validGender(req.params.gender)
   ) {
     let text;
-    if (req.params.gender === "Other") {
-      if (req.params.preference !== "Both") {
-        text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND orientation = '${req.params.gender}'`;
-      } else {
-        text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
-      }
-    } else {
-      if (
-        req.params.preference !== "Both" &&
-        req.params.preference !== "Other"
-      ) {
-        text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND (orientation = '${req.params.gender}' OR orientation = 'Both')`;
-      } else if (req.params.preference === "Other") {
-        text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND orientation = '${req.params.gender}'`;
-      } else {
-        text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = 'Man' AND (orientation = '${req.params.gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${req.params.gender}' OR orientation = 'Both')`;
-      }
-    }
+    // if (req.params.gender === "Other") {
+    //   if (req.params.preference !== "Both") {
+    //     text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND orientation = '${req.params.gender}'`;
+    //   } else {
+    //     text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
+    //   }
+    // } else {
+    //   if (
+    //     req.params.preference !== "Both" &&
+    //     req.params.preference !== "Other"
+    //   ) {
+    //     text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND (orientation = '${req.params.gender}' OR orientation = 'Both')`;
+    //   } else if (req.params.preference === "Other") {
+    //     text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = '${req.params.preference}' AND orientation = '${req.params.gender}'`;
+    //   } else {
+    //     text = `SELECT user_id, user_name, city, birthday, last_connection FROM users WHERE gender = 'Man' AND (orientation = '${req.params.gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${req.params.gender}' OR orientation = 'Both')`;
+    //   }
+    // }
+    text += toto();
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
@@ -79,5 +80,25 @@ const getUsersByPreference = async (req, res) => {
     });
   }
 };
+
+function toto(params) {
+  if (params.gender === "Other") {
+    if (params.preference !== "Both") {
+      text = `WHERE gender = '${params.preference}' AND orientation = '${params.gender}'`;
+    } else {
+      text = `WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
+    }
+  } else {
+    if (params.preference !== "Both" && params.preference !== "Other") {
+      text = `WHERE gender = '${params.preference}' AND (orientation = '${params.gender}' OR orientation = 'Both')`;
+    } else if (params.preference === "Other") {
+      text = `WHERE gender = '${params.preference}' AND orientation = '${params.gender}'`;
+    } else {
+      text = `WHERE gender = 'Man' AND (orientation = '${params.gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${req.params.gender}' OR orientation = 'Both')`;
+    }
+  }
+
+  return text;
+}
 
 export default { getUsersByPreference };
