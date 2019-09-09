@@ -44,7 +44,7 @@ class Preferences extends React.Component<Props, PState> {
   }
   public render() {
     return (
-      <div className="media-container">
+      <div className="media-container-preferences">
         <div className="title-container-preferences">
           <Header as="h1" dividing>
             What I want you to know
