@@ -82,6 +82,7 @@ class Preferences extends React.Component<Props, PState> {
               >
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
+                <option value="Other">Other</option>
                 <option value="Both">Both</option>
               </select>
             </div>
