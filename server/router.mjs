@@ -42,7 +42,7 @@ router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
 router.put("/profile/change-password", profileRoutes.changePassword);
 
 router.get(
-  "/home/get-users-by-preference/:preference/:gender",
+  "/home/get-users-by-preference/:gender/:preference",
   homeRoutes.getUsersByPreference
 );
 
