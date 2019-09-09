@@ -105,7 +105,6 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - max length verification postman
     // - Table like et visits
     // - Faire la requete pour avoir les matchs en fonction de l'orientation
     return (
