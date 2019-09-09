@@ -95,6 +95,7 @@ class Preferences extends React.Component<Props, PState> {
               onChange={({ target: { value } }: any) =>
                 this.setState({ bio: value })
               }
+              maxLength="250"
             />
           </Form>
           <Button
@@ -163,6 +164,12 @@ class Preferences extends React.Component<Props, PState> {
         return {
           valid: false,
           message: "You need to enter all the fields"
+        };
+      }
+      if (bio.length > 250) {
+        return {
+          valid: false,
+          message: "Please enter a biography that doesn't exceed 250 characters"
         };
       }
       return { valid: true };
