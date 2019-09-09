@@ -55,6 +55,7 @@ const changePersonalInfos = async (req, res) => {
 const changePreferenceInfos = async (req, res) => {
   if (
     req.body.bio &&
+    req.body.bio.length < 250 &&
     validGender(req.body.gender) &&
     validOrientation(req.body.orientation)
   ) {
