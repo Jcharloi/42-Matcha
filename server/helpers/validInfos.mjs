@@ -112,6 +112,7 @@ function validOrientation(orientation) {
   if (
     orientation === "Man" ||
     orientation === "Woman" ||
+    orientation === "Other" ||
     orientation === "Both"
   ) {
     return true;
