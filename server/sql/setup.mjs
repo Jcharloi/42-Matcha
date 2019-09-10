@@ -1,13 +1,27 @@
 import pgtools from "pgtools";
+import opencage from "opencage-api-client";
 import pg from "pg";
 import fs from "fs";
-import keys from "./dbKeys.json";
+import dbKeys from "./dbKeys.json";
+import keys from "../keys.json";
 import faker from "faker";
 import escape from "pg-escape";
-import cities from "all-the-cities";
+import Axios from "axios";
+
+const { odg_api_key } = keys;
+const { user, password } = dbKeys;
+
+const pool = new pg.Pool({
+  user: user,
+  host: "localhost",
+  database: "matcha",
+  password: password,
+  port: "5432"
+});
 
 const sql = fs.readFileSync("./sql/setup.sql").toString();
 const pictures = fs.readdirSync("./public/fake-pictures/");
+
 const tags = [
   "Make-up",
   "Pet",
@@ -34,16 +48,12 @@ const tags = [
   "Yoga",
   "Jewellery"
 ];
-const { user, password } = keys;
+
 faker.locale = "fr";
 
-const pool = new pg.Pool({
-  user: user,
-  host: "localhost",
-  database: "matcha",
-  password: password,
-  port: "5432"
-});
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 pgtools
   .dropdb({ user, host: "localhost", password, port: 5432 }, "matcha")
@@ -57,7 +67,22 @@ pgtools
           .query(sql)
           .then(async () => {
             console.log("Populating with new fakes profiles");
-            for (let i = 0; i < 1000; i++) {
+            const cities = await Axios(
+              "https://randomuser.me/api/?results=500&nat=fr&inc=location"
+            )
+              .then(({ data: { results } }) => {
+                let cities = [];
+                for (let i = 0; i < results.length; i++) {
+                  cities.push({
+                    city: capitalizeFirstLetter(results[i].location.city)
+                  });
+                }
+                return cities;
+              })
+              .catch(e => {
+                console.error(e.stack);
+              });
+            for (let i = 0; i < 10; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
@@ -77,6 +102,22 @@ pgtools
                 .between("2019-06-01", "2019-09-05")
                 .toString()
                 .split(" ");
+              let lat;
+              let lon;
+              await opencage
+                .geocode({
+                  q: `${cities[indexCity].city}`,
+                  key: odg_api_key
+                })
+                .then(data => {
+                  if (data.status.code == 200 && data.results.length > 0) {
+                    lat = data.results[0].geometry.lat;
+                    lon = data.results[0].geometry.lng;
+                  }
+                })
+                .catch(e => {
+                  console.error(e.stack);
+                });
               const query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
                 "/" +
                 birthdayDate[2] +
@@ -91,8 +132,8 @@ pgtools
               ])}', ${escape.literal(
                 faker.random.words(20)
               )}, ${faker.random.number(100)}, ${escape.literal(
-                cities[indexCity].name
-              )}, '${new Date(
+                cities[indexCity].city
+              )}, '${lat}', '${lon}', '${new Date(
                 connectionDate[3] +
                   "/" +
                   connectionDate[1] +
