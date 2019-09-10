@@ -48,19 +48,21 @@ const getUserCoordinatesByCity = async city => {
 };
 
 const matchByCity = async (res, city, userMatchInfo) => {
-  console.log(userMatchInfo[0].city);
-  const myCoordinates = await getUserCoordinatesByCity(city);
-  //---------------------------------------------------------------------
-  const potentialMatchCoordinates = await getUserCoordinatesByCity(
-    userMatchInfo[0].city
-  );
-  console.log(myCoordinates, potentialMatchCoordinates);
-  console.log(
-    geodist(myCoordinates, potentialMatchCoordinates, {
+  //get user id and latitude, longitude
+  const myCoordinates = await getUserCoordinatesByCity(city); //
+  userMatchInfo.map(async user => {
+    const potentialMatchCoordinates = {
+      lat: user.latitude,
+      lon: user.longitude
+    };
+    return (user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
       unit: "km"
-    })
-  );
-  // res.send({ validated: true, userMatchInfo });
+    }));
+  });
+  userMatchInfo.sort(function(a, b) {
+    return a.distance - b.distance;
+  });
+  res.send({ validated: true, userMatchInfo });
 };
 
 const getUsersByPreference = async (req, res) => {
@@ -69,7 +71,7 @@ const getUsersByPreference = async (req, res) => {
     validGender(req.params.gender)
   ) {
     let text =
-      `SELECT user_id, user_name, city, birthday, last_connection FROM users ` +
+      `SELECT user_id, user_name, city, latitude, longitude, birthday, last_connection FROM users ` +
       getMatchByOrientation(req.params);
     await client
       .query(text)
@@ -82,6 +84,8 @@ const getUsersByPreference = async (req, res) => {
             id: rows[i].user_id,
             name: rows[i].user_name,
             city: rows[i].city,
+            latitude: rows[i].latitude,
+            longitude: rows[i].longitude,
             age: 2019 - rows[i].birthday.split("/")[2],
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),

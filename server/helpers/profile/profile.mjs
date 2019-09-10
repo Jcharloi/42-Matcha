@@ -19,8 +19,28 @@ const changePersonalInfos = async (req, res) => {
     validMail(req.body.mail) &&
     validBirthday(req.body.day, req.body.month, req.body.year)
   ) {
+    let lat;
+    let lon;
+    await opencage
+      .geocode({
+        q: `${req.body.city}`,
+        key: odg_api_key
+      })
+      .then(async data => {
+        if (data.status.code == 200 && data.results.length > 0) {
+          lat = data.results[0].geometry.lat;
+          lon = data.results[0].geometry.lng;
+        }
+      })
+      .catch(error => {
+        console.error(error.message);
+        res.send({
+          validated: false,
+          message: "We got an error with opencage geocode"
+        });
+      });
     const birthday = req.body.month + "/" + req.body.day + "/" + req.body.year;
-    let text = `UPDATE users SET first_name=$1, last_name=$2, mail=$3, city=$4, birthday=$5 WHERE user_name = $6`;
+    let text = `UPDATE users SET first_name=$1, last_name=$2, mail=$3, city=$4, latitude='${lat}', longitude='${lon}', birthday=$5 WHERE user_name = $6`;
     let values = [
       req.body.firstName,
       req.body.lastName,
