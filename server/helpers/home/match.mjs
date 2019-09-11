@@ -1,14 +1,11 @@
 import client from "../../sql/sql.mjs";
-import opencage from "opencage-api-client";
 import geodist from "geodist";
 
 import { getUserPictures } from "../profile/getUserInfos.mjs";
 import { validOrientation } from "../validInfos.mjs";
 import { validGender } from "../validInfos.mjs";
 import { getUserTags } from "../profile/getUserInfos.mjs";
-
-import keys from "../../keys.json";
-const { odg_api_key } = keys;
+import { getUserId } from "../../common.mjs";
 //Orientation = Man, Woman, Other, Both
 
 /*
@@ -28,28 +25,23 @@ const { odg_api_key } = keys;
 //Other -> Both | WHERE gender = (man AND orientation = other) || (woman AND orientation = other)
 */
 
-const getUserCoordinatesByCity = async city => {
-  return await opencage
-    .geocode({
-      q: `${city}`,
-      key: odg_api_key
-    })
-    .then(data => {
-      let coordinates = {};
-      if (data.status.code == 200 && data.results.length > 0) {
-        coordinates.lat = data.results[0].geometry.lat;
-        coordinates.lon = data.results[0].geometry.lng;
-      }
-      return coordinates;
+const getUserLatitudeAndLongitude = async userName => {
+  const userId = await getUserId(userName);
+  let text = `SELECT latitude, longitude FROM users WHERE user_id = '${userId}'`;
+  return await client
+    .query(text)
+    .then(({ rows }) => {
+      let myCoordinates = {};
+      myCoordinates.lat = rows[0].latitude;
+      myCoordinates.lon = rows[0].longitude;
+      return myCoordinates;
     })
     .catch(e => {
       console.error(e.stack);
     });
 };
 
-const matchByCity = async (res, city, userMatchInfo) => {
-  //get user id and latitude, longitude
-  const myCoordinates = await getUserCoordinatesByCity(city); //
+const matchByCity = async (res, myCoordinates, userMatchInfo) => {
   userMatchInfo.map(async user => {
     const potentialMatchCoordinates = {
       lat: user.latitude,
@@ -66,13 +58,10 @@ const matchByCity = async (res, city, userMatchInfo) => {
 };
 
 const getUsersByPreference = async (req, res) => {
-  if (
-    validOrientation(req.params.preference) &&
-    validGender(req.params.gender)
-  ) {
+  if (validOrientation(req.body.preference) && validGender(req.body.gender)) {
     let text =
       `SELECT user_id, user_name, city, latitude, longitude, birthday, last_connection FROM users ` +
-      getMatchByOrientation(req.params);
+      getMatchByOrientation(req.body);
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
@@ -80,7 +69,6 @@ const getUsersByPreference = async (req, res) => {
         //retirer son propre resultat
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
-            score: 0,
             id: rows[i].user_id,
             name: rows[i].user_name,
             city: rows[i].city,
@@ -92,7 +80,10 @@ const getUsersByPreference = async (req, res) => {
             tags: await getUserTags(rows[i].user_id)
           });
         }
-        matchByCity(res, req.params.city, userMatchInfo);
+        let myCoordinates = await getUserLatitudeAndLongitude(
+          req.body.userName
+        );
+        matchByCity(res, myCoordinates, userMatchInfo);
       })
       .catch(e => {
         console.error(e);
@@ -109,22 +100,22 @@ const getUsersByPreference = async (req, res) => {
   }
 };
 
-function getMatchByOrientation(params) {
+function getMatchByOrientation({ gender, preference }) {
   let text;
 
-  if (params.gender === "Other") {
-    if (params.preference !== "Both") {
-      text = `WHERE gender = '${params.preference}' AND orientation = '${params.gender}'`;
+  if (gender === "Other") {
+    if (preference !== "Both") {
+      text = `WHERE gender = '${preference}' AND orientation = '${gender}'`;
     } else {
       text = `WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
     }
   } else {
-    if (params.preference !== "Both" && params.preference !== "Other") {
-      text = `WHERE gender = '${params.preference}' AND (orientation = '${params.gender}' OR orientation = 'Both')`;
-    } else if (params.preference === "Other") {
-      text = `WHERE gender = '${params.preference}' AND orientation = '${params.gender}'`;
+    if (preference !== "Both" && preference !== "Other") {
+      text = `WHERE gender = '${preference}' AND (orientation = '${gender}' OR orientation = 'Both')`;
+    } else if (preference === "Other") {
+      text = `WHERE gender = '${preference}' AND orientation = '${gender}'`;
     } else {
-      text = `WHERE gender = 'Man' AND (orientation = '${params.gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${params.gender}' OR orientation = 'Both')`;
+      text = `WHERE gender = 'Man' AND (orientation = '${gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${gender}' OR orientation = 'Both')`;
     }
   }
   return text;
