@@ -118,7 +118,7 @@ pgtools
                 .catch(e => {
                   console.error(e.stack);
                 });
-              const query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
+              const query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
                 "/" +
                 birthdayDate[2] +
                 "/" +
