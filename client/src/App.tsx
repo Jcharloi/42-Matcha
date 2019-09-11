@@ -105,8 +105,7 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - Stocker latitude/longitude dans la bdd a l'edition du profil
-    // - Faire la requete pour avoir les matchs en fonction de l'orientation
+    // - Continuer la requete vis a vis des tags
     return (
       <div>
         <Router history={history}>
