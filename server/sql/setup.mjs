@@ -3,10 +3,10 @@ import opencage from "opencage-api-client";
 import pg from "pg";
 import fs from "fs";
 import dbKeys from "./dbKeys.json";
-import keys from "../keys.json";
 import faker from "faker";
 import escape from "pg-escape";
 import Axios from "axios";
+import keys from "../keys.json";
 
 const { odg_api_key } = keys;
 const { user, password } = dbKeys;
@@ -53,6 +53,25 @@ faker.locale = "fr";
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+async function getUserCoordinatesByCity(city) {
+  return await opencage
+    .geocode({
+      q: `${city}`,
+      key: odg_api_key
+    })
+    .then(data => {
+      let coordinates = {};
+      if (data.status.code == 200 && data.results.length > 0) {
+        coordinates.lat = data.results[0].geometry.lat;
+        coordinates.lon = data.results[0].geometry.lng;
+      }
+      return coordinates;
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
 }
 
 pgtools
