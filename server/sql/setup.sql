@@ -13,6 +13,8 @@ CREATE TABLE users
     presentation text,
     score varchar(250),
     city varchar(250),
+    latitude varchar(250),
+    longitude varchar(250),
     last_connection varchar(250),
     validated_account boolean NOT NULL,
     unique_link_id varchar(250)

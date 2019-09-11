@@ -1,11 +1,12 @@
-import opencage from "opencage-api-client";
 import client from "../../sql/sql.mjs";
+import keys from "../../keys.json";
 
 import { getUserId } from "../../common.mjs";
 import { compareTag } from "../validInfos.mjs";
 
-import keys from "../../keys.json";
-const { odg_api_key, ip_city } = keys;
+import { getUserCoordinatesByCity } from "../../common.mjs";
+import { getUserCityByCoordinates } from "../../common.mjs";
+const { ip_city } = keys;
 
 const getUserAll = async (params, res) => {
   let text = `SELECT user_id FROM users WHERE user_name = $1`;
@@ -107,28 +108,17 @@ const getUserCity = async (req, res) => {
   if (!req.body.longitude && !req.body.latitude && !req.body.ip) {
     res.send({ validated: false, message: "Not enough informations" });
   } else {
+    let coordinates = {};
     let userInfos = {};
     let next = false;
     if (req.body.latitude != 0 && req.body.longitude != 0) {
-      await opencage
-        .geocode({
-          q: `${req.body.latitude}, ${req.body.longitude}`,
-          key: odg_api_key,
-          language: "fr"
-        })
-        .then(async data => {
-          if (data.status.code == 200 && data.results.length > 0) {
-            userInfos.city = data.results[0].components.city;
-            next = true;
-          }
-        })
-        .catch(error => {
-          console.error(error.message);
-          res.send({
-            validated: false,
-            message: "We got an error with opencage geocode"
-          });
-        });
+      coordinates.lat = req.body.latitude;
+      coordinates.lon = req.body.longitude;
+      userInfos.city = await getUserCityByCoordinates(
+        coordinates.lat,
+        coordinates.lon
+      );
+      next = true;
     } else if (req.body.ip) {
       await fetch(`http://ip.city/api.php?ip=${req.body.ip}&key=${ip_city}`)
         .then(response => response.json())
@@ -143,13 +133,14 @@ const getUserCity = async (req, res) => {
             message: "We got an error with ip city"
           });
         });
+      coordinates = await getUserCoordinatesByCity(userInfos.city);
     }
 
+    const userId = await getUserId(req.body.userName);
     if (next) {
-      let text = `UPDATE users SET city = '${userInfos.city}' WHERE user_name = $1`;
-      let values = [req.body.userName];
+      let text = `UPDATE users SET city = '${userInfos.city}', latitude = '${coordinates.lat}', longitude = '${coordinates.lon}' WHERE user_id = '${userId}'`;
       await client
-        .query(text, values)
+        .query(text)
         .then(() => {
           res.send({ validated: true, userInfos });
         })
