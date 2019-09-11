@@ -6,17 +6,17 @@ import { validOrientation } from "../validInfos.mjs";
 import { validGender } from "../validInfos.mjs";
 import { getUserTags } from "../profile/getUserInfos.mjs";
 import { getUserId } from "../../common.mjs";
-//Orientation = Man, Woman, Other, Both
 
+//Orientation = Man, Woman, Other, Both
 /*
 //Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
 //Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
-//Woman -> Other | WHERE gender = other AND (orientation = woman)
+//Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both))
 //Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
 
 //Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
 //Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
-//Man -> Other | WHERE gender = other AND (orientation = man)
+//Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both))
 //Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
 
 //Other -> Woman | WHERE gender = woman AND orientation = other
@@ -24,9 +24,29 @@ import { getUserId } from "../../common.mjs";
 //Other -> Other | WHERE gender = other AND orientation = other
 //Other -> Both | WHERE gender = (man AND orientation = other) || (woman AND orientation = other)
 */
+function compareTag(myTags, tagUser) {
+  return (
+    myTags.findIndex(myTag => {
+      return myTag.name === tagUser;
+    }) != -1
+  );
+}
 
-const getUserLatitudeAndLongitude = async userName => {
-  const userId = await getUserId(userName);
+const matchByTags = async (myTags, userMatchInfo) => {
+  userMatchInfo.map(user => {
+    user.tags.map(userTag => {
+      if (compareTag(myTags, userTag.name)) {
+        user.scoreTags = user.scoreTags + 1;
+      }
+    });
+    user.scoreTags = Math.floor(
+      (100 * user.scoreTags) / ((myTags.length + user.tags.length) / 2)
+    );
+  });
+  return userMatchInfo;
+};
+
+const getUserLatitudeAndLongitude = async userId => {
   let text = `SELECT latitude, longitude FROM users WHERE user_id = '${userId}'`;
   return await client
     .query(text)
@@ -41,26 +61,34 @@ const getUserLatitudeAndLongitude = async userName => {
     });
 };
 
-const matchByCity = async (res, myCoordinates, userMatchInfo) => {
-  userMatchInfo.map(async user => {
+const matchByCity = async (myCoordinates, userMatchInfo) => {
+  userMatchInfo.map(user => {
     const potentialMatchCoordinates = {
       lat: user.latitude,
       lon: user.longitude
     };
-    return (user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
+    user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
       unit: "km"
-    }));
+    });
+    if (user.distance < 100) {
+      user.scoreDistance = 10;
+    } else if (user.distance < 200) {
+      user.scoreDistance = 5;
+    } else {
+      user.scoreDistance = 0;
+    }
+    return user;
   });
   userMatchInfo.sort(function(a, b) {
     return a.distance - b.distance;
   });
-  res.send({ validated: true, userMatchInfo });
+  return userMatchInfo;
 };
 
 const getUsersByPreference = async (req, res) => {
   if (validOrientation(req.body.preference) && validGender(req.body.gender)) {
     let text =
-      `SELECT user_id, user_name, city, latitude, longitude, birthday, last_connection FROM users ` +
+      `SELECT user_id, user_name, score, city, latitude, longitude, birthday, last_connection FROM users ` +
       getMatchByOrientation(req.body);
     await client
       .query(text)
@@ -69,6 +97,8 @@ const getUsersByPreference = async (req, res) => {
         //retirer son propre resultat
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
+            scoreDistance: 0,
+            scoreTags: 0,
             id: rows[i].user_id,
             name: rows[i].user_name,
             city: rows[i].city,
@@ -77,15 +107,16 @@ const getUsersByPreference = async (req, res) => {
             age: 2019 - rows[i].birthday.split("/")[2],
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
-            tags: await getUserTags(rows[i].user_id)
+            tags: await getUserTags(rows[i].user_id),
+            popularityScore: rows[i].score
           });
         }
-        res.send({ validated: false, userMatchInfo });
-        // matchByCity(res, req.params.city, userMatchInfo);
-        // let myCoordinates = await getUserLatitudeAndLongitude(
-        //   req.body.userName
-        // );
-        // matchByCity(res, myCoordinates, userMatchInfo);
+        const userId = await getUserId(req.body.userName);
+        const myCoordinates = await getUserLatitudeAndLongitude(userId);
+        const myTags = await getUserTags(userId);
+        userMatchInfo = await matchByCity(myCoordinates, userMatchInfo);
+        userMatchInfo = await matchByTags(myTags, userMatchInfo);
+        res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
         console.error(e);
@@ -112,10 +143,8 @@ function getMatchByOrientation({ gender, preference }) {
       text = `WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
     }
   } else {
-    if (preference !== "Both" && preference !== "Other") {
+    if (preference !== "Both") {
       text = `WHERE gender = '${preference}' AND (orientation = '${gender}' OR orientation = 'Both')`;
-    } else if (preference === "Other") {
-      text = `WHERE gender = '${preference}' AND orientation = '${gender}'`;
     } else {
       text = `WHERE gender = 'Man' AND (orientation = '${gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${gender}' OR orientation = 'Both')`;
     }
