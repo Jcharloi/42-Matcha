@@ -1,8 +1,46 @@
 import client from "./sql/sql.mjs";
-
+import opencage from "opencage-api-client";
 import nodemailer from "nodemailer";
 import keys from "./keys.json";
-const { mail_password } = keys;
+
+const { mail_password, odg_api_key } = keys;
+
+async function getUserCoordinatesByCity(city) {
+  return await opencage
+    .geocode({
+      q: `${city}`,
+      key: odg_api_key
+    })
+    .then(data => {
+      let coordinates = {};
+      if (data.status.code == 200 && data.results.length > 0) {
+        coordinates.lat = data.results[0].geometry.lat;
+        coordinates.lon = data.results[0].geometry.lng;
+      }
+      return coordinates;
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
+}
+
+async function getUserCityByCoordinates(lat, lon) {
+  return await opencage
+    .geocode({
+      q: `${lat}, ${lon}`,
+      key: odg_api_key
+    })
+    .then(data => {
+      let city;
+      if (data.status.code == 200 && data.results.length > 0) {
+        city = data.results[0].components.city;
+      }
+      return city;
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
+}
 
 async function sendMail(userInfo, subject, text) {
   let transporter = nodemailer.createTransport({
@@ -58,4 +96,10 @@ function createRandomId(length) {
   return result;
 }
 
-export { sendMail, getUserId, createRandomId };
+export {
+  getUserCoordinatesByCity,
+  getUserCityByCoordinates,
+  sendMail,
+  getUserId,
+  createRandomId
+};
