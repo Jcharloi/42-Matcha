@@ -6,17 +6,17 @@ import { validOrientation } from "../validInfos.mjs";
 import { validGender } from "../validInfos.mjs";
 import { getUserTags } from "../profile/getUserInfos.mjs";
 import { getUserId } from "../../common.mjs";
-//Orientation = Man, Woman, Other, Both
 
+//Orientation = Man, Woman, Other, Both
 /*
 //Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
 //Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
-//Woman -> Other | WHERE gender = other AND (orientation = woman)
+//Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both))
 //Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
 
 //Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
 //Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
-//Man -> Other | WHERE gender = other AND (orientation = man)
+//Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both))
 //Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
 
 //Other -> Woman | WHERE gender = woman AND orientation = other
@@ -110,10 +110,8 @@ function getMatchByOrientation({ gender, preference }) {
       text = `WHERE gender = 'Man' AND orientation = 'Other' OR gender = 'Woman' AND orientation = 'Other'`;
     }
   } else {
-    if (preference !== "Both" && preference !== "Other") {
+    if (preference !== "Both") {
       text = `WHERE gender = '${preference}' AND (orientation = '${gender}' OR orientation = 'Both')`;
-    } else if (preference === "Other") {
-      text = `WHERE gender = '${preference}' AND orientation = '${gender}'`;
     } else {
       text = `WHERE gender = 'Man' AND (orientation = '${gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${gender}' OR orientation = 'Both')`;
     }
