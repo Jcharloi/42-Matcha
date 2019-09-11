@@ -102,22 +102,9 @@ pgtools
                 .between("2019-06-01", "2019-09-05")
                 .toString()
                 .split(" ");
-              let lat;
-              let lon;
-              await opencage
-                .geocode({
-                  q: `${cities[indexCity].city}`,
-                  key: odg_api_key
-                })
-                .then(data => {
-                  if (data.status.code == 200 && data.results.length > 0) {
-                    lat = data.results[0].geometry.lat;
-                    lon = data.results[0].geometry.lng;
-                  }
-                })
-                .catch(e => {
-                  console.error(e.stack);
-                });
+              const { lat, lon } = await getUserCoordinatesByCity(
+                cities[indexCity].city
+              );
               const query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
                 "/" +
                 birthdayDate[2] +
