@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import client from "../../sql/sql.mjs";
 
 import {
   validCurrentPassword,
@@ -8,8 +9,8 @@ import {
   validGender,
   validOrientation
 } from "../validInfos.mjs";
-
-import client from "../../sql/sql.mjs";
+import { getUserCoordinatesByCity } from "../../common.mjs";
+import { getUserId } from "../../common.mjs";
 
 const changePersonalInfos = async (req, res) => {
   if (
@@ -19,51 +20,40 @@ const changePersonalInfos = async (req, res) => {
     validMail(req.body.mail) &&
     validBirthday(req.body.day, req.body.month, req.body.year)
   ) {
-    let lat;
-    let lon;
-    await opencage
-      .geocode({
-        q: `${req.body.city}`,
-        key: odg_api_key
-      })
-      .then(async data => {
-        if (data.status.code == 200 && data.results.length > 0) {
-          lat = data.results[0].geometry.lat;
-          lon = data.results[0].geometry.lng;
-        }
-      })
-      .catch(error => {
-        console.error(error.message);
-        res.send({
-          validated: false,
-          message: "We got an error with opencage geocode"
-        });
+    let { lat, lon } = await getUserCoordinatesByCity(req.body.city);
+    if (!lat || !lon) {
+      res.send({
+        validated: false,
+        message: "This city does not exists"
       });
-    const birthday = req.body.month + "/" + req.body.day + "/" + req.body.year;
-    let text = `UPDATE users SET first_name=$1, last_name=$2, mail=$3, city=$4, latitude='${lat}', longitude='${lon}', birthday=$5 WHERE user_name = $6`;
-    let values = [
-      req.body.firstName,
-      req.body.lastName,
-      req.body.mail,
-      req.body.city,
-      birthday,
-      req.body.userName
-    ];
-    await client
-      .query(text, values)
-      .then(() => {
-        res.send({
-          validated: true,
-          message: "Personal informations updated successfully !"
+    } else {
+      const userId = await getUserId(req.body.userName);
+      const birthday =
+        req.body.month + "/" + req.body.day + "/" + req.body.year;
+      let text = `UPDATE users SET first_name=$1, last_name=$2, mail=$3, city=$4, latitude='${lat}', longitude='${lon}', birthday=$5 WHERE user_id = '${userId}'`;
+      let values = [
+        req.body.firstName,
+        req.body.lastName,
+        req.body.mail,
+        req.body.city,
+        birthday
+      ];
+      await client
+        .query(text, values)
+        .then(() => {
+          res.send({
+            validated: true,
+            message: "Personal informations updated successfully !"
+          });
+        })
+        .catch(e => {
+          console.error(e.stack);
+          res.send({
+            validated: false,
+            message: "There was a problem with our database"
+          });
         });
-      })
-      .catch(e => {
-        console.error(e.stack);
-        res.send({
-          validated: false,
-          message: "There was a problem with our database"
-        });
-      });
+    }
   } else {
     res.send({
       validated: false,
