@@ -11,12 +11,12 @@ import { getUserId } from "../../common.mjs";
 /*
 //Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
 //Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
-//Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both))
+//Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both)
 //Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
 
 //Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
 //Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
-//Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both))
+//Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both)
 //Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
 
 //Other -> Woman | WHERE gender = woman AND orientation = other

@@ -2,9 +2,9 @@ import bcrypt from "bcrypt";
 import client from "../sql/sql.mjs";
 
 function compareTag(tagsList, potentialUserTag) {
-  Object.entries(tagsList).forEach(([key, { name }]) => {
-    if (name === potentialUserTag) {
-      delete tagsList[key];
+  tagsList.map((tag, index) => {
+    if (tag.name === potentialUserTag) {
+      tagsList.splice(index, 1);
     }
   });
   return tagsList;

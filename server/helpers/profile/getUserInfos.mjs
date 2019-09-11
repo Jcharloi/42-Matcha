@@ -164,11 +164,12 @@ const getTags = async (req, res) => {
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
-        let tagsList = {};
+        let tagsList = [];
         for (let i = 0; i < rowCount; i++) {
-          tagsList[rows[i].tag_id] = {
+          tagsList.push({
+            id: rows[i].tag_id,
             name: rows[i].name
-          };
+          });
         }
         text = `SELECT name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = $1`;
         let values = [userId];

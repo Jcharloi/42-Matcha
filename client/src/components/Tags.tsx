@@ -27,7 +27,7 @@ interface Props {
 }
 
 interface TState {
-  tagsList: { [key: string]: { name: string } };
+  tagsList: [{ id: string; name: string }];
   displayCustom: boolean;
   customTag: string;
   messageTags?: string | null;
@@ -38,7 +38,7 @@ class Tags extends React.Component<Props, TState> {
     super(props);
     this.state = {
       displayCustom: false,
-      tagsList: {},
+      tagsList: [{ id: "", name: "" }],
       customTag: ""
     };
   }
@@ -102,9 +102,13 @@ class Tags extends React.Component<Props, TState> {
                                 );
                                 this.props.tags.splice(tagIndex, 1);
                                 if (!tag.custom) {
-                                  this.state.tagsList[tagId] = {
+                                  this.state.tagsList.push({
+                                    id: tagId,
                                     name: tag.name
-                                  };
+                                  });
+                                  this.setState({
+                                    tagsList: this.state.tagsList
+                                  });
                                 }
                                 const newData = {
                                   ...this.props,
@@ -141,8 +145,8 @@ class Tags extends React.Component<Props, TState> {
             <div className="custom-tag-container">
               <h1 className="title">Wanna add more ?</h1>
               {this.state.tagsList &&
-                Object.entries(this.state.tagsList).map(([key, { name }]) => (
-                  <span key={key} className="tag-value ui tag label">
+                this.state.tagsList.map(({ id, name }, index) => (
+                  <span key={id} className="tag-value ui tag label">
                     <span
                       onClick={async () => {
                         await Axios.put(
@@ -164,13 +168,17 @@ class Tags extends React.Component<Props, TState> {
                                     tags: [
                                       ...this.props.tags,
                                       {
-                                        tag_id: key,
+                                        tag_id: id,
                                         name,
                                         custom: false
                                       }
                                     ]
                                   };
-                                  delete this.state.tagsList[key];
+                                  const tags = this.state.tagsList;
+                                  tags.splice(index, 1);
+                                  this.setState({
+                                    tagsList: tags
+                                  });
                                   store.dispatch(insertUserProfile(newData));
                                   let isCompleted = isProfileCompleted(
                                     this.props.city,
