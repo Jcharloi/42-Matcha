@@ -88,7 +88,8 @@ const getUsersByPreference = async (req, res) => {
             tags: await getUserTags(rows[i].user_id)
           });
         }
-        matchByCity(res, req.params.city, userMatchInfo);
+        res.send({ validated: false, userMatchInfo });
+        // matchByCity(res, req.params.city, userMatchInfo);
       })
       .catch(e => {
         console.error(e);
@@ -121,6 +122,7 @@ function getMatchByOrientation(params) {
       text = `WHERE gender = '${params.preference}' AND orientation = '${params.gender}'`;
     } else {
       text = `WHERE gender = 'Man' AND (orientation = '${params.gender}' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = '${params.gender}' OR orientation = 'Both')`;
+      console.log("else");
     }
   }
   return text;
