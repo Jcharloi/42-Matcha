@@ -16,7 +16,20 @@ interface Props {
         main: boolean;
       }
     ];
+    tags: [
+      {
+        tag_id: string;
+        name: string;
+        custom: boolean;
+      }
+    ];
   };
+}
+
+class MatchedUserTag extends React.Component {
+  public render() {
+    return <button className="mini ui button">Mini</button>;
+  }
 }
 
 class UserCard extends React.Component<Props> {
@@ -32,7 +45,8 @@ class UserCard extends React.Component<Props> {
     // console.log(lastSeenSince);
     var userPic = this.props.userInfo.pictures;
     var userPicMain = userPic[0];
-    console.log(userPicMain.path);
+    // console.log(userPicMain.path);
+    console.log(this.props.userInfo.tags);
     return (
       <div className="ui card user">
         <div className="image">
@@ -48,12 +62,14 @@ class UserCard extends React.Component<Props> {
           <div className="meta">
             <span className="date">{this.props.userInfo.city}</span>
           </div>
-          <div className="description">blblbl</div>
+          <div className="description">
+            <MatchedUserTag />
+          </div>
         </div>
         <div className="extra content">
           <a>
             <i className="birthday cake icon"></i>
-            {this.props.userInfo.age}
+            {this.props.userInfo.age} years old
           </a>
           <span className="right floated">
             Last seen {lastSeenSince} days ago
