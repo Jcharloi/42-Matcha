@@ -13,7 +13,8 @@ import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
 import profileRoutes from "./helpers/profile/profile.mjs";
 import picturesRoutes from "./helpers/profile/pictures.mjs";
 import tagRoutes from "./helpers/profile/tags.mjs";
-import homeRoutes from "./helpers/home/match.mjs";
+import matchRoutes from "./helpers/home/match.mjs";
+import sortRoutes from "./helpers/home/sort.mjs";
 
 router.all("/profile/*", tokenRoutes.tokenMiddleware);
 router.all("/home/*", tokenRoutes.tokenMiddleware);
@@ -42,7 +43,8 @@ router.put("/profile/delete-tags", tagRoutes.deleteTags);
 router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
 router.put("/profile/change-password", profileRoutes.changePassword);
 
-router.post("/home/get-users-by-preference", homeRoutes.getUsersByPreference);
+router.post("/home/get-users-by-preference", matchRoutes.getUsersByPreference);
+router.post("/home/sort-by-index", sortRoutes.sortByIndex);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
