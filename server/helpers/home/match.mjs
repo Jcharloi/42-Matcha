@@ -99,7 +99,6 @@ const getUsersByPreference = async (req, res) => {
       .query(text)
       .then(async ({ rowCount, rows }) => {
         let userMatchInfo = [];
-        //retirer son propre resultat
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
             scoreDistance: 0,
@@ -133,6 +132,12 @@ const getUsersByPreference = async (req, res) => {
             }
           })
           .reverse();
+        userMatchInfo.splice(
+          userMatchInfo.findIndex(user => {
+            return user.id === userId;
+          }),
+          1
+        );
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
