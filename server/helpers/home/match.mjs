@@ -9,21 +9,26 @@ import { getUserId } from "../../common.mjs";
 
 //Orientation = Man, Woman, Other, Both
 /*
-//Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
-//Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
-//Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both)
-//Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
+  Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
+  Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
+  Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both)
+  Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
 
-//Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
-//Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
-//Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both)
-//Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
+  Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
+  Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
+  Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both)
+  Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
 
-//Other -> Woman | WHERE gender = woman AND orientation = other
-//Other -> Man | WHERE gender = man AND orientation = other
-//Other -> Other | WHERE gender = other AND orientation = other
-//Other -> Both | WHERE gender = (man AND orientation = other) || (woman AND orientation = other)
+  Other -> Woman | WHERE gender = woman AND orientation = other
+  Other -> Man | WHERE gender = man AND orientation = other
+  Other -> Other | WHERE gender = other AND orientation = other
+  Other -> Both | WHERE gender = (man AND orientation = other) || (woman AND orientation = other)
+
+  10 pts -> 0-100km
+  5 pts -> 0-200km -> Retrier apres par rapport aux tags -> Les plus hauts % en premier
+  0 pts -> +200km -> Retrier apres par rapport aux tags -> Les plus hauts % en premier
 */
+
 function compareTag(myTags, tagUser) {
   return (
     myTags.findIndex(myTag => {
@@ -32,7 +37,7 @@ function compareTag(myTags, tagUser) {
   );
 }
 
-const matchByTags = async (myTags, userMatchInfo) => {
+const matchByTags = (myTags, userMatchInfo) => {
   userMatchInfo.map(user => {
     user.tags.map(userTag => {
       if (compareTag(myTags, userTag.name)) {
@@ -61,7 +66,7 @@ const getUserLatitudeAndLongitude = async userId => {
     });
 };
 
-const matchByCity = async (myCoordinates, userMatchInfo) => {
+const matchByCity = (myCoordinates, userMatchInfo) => {
   userMatchInfo.map(user => {
     const potentialMatchCoordinates = {
       lat: user.latitude,
@@ -116,6 +121,18 @@ const getUsersByPreference = async (req, res) => {
         const myTags = await getUserTags(userId);
         userMatchInfo = await matchByCity(myCoordinates, userMatchInfo);
         userMatchInfo = await matchByTags(myTags, userMatchInfo);
+        userMatchInfo
+          .sort((userA, userB) => {
+            if (userA.scoreDistance !== userB.scoreDistance) {
+              return userA.scoreDistance - userB.scoreDistance;
+            }
+            if (userA.scoreDistance === 10 && userB.scoreDistance === 10) {
+              return userB.distance - userA.distance;
+            } else {
+              return userA.scoreTags - userB.scoreTags;
+            }
+          })
+          .reverse();
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
