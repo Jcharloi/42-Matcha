@@ -108,6 +108,7 @@ const getUsersByPreference = async (req, res) => {
             city: rows[i].city,
             latitude: rows[i].latitude,
             longitude: rows[i].longitude,
+            //get the right age
             age: 2019 - rows[i].birthday.split("/")[2],
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
@@ -132,12 +133,12 @@ const getUsersByPreference = async (req, res) => {
             }
           })
           .reverse();
-        userMatchInfo.splice(
-          userMatchInfo.findIndex(user => {
-            return user.id === userId;
-          }),
-          1
-        );
+        const indexYourself = userMatchInfo.findIndex(user => {
+          return user.id === userId;
+        });
+        if (indexYourself != -1) {
+          userMatchInfo.splice(indexYourself, 1);
+        }
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
