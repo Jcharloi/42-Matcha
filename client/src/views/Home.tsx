@@ -39,6 +39,13 @@ interface PState {
           main: boolean;
         }
       ];
+      tags: [
+        {
+          tag_id: string;
+          name: string;
+          custom: boolean;
+        }
+      ];
     }
   ];
 }
@@ -59,6 +66,13 @@ class Home extends React.Component<Props, PState> {
               path: "",
               date: "",
               main: false
+            }
+          ],
+          tags: [
+            {
+              tag_id: "",
+              name: "",
+              custom: false
             }
           ]
         }
@@ -85,7 +99,6 @@ class Home extends React.Component<Props, PState> {
 
   public render() {
     console.log(this.state.userMatchInfo);
-    const test = "lel";
     return (
       <div>
         <TopMenu current="home" />
