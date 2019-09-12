@@ -105,7 +105,7 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - Continuer la requete vis a vis des tags
+    // - Triable par age, localisation etc
     return (
       <div>
         <Router history={history}>
