@@ -26,7 +26,7 @@ interface Props {
   };
 }
 
-class MatchedUserTag extends React.Component {
+class TagButton extends React.Component {
   public render() {
     return <button className="mini ui button">Mini</button>;
   }
@@ -34,27 +34,27 @@ class MatchedUserTag extends React.Component {
 
 class UserCard extends React.Component<Props> {
   public render() {
-    var today = new Date();
-    var lastSeen = new Date(this.props.userInfo.connection);
-    var msInDay = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    const lastSeen = new Date(this.props.userInfo.connection);
+    const msInDay = 24 * 60 * 60 * 1000;
 
     lastSeen.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
 
-    var lastSeenSince = (+today - +lastSeen) / msInDay;
+    const lastSeenSince = (+today - +lastSeen) / msInDay;
     // console.log(lastSeenSince);
-    var userPic = this.props.userInfo.pictures;
-    var userPicMain = userPic[0];
-    // console.log(userPicMain.path);
+
     console.log(this.props.userInfo.tags);
+    console.log("hello");
     return (
       <div className="ui card user">
         <div className="image">
           <img
             alt="profile-pic"
             className="profile-pic-card"
-            src={`http://localhost:5000/public/fake-pictures/${userPicMain.path}`}
+            src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
             // src="http://localhost:5000/public/profile-pictures/psim.jpg"
+            // src="http://localhost:5000/public/fake-pictures/001957.png"
           />
         </div>
         <div className="content">
@@ -63,7 +63,7 @@ class UserCard extends React.Component<Props> {
             <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">
-            <MatchedUserTag />
+            <TagButton />
           </div>
         </div>
         <div className="extra content">
