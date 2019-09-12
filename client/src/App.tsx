@@ -105,7 +105,8 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
-    // - Triable par age, localisation etc
+    // - Obtenir le bon age de naissance
+    // - Intervalle
     return (
       <div>
         <Router history={history}>
