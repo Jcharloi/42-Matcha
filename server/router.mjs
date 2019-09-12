@@ -51,5 +51,10 @@ router.get("/public/profile-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
+router.get("/public/fake-pictures/:id", (req, res) => {
+  const pictureName = req.params.id;
+  const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
+  res.sendFile(absolutePath);
+});
 
 export default router;

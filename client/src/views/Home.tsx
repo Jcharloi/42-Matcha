@@ -85,19 +85,13 @@ class Home extends React.Component<Props, PState> {
 
   public render() {
     console.log(this.state.userMatchInfo);
-    // let currentState = store.getState();
-    // console.log(currentState);
-    // console.log(this.props);
     const test = "lel";
     return (
       <div>
         <TopMenu current="home" />
         {this.state.userMatchInfo.map(crayon => (
-          // console.log("test: ", crayon.id),
-          <UserCard userInfo={crayon} />
+          <UserCard key={crayon.id.toString()} userInfo={crayon} />
         ))}
-
-        {/* <p>{this.state.userMatchInfo[0]}</p> */}
       </div>
     );
   }
