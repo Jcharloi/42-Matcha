@@ -39,22 +39,25 @@ class UserCard extends React.Component<Props> {
           <img
             alt="profile-pic"
             className="profile-pic-card"
-            // src={`http://localhost:5000/public/profile-pictures/${userPicMain.path}`}
-            src="http://localhost:5000/public/profile-pictures/psim.jpg"
+            src={`http://localhost:5000/public/fake-pictures/${userPicMain.path}`}
+            // src="http://localhost:5000/public/profile-pictures/psim.jpg"
           />
         </div>
         <div className="content">
           <a className="header">{this.props.userInfo.name}</a>
           <div className="meta">
-            <span className="date">Connected {lastSeenSince} days ago</span>
+            <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">blblbl</div>
         </div>
         <div className="extra content">
           <a>
-            <i className="road icon"></i>
-            {this.props.userInfo.city}
+            <i className="birthday cake icon"></i>
+            {this.props.userInfo.age}
           </a>
+          <span className="right floated">
+            Last seen {lastSeenSince} days ago
+          </span>
         </div>
       </div>
     );
