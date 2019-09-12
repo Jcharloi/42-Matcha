@@ -6,8 +6,6 @@ import "../styles/stylesUserHome.css";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
-import { store } from "../redux/store";
-import { StringLiteralTypeAnnotation } from "@babel/types";
 interface Props {
   user_id: string;
   mail: string;
@@ -25,6 +23,7 @@ interface Props {
 }
 
 interface PState {
+  isLoading: boolean;
   userMatchInfo: [
     {
       id: string;
@@ -54,6 +53,7 @@ class Home extends React.Component<Props, PState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      isLoading: true,
       userMatchInfo: [
         {
           id: "",
@@ -86,11 +86,10 @@ class Home extends React.Component<Props, PState> {
       gender: this.props.gender,
       preference: this.props.orientation
     })
-      // .then(res => res.text())
       .then(({ data: { userMatchInfo } }) => {
-        this.setState({ userMatchInfo: userMatchInfo });
+        this.setState({ userMatchInfo: userMatchInfo, isLoading: false });
       })
-      .then(data => console.log(data))
+      // .then(data => console.log(data))
       .catch(err => console.error(err));
   }
   componentWillMount() {
@@ -98,13 +97,14 @@ class Home extends React.Component<Props, PState> {
   }
 
   public render() {
-    console.log(this.state.userMatchInfo);
+    console.log(this.state.userMatchInfo.length);
     return (
       <div>
         <TopMenu current="home" />
-        {this.state.userMatchInfo.map(crayon => (
-          <UserCard key={crayon.id.toString()} userInfo={crayon} />
-        ))}
+        {!this.state.isLoading &&
+          this.state.userMatchInfo.map(crayon => (
+            <UserCard key={crayon.id.toString()} userInfo={crayon} />
+          ))}
       </div>
     );
   }
