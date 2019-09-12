@@ -39,8 +39,8 @@ class UserCard extends React.Component<Props> {
           <img
             alt="profile-pic"
             className="profile-pic-card"
-            // src={`http://localhost:5000/public/profile-pictures/${userPicMain.path}`}
-            src="http://localhost:5000/public/profile-pictures/psim.jpg"
+            src={`http://localhost:5000/public/fake-pictures/${userPicMain.path}`}
+            // src="http://localhost:5000/public/profile-pictures/psim.jpg"
           />
         </div>
         <div className="content">
