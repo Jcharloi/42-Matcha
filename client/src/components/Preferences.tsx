@@ -153,7 +153,7 @@ class Preferences extends React.Component<Props, PState> {
             Change my preferences
           </Button>
           {this.state.messagePreference && (
-            <div className="toast-message ui violet floating message">
+            <div className="toast-message ui blue floating message">
               <p>{this.state.messagePreference}</p>
             </div>
           )}
