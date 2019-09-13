@@ -19,31 +19,31 @@ class TopMenu extends React.Component<Props> {
             alt="Logo top menu"
           />
           {this.props.current !== "home" ? (
-            <a
-              className="item"
+            <div
+              className="item item-page"
               onClick={() => {
                 history.push("/home");
               }}
             >
               Home
-            </a>
+            </div>
           ) : null}
           {this.props.current !== "profile" ? (
-            <a
-              className="item"
+            <div
+              className="item item-page"
               onClick={() => {
                 history.push("/profile");
               }}
             >
               Profile
-            </a>
+            </div>
           ) : null}
-          <a className="item">Visits</a>
-          <a className="item">Likes</a>
+          <div className="item item-page">Visits</div>
+          <div className="item item-page">Likes</div>
           <div className="right menu">
             <div className="item">
-              <a className="item">Notifications</a>
-              <a className="item">Messages</a>
+              <div className="item item-page">Notifications</div>
+              <div className="item item-page">Messages</div>
               <div
                 className="ui red button"
                 onClick={() => {

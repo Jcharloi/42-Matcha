@@ -9,3 +9,11 @@
 .home:active {
   color: black !important;
 }
+
+.item-page {
+  cursor: pointer;
+}
+
+.item-page:hover {
+  background-color: rgb(238, 236, 236) !important;
+}
