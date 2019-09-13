@@ -1,11 +1,14 @@
 import client from "../../sql/sql.mjs";
 import geodist from "geodist";
 
-import { getUserPictures } from "../profile/getUserInfos.mjs";
-import { validOrientation } from "../validInfos.mjs";
-import { validGender } from "../validInfos.mjs";
-import { getUserTags } from "../profile/getUserInfos.mjs";
+import {
+  getUserLatitudeAndLongitude,
+  getUserPictures,
+  getUserTags
+} from "../profile/getUserInfos.mjs";
+import { validGender, validOrientation } from "../validInfos.mjs";
 import { getUserId } from "../../common.mjs";
+import { sortByDistance } from "./sortBy.mjs";
 
 //Orientation = Man, Woman, Other, Both
 /*
@@ -29,15 +32,15 @@ import { getUserId } from "../../common.mjs";
   0 pts -> +200km -> Retrier apres par rapport aux tags -> Les plus hauts % en premier
 */
 
-function compareTag(myTags, tagUser) {
+const compareTag = (myTags, tagUser) => {
   return (
     myTags.findIndex(myTag => {
       return myTag.name === tagUser;
     }) != -1
   );
-}
+};
 
-const matchByTags = (myTags, userMatchInfo) => {
+const calculateCommonTags = (myTags, userMatchInfo) => {
   userMatchInfo.map(user => {
     user.tags.map(userTag => {
       if (compareTag(myTags, userTag.name)) {
@@ -49,21 +52,6 @@ const matchByTags = (myTags, userMatchInfo) => {
     );
   });
   return userMatchInfo;
-};
-
-const getUserLatitudeAndLongitude = async userId => {
-  let text = `SELECT latitude, longitude FROM users WHERE user_id = '${userId}'`;
-  return await client
-    .query(text)
-    .then(({ rows }) => {
-      let myCoordinates = {};
-      myCoordinates.lat = rows[0].latitude;
-      myCoordinates.lon = rows[0].longitude;
-      return myCoordinates;
-    })
-    .catch(e => {
-      console.error(e.stack);
-    });
 };
 
 const matchByCity = (myCoordinates, userMatchInfo) => {
@@ -84,9 +72,29 @@ const matchByCity = (myCoordinates, userMatchInfo) => {
     }
     return user;
   });
-  userMatchInfo.sort(function(a, b) {
-    return a.distance - b.distance;
+  userMatchInfo = sortByDistance(userMatchInfo);
+  return userMatchInfo;
+};
+
+const finalSortByMe = userMatchInfo => {
+  userMatchInfo
+    .sort((userA, userB) => {
+      if (userA.scoreDistance !== userB.scoreDistance) {
+        return userA.scoreDistance - userB.scoreDistance;
+      }
+      if (userA.scoreDistance === 10 && userB.scoreDistance === 10) {
+        return userB.distance - userA.distance;
+      } else {
+        return userA.scoreTags - userB.scoreTags;
+      }
+    })
+    .reverse();
+  const indexYourself = userMatchInfo.findIndex(user => {
+    return user.id === userId;
   });
+  if (indexYourself != -1) {
+    userMatchInfo.splice(indexYourself, 1);
+  }
   return userMatchInfo;
 };
 
@@ -121,25 +129,8 @@ const getUsersByPreference = async (req, res) => {
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
         userMatchInfo = await matchByCity(myCoordinates, userMatchInfo);
-        userMatchInfo = await matchByTags(myTags, userMatchInfo);
-        userMatchInfo
-          .sort((userA, userB) => {
-            if (userA.scoreDistance !== userB.scoreDistance) {
-              return userA.scoreDistance - userB.scoreDistance;
-            }
-            if (userA.scoreDistance === 10 && userB.scoreDistance === 10) {
-              return userB.distance - userA.distance;
-            } else {
-              return userA.scoreTags - userB.scoreTags;
-            }
-          })
-          .reverse();
-        const indexYourself = userMatchInfo.findIndex(user => {
-          return user.id === userId;
-        });
-        if (indexYourself != -1) {
-          userMatchInfo.splice(indexYourself, 1);
-        }
+        userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
+        userMatchInfo = await finalSortByMe(userMatchInfo);
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
@@ -157,7 +148,7 @@ const getUsersByPreference = async (req, res) => {
   }
 };
 
-function getMatchByOrientation({ gender, preference }) {
+const getMatchByOrientation = ({ gender, preference }) => {
   let text;
 
   if (gender === "Other") {
@@ -174,6 +165,6 @@ function getMatchByOrientation({ gender, preference }) {
     }
   }
   return text;
-}
+};
 
-export default { getUsersByPreference };
+export { getUsersByPreference };

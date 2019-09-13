@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import client from "../sql/sql.mjs";
 
-function compareTag(tagsList, potentialUserTag) {
+const compareTag = (tagsList, potentialUserTag) => {
   tagsList.map((tag, index) => {
     if (tag.name === potentialUserTag) {
       tagsList.splice(index, 1);
@@ -10,7 +10,7 @@ function compareTag(tagsList, potentialUserTag) {
   return tagsList;
 }
 
-function validFile(name, size, type) {
+const validFile = (name, size, type) => {
   if (!name) {
     return false;
   }
@@ -26,7 +26,7 @@ function validFile(name, size, type) {
   return true;
 }
 
-function validMail(mail) {
+const validMail = (mail) => {
   let regex = new RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -36,7 +36,7 @@ function validMail(mail) {
   return true;
 }
 
-async function validCurrentPassword(userName, currentPassword) {
+const validCurrentPassword = async (userName, currentPassword) => {
   let answer;
   const text = `SELECT password_hash FROM users WHERE user_name = $1`;
   const values = [userName];
@@ -62,9 +62,9 @@ async function validCurrentPassword(userName, currentPassword) {
       anwer = false;
     });
   return answer;
-}
+};
 
-function validPassword(password) {
+const validPassword = (password) => {
   let regex = new RegExp(
     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
   );
@@ -74,7 +74,7 @@ function validPassword(password) {
   return true;
 }
 
-function validBirthday(day, monthBody, year) {
+const validBirthday = (day, monthBody, year) => {
   const months = [
     "Jan",
     "Feb",
@@ -101,14 +101,14 @@ function validBirthday(day, monthBody, year) {
   return true;
 }
 
-function validGender(gender) {
+const validGender = (gender) => {
   if (gender === "Man" || gender === "Woman" || gender === "Other") {
     return true;
   }
   return false;
 }
 
-function validOrientation(orientation) {
+const validOrientation = (orientation) => {
   if (
     orientation === "Man" ||
     orientation === "Woman" ||

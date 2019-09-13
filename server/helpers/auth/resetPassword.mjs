@@ -128,4 +128,4 @@ const newPassword = async (req, res) => {
   }
 };
 
-export default { resetPassword, resetPasswordId, newPassword };
+export { resetPassword, resetPasswordId, newPassword };

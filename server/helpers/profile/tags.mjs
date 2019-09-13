@@ -14,16 +14,12 @@ const selectTags = async (req, res) => {
       .query(text, values)
       .then(async ({ rows, rowCount }) => {
         if (rowCount > 0) {
-          text = `SELECT * FROM user_tag WHERE tag_id = '${
-            rows[0].tag_id
-          }' AND user_id = '${userId}'`;
+          text = `SELECT * FROM user_tag WHERE tag_id = '${rows[0].tag_id}' AND user_id = '${userId}'`;
           await client
             .query(text)
             .then(async ({ rowCount }) => {
               if (rowCount === 0) {
-                text = `INSERT INTO user_tag (tag_id, user_id) VALUES ('${
-                  rows[0].tag_id
-                }', '${userId}')`;
+                text = `INSERT INTO user_tag (tag_id, user_id) VALUES ('${rows[0].tag_id}', '${userId}')`;
                 await client
                   .query(text)
                   .then(() => {
@@ -179,8 +175,4 @@ const addCustomTags = async (req, res) => {
   }
 };
 
-export default {
-  selectTags,
-  deleteTags,
-  addCustomTags
-};
+export { selectTags, deleteTags, addCustomTags };
