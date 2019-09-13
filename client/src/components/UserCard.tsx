@@ -1,8 +1,5 @@
 import * as React from "react";
 import "../styles/stylesUserHome.css";
-import Pictures from "./Pictures";
-import ProgressBar from "./ProgressBar";
-import { Redirect } from "react-router";
 
 //button
 interface Props {
@@ -95,7 +92,7 @@ class UserCard extends React.Component<Props> {
           </div>
           <div className="description">
             {this.props.userInfo.tags.map(tag => (
-              <button className="mini ui tag label">{tag.name}</button>
+              <button className="tag-home ui tag label">{tag.name}</button>
             ))}
           </div>
         </div>
