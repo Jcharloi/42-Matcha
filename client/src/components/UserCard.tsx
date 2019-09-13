@@ -3,8 +3,9 @@ import "../styles/stylesUserHome.css";
 import Pictures from "./Pictures";
 import ProgressBar from "./ProgressBar";
 import { Redirect } from "react-router";
-
+//tag font size
 //button
+//max tag nb
 interface Props {
   userInfo: {
     id: string;
@@ -61,7 +62,6 @@ class UserCard extends React.Component<Props> {
     } else if (this.props.userInfo.gender == "Man") {
       genderIcon = "mars icon";
     }
-    console.log(this.hsl_col_perc(this.props.userInfo.popularityScore));
 
     return (
       <div className="ui card user">
@@ -95,7 +95,9 @@ class UserCard extends React.Component<Props> {
           </div>
           <div className="description">
             {this.props.userInfo.tags.map(tag => (
-              <button className="mini ui tag label">{tag.name}</button>
+              <button key={tag.tag_id.toString()} className="mini ui tag label">
+                {tag.name}
+              </button>
             ))}
           </div>
         </div>
