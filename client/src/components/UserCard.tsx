@@ -1,9 +1,9 @@
 import * as React from "react";
 import "../styles/stylesUserHome.css";
 import Pictures from "./Pictures";
+import ProgressBar from "./ProgressBar";
+import { Redirect } from "react-router";
 
-//todo popularity score
-//gender icon/
 //button
 interface Props {
   userInfo: {
@@ -13,6 +13,7 @@ interface Props {
     age: string;
     connection: string;
     gender: string;
+    popularityScore: string;
     pictures: [
       {
         path: string;
@@ -35,6 +36,15 @@ interface Props {
 // }
 
 class UserCard extends React.Component<Props> {
+  hsl_col_perc(percent: string) {
+    const nb = +percent;
+    var a = nb / 100,
+      b = (120 - 0) * a,
+      c = b + 0;
+
+    // Return a CSS HSL string
+    return "hsl(" + c + ", 120%, 40%)";
+  }
   public render() {
     const today = new Date();
     const lastSeen = new Date(this.props.userInfo.connection);
@@ -51,6 +61,8 @@ class UserCard extends React.Component<Props> {
     } else if (this.props.userInfo.gender == "Man") {
       genderIcon = "mars icon";
     }
+    console.log(this.hsl_col_perc(this.props.userInfo.popularityScore));
+
     return (
       <div className="ui card user">
         <div className="image">
@@ -61,9 +73,23 @@ class UserCard extends React.Component<Props> {
             // src="http://localhost:5000/public/profile-pictures/psim.jpg"
             // src="http://localhost:5000/public/fake-pictures/001957.png"
           />
+          {/* <div className="popularity"></div> */}
+          {/* <ProgressBar /> */}
         </div>
         <div className="content">
-          <a className="header">{this.props.userInfo.name}</a>
+          <a className="header">
+            {this.props.userInfo.name}
+            <span className="right floated popscore ">
+              <div
+                style={{
+                  color: this.hsl_col_perc(this.props.userInfo.popularityScore)
+                }}
+                className="ui large label"
+              >
+                {this.props.userInfo.popularityScore}%
+              </div>
+            </span>
+          </a>
           <div className="meta">
             <span className="date">{this.props.userInfo.city}</span>
           </div>
