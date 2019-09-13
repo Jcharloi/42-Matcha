@@ -1,9 +1,5 @@
 import * as React from "react";
 import "../styles/stylesUserHome.css";
-import Pictures from "./Pictures";
-import ProgressBar from "./ProgressBar";
-import { Redirect } from "react-router";
-//tag font size
 //button
 //max tag nb
 interface Props {
@@ -95,9 +91,7 @@ class UserCard extends React.Component<Props> {
           </div>
           <div className="description">
             {this.props.userInfo.tags.map(tag => (
-              <button key={tag.tag_id.toString()} className="mini ui tag label">
-                {tag.name}
-              </button>
+              <button className="tag-home ui tag label">{tag.name}</button>
             ))}
           </div>
         </div>
