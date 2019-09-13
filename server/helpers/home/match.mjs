@@ -93,7 +93,7 @@ const matchByCity = (myCoordinates, userMatchInfo) => {
 const getUsersByPreference = async (req, res) => {
   if (validOrientation(req.body.preference) && validGender(req.body.gender)) {
     let text =
-      `SELECT user_id, user_name, score, city, latitude, longitude, birthday, last_connection FROM users ` +
+      `SELECT user_id, user_name, score, city, latitude, longitude, birthday, gender, last_connection FROM users ` +
       getMatchByOrientation(req.body);
     await client
       .query(text)
@@ -105,6 +105,7 @@ const getUsersByPreference = async (req, res) => {
             scoreTags: 0,
             id: rows[i].user_id,
             name: rows[i].user_name,
+            gender: rows[i].gender,
             city: rows[i].city,
             latitude: rows[i].latitude,
             longitude: rows[i].longitude,
