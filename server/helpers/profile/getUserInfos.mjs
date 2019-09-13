@@ -27,7 +27,7 @@ const getUserAll = async (params, res) => {
     });
 };
 
-export async function getUserInfos(userId) {
+const getUserInfos = async userId => {
   return await client
     .query(`SELECT * FROM users WHERE user_id = '${userId}'`)
     .then(({ rows }) => {
@@ -52,9 +52,9 @@ export async function getUserInfos(userId) {
         message: "We got a problem with our database, please try again"
       };
     });
-}
+};
 
-export async function getUserPictures(userId) {
+const getUserPictures = async userId => {
   return await client
     .query(
       `SELECT path, date, main FROM profile_picture INNER JOIN users ON(profile_picture.user_id = users.user_id) WHERE users.user_id = '${userId}' ORDER BY main, date DESC`
@@ -78,9 +78,9 @@ export async function getUserPictures(userId) {
         message: "We got a problem with our database, please try again"
       };
     });
-}
+};
 
-export async function getUserTags(userId) {
+const getUserTags = async userId => {
   return await client
     .query(
       `SELECT tag.tag_id, name, custom FROM tag JOIN user_tag ON(user_tag.tag_id = tag.tag_id) WHERE user_tag.user_id = '${userId}'`
@@ -102,7 +102,22 @@ export async function getUserTags(userId) {
         message: "We got a problem with our database, please try again"
       };
     });
-}
+};
+
+const getUserLatitudeAndLongitude = async userId => {
+  let text = `SELECT latitude, longitude FROM users WHERE user_id = '${userId}'`;
+  return await client
+    .query(text)
+    .then(({ rows }) => {
+      let myCoordinates = {};
+      myCoordinates.lat = rows[0].latitude;
+      myCoordinates.lon = rows[0].longitude;
+      return myCoordinates;
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
+};
 
 const getUserCity = async (req, res) => {
   if (!req.body.longitude && !req.body.latitude && !req.body.ip) {
@@ -196,4 +211,12 @@ const getTags = async (req, res) => {
   }
 };
 
-export default { getUserAll, getUserCity, getTags };
+export {
+  getUserAll,
+  getUserInfos,
+  getUserPictures,
+  getUserTags,
+  getUserLatitudeAndLongitude,
+  getUserCity,
+  getTags
+};

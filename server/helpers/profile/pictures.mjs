@@ -255,8 +255,4 @@ const deletePictures = async (req, res) => {
   }
 };
 
-export default {
-  uploadPictures,
-  setMainPictures,
-  deletePictures
-};
+export { uploadPictures, setMainPictures, deletePictures };

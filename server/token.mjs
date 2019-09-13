@@ -19,7 +19,7 @@ const tokenMiddleware = async (req, res, next) => {
   response.validToken ? next() : res.send(response);
 };
 
-async function checkAuthToken(token, userName) {
+const checkAuthToken = async (token, userName) => {
   if (!token || !userName) {
     return {
       validToken: false,
@@ -58,6 +58,6 @@ async function checkAuthToken(token, userName) {
       return response;
     }
   });
-}
+};
 
-export default { verifyToken, tokenMiddleware, checkAuthToken };
+export { verifyToken, tokenMiddleware, checkAuthToken };

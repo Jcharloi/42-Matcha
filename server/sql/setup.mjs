@@ -51,11 +51,11 @@ const tags = [
 
 faker.locale = "fr";
 
-function capitalizeFirstLetter(string) {
+const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-async function getUserCoordinatesByCity(city) {
+const getUserCoordinatesByCity = async city => {
   return await opencage
     .geocode({
       q: `${city}`,
@@ -72,7 +72,7 @@ async function getUserCoordinatesByCity(city) {
     .catch(e => {
       console.error(e.stack);
     });
-}
+};
 
 pgtools
   .dropdb({ user, host: "localhost", password, port: 5432 }, "matcha")
