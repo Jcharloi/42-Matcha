@@ -2,6 +2,9 @@ import * as React from "react";
 import "../styles/stylesUserHome.css";
 import Pictures from "./Pictures";
 
+//todo popularity score
+//gender icon/
+//button
 interface Props {
   userInfo: {
     id: string;
@@ -9,6 +12,7 @@ interface Props {
     city: string;
     age: string;
     connection: string;
+    gender: string;
     pictures: [
       {
         path: string;
@@ -26,11 +30,9 @@ interface Props {
   };
 }
 
-class TagButton extends React.Component {
-  public render() {
-    return <button className="mini ui button">Mini</button>;
-  }
-}
+// class UserTags extends React.Component {
+// public
+// }
 
 class UserCard extends React.Component<Props> {
   public render() {
@@ -43,9 +45,12 @@ class UserCard extends React.Component<Props> {
 
     const lastSeenSince = (+today - +lastSeen) / msInDay;
     // console.log(lastSeenSince);
-
-    console.log(this.props.userInfo.tags);
-    console.log("hello");
+    var genderIcon = "mars stroke horizontal icon";
+    if (this.props.userInfo.gender == "Woman") {
+      genderIcon = "venus icon";
+    } else if (this.props.userInfo.gender == "Man") {
+      genderIcon = "mars icon";
+    }
     return (
       <div className="ui card user">
         <div className="image">
@@ -63,12 +68,14 @@ class UserCard extends React.Component<Props> {
             <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">
-            <TagButton />
+            {this.props.userInfo.tags.map(tag => (
+              <button className="mini ui tag label">{tag.name}</button>
+            ))}
           </div>
         </div>
         <div className="extra content">
           <a>
-            <i className="birthday cake icon"></i>
+            <i className={genderIcon}></i>
             {this.props.userInfo.age} years old
           </a>
           <span className="right floated">
