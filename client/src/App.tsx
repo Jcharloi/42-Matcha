@@ -106,6 +106,9 @@ class App extends React.Component<Props, AppState> {
   render() {
     //  A faire :
     // - Tester le tri
+    // - Infinite scroll
+    // - Generer last connection en dynamique
+    // - Adapter par rapport aux heures/minutes
     // - Obtenir le bon age de naissance
     return (
       <div>
