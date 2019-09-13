@@ -290,7 +290,7 @@ class Tags extends React.Component<Props, TState> {
                   Add my tag
                 </Button>
                 {this.state.messageTags && (
-                  <div className="toast-message ui violet floating message">
+                  <div className="toast-message ui blue floating message">
                     <p>{this.state.messageTags}</p>
                   </div>
                 )}
