@@ -1,11 +1,12 @@
 import * as React from "react";
+import Axios from "axios";
+import { connect } from "react-redux";
+import { State } from "../redux/types/types";
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
 
 import "../styles/stylesUserHome.css";
-import Axios from "axios";
-import { connect } from "react-redux";
-import { State } from "../redux/types/types";
+
 interface Props {
   user_id: string;
   mail: string;
@@ -22,7 +23,7 @@ interface Props {
   tags: any;
 }
 
-interface PState {
+interface HState {
   isLoading: boolean;
   userMatchInfo: [
     {
@@ -49,9 +50,10 @@ interface PState {
       ];
     }
   ];
+  messageHome?: string;
 }
 
-class Home extends React.Component<Props, PState> {
+class Home extends React.Component<Props, HState> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -83,24 +85,26 @@ class Home extends React.Component<Props, PState> {
       ]
     };
   }
-  callAPI() {
+
+  componentWillMount() {
     Axios.post("http://localhost:5000/home/get-users-by-preference/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       gender: this.props.gender,
       preference: this.props.orientation
     })
-      .then(({ data: { userMatchInfo } }) => {
-        this.setState({ userMatchInfo: userMatchInfo, isLoading: false });
+      .then(({ data: { validated, message, userMatchInfo } }) => {
+        if (validated) {
+          this.setState({ userMatchInfo });
+        }
+        this.setState({ messageHome: message, isLoading: false });
       })
-      // .then(data => console.log(data))
       .catch(err => console.error(err));
   }
+
   callApiIndexed(indexBy: string) {
-    var userAge = new Date().getFullYear() - +this.props.birthday.split("/")[2];
-    console.log(userAge.toString());
-    // if (indexBy == "Age") {
-    // userAge = new Date().getFullYear() -
+    const userAge =
+      new Date().getFullYear() - +this.props.birthday.split("/")[2];
 
     Axios.post("http://localhost:5000/home/sort-by-index", {
       userName: localStorage.getItem("user_name"),
@@ -109,17 +113,16 @@ class Home extends React.Component<Props, PState> {
       age: userAge.toString(),
       userMatchInfo: this.state.userMatchInfo
     })
-      .then(({ data: { userMatchInfo } }) => {
-        this.setState({ userMatchInfo: userMatchInfo, isLoading: false });
+      .then(({ data: { validated, message, userMatchInfo } }) => {
+        if (validated) {
+          this.setState({ userMatchInfo });
+        }
+        this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
   }
-  componentWillMount() {
-    this.callAPI();
-  }
 
   public render() {
-    // console.log(this.state.userMatchInfo.length);
     return (
       <div>
         <TopMenu current="home" />
@@ -150,13 +153,19 @@ class Home extends React.Component<Props, PState> {
           </button>
         </div>
         {!this.state.isLoading &&
-          this.state.userMatchInfo.map(crayon => (
-            <UserCard key={crayon.id.toString()} userInfo={crayon} />
+          this.state.userMatchInfo.map(user => (
+            <UserCard key={user.id} userInfo={user} />
           ))}
+        {this.state.messageHome && (
+          <div className="toast-message ui blue floating message">
+            <p>{this.state.messageHome}</p>
+          </div>
+        )}
       </div>
     );
   }
 }
+
 const mapStateToProps = (state: State): Props => {
   return state.user;
 };

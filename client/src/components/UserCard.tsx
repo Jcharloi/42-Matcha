@@ -1,7 +1,7 @@
 import * as React from "react";
+
 import "../styles/stylesUserHome.css";
-//button
-//max tag nb
+
 interface Props {
   userInfo: {
     id: string;
@@ -28,37 +28,34 @@ interface Props {
   };
 }
 
-// class UserTags extends React.Component {
-// public
-// }
+interface CState {
+  genderIcon: string;
+  lastSeenSince: number;
+}
 
-class UserCard extends React.Component<Props> {
-  hsl_col_perc(percent: string) {
+class UserCard extends React.Component<Props, CState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      genderIcon:
+        this.props.userInfo.gender == "Woman" ? "venus icon" : "mars icon",
+      lastSeenSince:
+        (+new Date().setHours(0, 0, 0, 0) -
+          +new Date(this.props.userInfo.connection).setHours(0, 0, 0, 0)) /
+        (24 * 60 * 60 * 1000)
+    };
+  }
+
+  hsl_col_perc(percent: string): string {
     const nb = +percent;
     var a = nb / 100,
       b = (120 - 0) * a,
       c = b + 0;
 
-    // Return a CSS HSL string
     return "hsl(" + c + ", 120%, 40%)";
   }
+
   public render() {
-    const today = new Date();
-    const lastSeen = new Date(this.props.userInfo.connection);
-    const msInDay = 24 * 60 * 60 * 1000;
-
-    lastSeen.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    const lastSeenSince = (+today - +lastSeen) / msInDay;
-    // console.log(lastSeenSince);
-    var genderIcon = "mars stroke horizontal icon";
-    if (this.props.userInfo.gender == "Woman") {
-      genderIcon = "venus icon";
-    } else if (this.props.userInfo.gender == "Man") {
-      genderIcon = "mars icon";
-    }
-
     return (
       <div className="ui card user">
         <div className="image">
@@ -66,11 +63,7 @@ class UserCard extends React.Component<Props> {
             alt="profile-pic"
             className="profile-pic-card"
             src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
-            // src="http://localhost:5000/public/profile-pictures/psim.jpg"
-            // src="http://localhost:5000/public/fake-pictures/001957.png"
           />
-          {/* <div className="popularity"></div> */}
-          {/* <ProgressBar /> */}
         </div>
         <div className="content">
           <a className="header">
@@ -90,18 +83,20 @@ class UserCard extends React.Component<Props> {
             <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">
-            {this.props.userInfo.tags.map(tag => (
-              <button className="tag-home ui tag label">{tag.name}</button>
+            {this.props.userInfo.tags.slice(0, 2).map(tag => (
+              <button key={tag.tag_id} className="tag-home ui tag label">
+                {tag.name}
+              </button>
             ))}
           </div>
         </div>
         <div className="extra content">
           <a>
-            <i className={genderIcon}></i>
+            <i className={this.state.genderIcon}></i>
             {this.props.userInfo.age} years old
           </a>
           <span className="right floated">
-            Last seen {lastSeenSince} days ago
+            Last seen {this.state.lastSeenSince} days ago
           </span>
         </div>
       </div>
