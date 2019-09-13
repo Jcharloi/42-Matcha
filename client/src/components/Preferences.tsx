@@ -43,6 +43,9 @@ class Preferences extends React.Component<Props, PState> {
     };
   }
   public render() {
+    if (this.state.messagePreference) {
+      setTimeout(() => this.setState({ messagePreference: "" }), 4000);
+    }
     return (
       <div className="media-container-preferences">
         <div className="title-container-preferences">
@@ -150,7 +153,9 @@ class Preferences extends React.Component<Props, PState> {
             Change my preferences
           </Button>
           {this.state.messagePreference && (
-            <div className="edit-text">{this.state.messagePreference}</div>
+            <div className="toast-message ui violet floating message">
+              <p>{this.state.messagePreference}</p>
+            </div>
           )}
         </div>
       </div>

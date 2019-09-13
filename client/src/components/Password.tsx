@@ -20,6 +20,9 @@ class Password extends React.Component<{}, State> {
   }
 
   public render() {
+    if (this.state.messagePassword) {
+      setTimeout(() => this.setState({ messagePassword: "" }), 4000);
+    }
     return (
       <div className="media-container-password">
         <div className="title-container">
@@ -80,7 +83,9 @@ class Password extends React.Component<{}, State> {
             Change my password
           </Button>
           {this.state.messagePassword && (
-            <div>{this.state.messagePassword}</div>
+            <div className="toast-message ui violet floating message">
+              <p>{this.state.messagePassword}</p>
+            </div>
           )}
         </div>
       </div>
