@@ -224,7 +224,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                 Upload a picture
               </label>
               {this.state.messagePictures && (
-                <div className="toast-message ui violet floating message">
+                <div className="toast-message ui blue floating message">
                   <p>{this.state.messagePictures}</p>
                 </div>
               )}
