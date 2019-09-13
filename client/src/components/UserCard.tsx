@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../styles/stylesUserHome.css";
-
 //button
+//max tag nb
 interface Props {
   userInfo: {
     id: string;
@@ -58,7 +58,6 @@ class UserCard extends React.Component<Props> {
     } else if (this.props.userInfo.gender == "Man") {
       genderIcon = "mars icon";
     }
-    console.log(this.hsl_col_perc(this.props.userInfo.popularityScore));
 
     return (
       <div className="ui card user">
