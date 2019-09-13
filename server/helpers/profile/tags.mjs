@@ -23,7 +23,10 @@ const selectTags = async (req, res) => {
                 await client
                   .query(text)
                   .then(() => {
-                    res.send({ validated: true, message: "Tag selected !" });
+                    res.send({
+                      validated: true,
+                      message: "Tag selected successfully!"
+                    });
                   })
                   .catch(e => {
                     console.error(e);
@@ -91,7 +94,7 @@ const deleteTags = async (req, res) => {
               res.send({
                 tagId,
                 validated: true,
-                message: "Your tag is successfully removed"
+                message: "Tag removed successfully !"
               });
             })
             .catch(e => {
@@ -139,7 +142,7 @@ const addCustomTags = async (req, res) => {
                   res.send({
                     randomId,
                     validated: true,
-                    message: "Your custom tag is added !"
+                    message: "Custom tag added successfully !"
                   });
                 })
                 .catch(e => {

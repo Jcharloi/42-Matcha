@@ -63,6 +63,9 @@ class Tags extends React.Component<Props, TState> {
   }
 
   public render() {
+    if (this.state.messageTags) {
+      setTimeout(() => this.setState({ messageTags: "" }), 4000);
+    }
     return (
       <div className="media-container">
         <div className="title-container-tag">
@@ -287,7 +290,9 @@ class Tags extends React.Component<Props, TState> {
                   Add my tag
                 </Button>
                 {this.state.messageTags && (
-                  <div className="edit-text">{this.state.messageTags}</div>
+                  <div className="toast-message ui violet floating message">
+                    <p>{this.state.messageTags}</p>
+                  </div>
                 )}
               </div>
             </div>
