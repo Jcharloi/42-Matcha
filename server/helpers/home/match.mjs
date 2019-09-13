@@ -76,7 +76,7 @@ const matchByCity = (myCoordinates, userMatchInfo) => {
   return userMatchInfo;
 };
 
-const finalSortByMe = userMatchInfo => {
+const finalSortByMe = (userMatchInfo, userId) => {
   userMatchInfo
     .sort((userA, userB) => {
       if (userA.scoreDistance !== userB.scoreDistance) {
@@ -130,7 +130,7 @@ const getUsersByPreference = async (req, res) => {
         const myTags = await getUserTags(userId);
         userMatchInfo = await matchByCity(myCoordinates, userMatchInfo);
         userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
-        userMatchInfo = await finalSortByMe(userMatchInfo);
+        userMatchInfo = await finalSortByMe(userMatchInfo, userId);
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
