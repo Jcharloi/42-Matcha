@@ -65,7 +65,7 @@ const changePersonalInfos = async (req, res) => {
 const changePreferenceInfos = async (req, res) => {
   if (
     req.body.bio &&
-    req.body.bio.length < 250 &&
+    req.body.bio.length <= 250 &&
     validGender(req.body.gender) &&
     validOrientation(req.body.orientation)
   ) {
@@ -81,7 +81,7 @@ const changePreferenceInfos = async (req, res) => {
       .then(() => {
         res.send({
           validated: true,
-          message: "You updated your preferences successfully !"
+          message: "Preference informations updated successfully !"
         });
       })
       .catch(e => {
@@ -112,7 +112,7 @@ const changePassword = async (req, res) => {
       .then(() => {
         res.send({
           validated: true,
-          message: "You updated your password successfully !"
+          message: "Password updated successfully !"
         });
       })
       .catch(e => {
