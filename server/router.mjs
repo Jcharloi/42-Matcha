@@ -45,6 +45,7 @@ router.put("/profile/change-password", profileRoutes.changePassword);
 
 router.post("/home/get-users-by-preference", matchRoutes.getUsersByPreference);
 router.post("/home/sort-by-index", sortRoutes.sortByIndex);
+router.post("/home/sort-by-interval", sortRoutes.sortByInterval);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
