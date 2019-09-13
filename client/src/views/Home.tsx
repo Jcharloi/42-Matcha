@@ -32,6 +32,7 @@ interface PState {
       age: string;
       connection: string;
       gender: string;
+      popularityScore: string;
       pictures: [
         {
           path: string;
@@ -63,6 +64,7 @@ class Home extends React.Component<Props, PState> {
           age: "",
           connection: "",
           gender: "",
+          popularityScore: "",
           pictures: [
             {
               path: "",

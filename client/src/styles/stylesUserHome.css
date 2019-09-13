@@ -17,6 +17,13 @@
 
   margin-left: 30px;
 }
+.popularity {
+  position: relative;
+  top: -30px;
+  /* border: 2px solid red; */
+  background-color: rgba(173, 173, 173, 0.671);
+  height: 30px;
+}
 .venus.icon {
   color: rgb(255, 73, 103);
 }
@@ -25,4 +32,7 @@
 }
 .mars.stroke.horizontal.icon {
   color: rgb(143, 0, 187);
+}
+.right.floated.popscore {
+  /* color: hsl(30, 100%, 50%); */
 }
