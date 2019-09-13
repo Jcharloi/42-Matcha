@@ -12,6 +12,7 @@ interface Props {
     city: string;
     age: string;
     connection: string;
+    gender: string;
     pictures: [
       {
         path: string;
@@ -27,21 +28,6 @@ interface Props {
       }
     ];
   };
-}
-interface TagProps {
-  tagInfo: {
-    tag_id: string;
-    name: string;
-    custom: boolean;
-  };
-}
-
-class TagLabel extends React.Component<TagProps> {
-  public render() {
-    return (
-      <button className="mini ui tag label">{this.props.tagInfo.name}</button>
-    );
-  }
 }
 
 // class UserTags extends React.Component {
@@ -59,9 +45,12 @@ class UserCard extends React.Component<Props> {
 
     const lastSeenSince = (+today - +lastSeen) / msInDay;
     // console.log(lastSeenSince);
-
-    console.log(this.props.userInfo.tags);
-    console.log("hello");
+    var genderIcon = "mars stroke horizontal icon";
+    if (this.props.userInfo.gender == "Woman") {
+      genderIcon = "venus icon";
+    } else if (this.props.userInfo.gender == "Man") {
+      genderIcon = "mars icon";
+    }
     return (
       <div className="ui card user">
         <div className="image">
@@ -80,13 +69,13 @@ class UserCard extends React.Component<Props> {
           </div>
           <div className="description">
             {this.props.userInfo.tags.map(tag => (
-              <TagLabel tagInfo={tag} />
+              <button className="mini ui tag label">{tag.name}</button>
             ))}
           </div>
         </div>
         <div className="extra content">
           <a>
-            <i className="birthday cake icon"></i>
+            <i className={genderIcon}></i>
             {this.props.userInfo.age} years old
           </a>
           <span className="right floated">
