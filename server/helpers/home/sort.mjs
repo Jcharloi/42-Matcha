@@ -20,6 +20,7 @@ const compareTag = (myTags, tagUser) => {
 
 const sortByInterval = (req, res) => {
   if (
+    !req.body.userMatchInfo ||
     !req.body.index ||
     !req.body.start ||
     !req.body.end ||
@@ -77,7 +78,11 @@ const sortByInterval = (req, res) => {
 
 const sortByIndex = (req, res) => {
   if (
-    (req.body.index && req.body.age && req.body.index === "Age") ||
+    (req.body.userMatchInfo &&
+      req.body.userMatchInfo.length > 0 &&
+      req.body.index &&
+      req.body.age &&
+      req.body.index === "Age") ||
     req.body.index === "Localisation" ||
     req.body.index === "Popularity" ||
     req.body.index === "Tags"

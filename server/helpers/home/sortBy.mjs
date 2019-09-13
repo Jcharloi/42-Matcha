@@ -17,6 +17,7 @@ const sortByPopularity = userMatchInfo => {
     return userB.popularityScore - userA.popularityScore;
   });
 };
+
 const sortByTagsInCommon = userMatchInfo => {
   return userMatchInfo.sort((userA, userB) => {
     return userB.scoreTags - userA.scoreTags;
