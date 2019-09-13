@@ -61,6 +61,4 @@ const connection = async (req, res) => {
   }
 };
 
-export default {
-  connection
-};
+export { connection };

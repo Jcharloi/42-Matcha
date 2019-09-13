@@ -5,7 +5,7 @@ import keys from "./keys.json";
 
 const { mail_password, odg_api_key } = keys;
 
-async function getUserCoordinatesByCity(city) {
+const getUserCoordinatesByCity = async city => {
   return await opencage
     .geocode({
       q: `${city}`,
@@ -22,9 +22,9 @@ async function getUserCoordinatesByCity(city) {
     .catch(e => {
       console.error(e.stack);
     });
-}
+};
 
-async function getUserCityByCoordinates(lat, lon) {
+const getUserCityByCoordinates = async (lat, lon) => {
   return await opencage
     .geocode({
       q: `${lat}, ${lon}`,
@@ -40,9 +40,9 @@ async function getUserCityByCoordinates(lat, lon) {
     .catch(e => {
       console.error(e.stack);
     });
-}
+};
 
-async function sendMail(userInfo, subject, text) {
+const sendMail = async (userInfo, subject, text) => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -65,9 +65,9 @@ async function sendMail(userInfo, subject, text) {
       return "Fail";
     });
   return response;
-}
+};
 
-async function getUserId(userName) {
+const getUserId = async userName => {
   let text = `SELECT user_id FROM users WHERE user_name = $1`;
   let values = [userName];
   return await client
@@ -83,9 +83,9 @@ async function getUserId(userName) {
       console.error(e);
       return false;
     });
-}
+};
 
-function createRandomId(length) {
+const createRandomId = length => {
   var result = "";
   var characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -94,7 +94,7 @@ function createRandomId(length) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
 
 export {
   getUserCoordinatesByCity,

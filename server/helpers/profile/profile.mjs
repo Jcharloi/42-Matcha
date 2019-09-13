@@ -131,8 +131,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-export default {
-  changePersonalInfos,
-  changePreferenceInfos,
-  changePassword
-};
+export { changePersonalInfos, changePreferenceInfos, changePassword };
