@@ -189,6 +189,9 @@ class Pictures extends React.Component<Props, PicturesState> {
   };
 
   public render() {
+    if (this.state.messagePictures) {
+      setTimeout(() => this.setState({ messagePictures: "" }), 4000);
+    }
     return (
       <div>
         <div className="body-container">
@@ -221,8 +224,8 @@ class Pictures extends React.Component<Props, PicturesState> {
                 Upload a picture
               </label>
               {this.state.messagePictures && (
-                <div className="message-picture">
-                  {this.state.messagePictures}
+                <div className="toast-message ui violet floating message">
+                  <p>{this.state.messagePictures}</p>
                 </div>
               )}
             </div>

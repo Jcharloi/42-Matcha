@@ -40,7 +40,7 @@ const uploadPictures = async (req, res) => {
                   res.send({
                     date,
                     fileName: name,
-                    message: "Your picture is uploaded !"
+                    message: "Picture uploaded successfully !"
                   });
                 })
                 .catch(e => {
@@ -117,7 +117,7 @@ const setMainPictures = async (req, res) => {
                 .then(() => {
                   res.send({
                     validated: true,
-                    message: "Your main picture is selected !"
+                    message: "Main picture selected successfully !"
                   });
                 })
                 .catch(e => {
@@ -213,7 +213,7 @@ const deletePictures = async (req, res) => {
                     }
                     res.send({
                       validated: true,
-                      message: "Your picture is deleted !"
+                      message: "Picture deleted successfully !"
                     });
                   })
                   .catch(e => {

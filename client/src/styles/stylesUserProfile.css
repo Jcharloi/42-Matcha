@@ -57,3 +57,11 @@
   width: 80%;
   padding-bottom: 10%;
 }
+
+.toast-message {
+  position: fixed !important;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22) !important;
+  top: 5rem;
+  right: 2rem;
+  z-index: 1;
+}

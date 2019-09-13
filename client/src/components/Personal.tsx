@@ -143,6 +143,9 @@ class Personal extends React.Component<Props, PState> {
   }
 
   public render() {
+    if (this.state.messagePersonal) {
+      setTimeout(() => this.setState({ messagePersonal: "" }), 4000);
+    }
     const months = [
       "January",
       "February",
@@ -340,7 +343,9 @@ class Personal extends React.Component<Props, PState> {
             Change my informations
           </Button>
           {this.state.messagePersonal && (
-            <div>{this.state.messagePersonal}</div>
+            <div className="toast-message ui violet floating message">
+              <p>{this.state.messagePersonal}</p>
+            </div>
           )}
         </div>
       </div>
