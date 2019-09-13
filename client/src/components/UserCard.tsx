@@ -61,11 +61,8 @@ class UserCard extends React.Component<Props> {
     } else if (this.props.userInfo.gender == "Man") {
       genderIcon = "mars icon";
     }
-<<<<<<< HEAD
-=======
     console.log(this.hsl_col_perc(this.props.userInfo.popularityScore));
 
->>>>>>> 1742abc59db660e6ffee02b8e885cb2551c20992
     return (
       <div className="ui card user">
         <div className="image">
