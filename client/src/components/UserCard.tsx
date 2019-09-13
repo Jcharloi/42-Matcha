@@ -38,7 +38,7 @@ class UserCard extends React.Component<Props, CState> {
     super(props);
     this.state = {
       genderIcon:
-        this.props.userInfo.gender == "Woman" ? "venus icon" : "mars icon",
+        this.props.userInfo.gender === "Woman" ? "venus icon" : "mars icon",
       lastSeenSince:
         (+new Date().setHours(0, 0, 0, 0) -
           +new Date(this.props.userInfo.connection).setHours(0, 0, 0, 0)) /
@@ -66,7 +66,7 @@ class UserCard extends React.Component<Props, CState> {
           />
         </div>
         <div className="content">
-          <a className="header">
+          <div className="header">
             {this.props.userInfo.name}
             <span className="right floated popscore ">
               <div
@@ -78,23 +78,23 @@ class UserCard extends React.Component<Props, CState> {
                 {this.props.userInfo.popularityScore}%
               </div>
             </span>
-          </a>
+          </div>
           <div className="meta">
             <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">
-            {this.props.userInfo.tags.slice(0, 2).map(tag => (
-              <button key={tag.tag_id} className="tag-home ui tag label">
+            {this.props.userInfo.tags.slice(0, 2).map((tag, index) => (
+              <button key={index} className="tag-home ui tag label">
                 {tag.name}
               </button>
             ))}
           </div>
         </div>
         <div className="extra content">
-          <a>
+          <span>
             <i className={this.state.genderIcon}></i>
             {this.props.userInfo.age} years old
-          </a>
+          </span>
           <span className="right floated">
             Last seen {this.state.lastSeenSince} days ago
           </span>
