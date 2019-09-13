@@ -17,3 +17,12 @@
 
   margin-left: 30px;
 }
+.venus.icon {
+  color: rgb(255, 73, 103);
+}
+.mars.icon {
+  color: rgb(0, 153, 255);
+}
+.mars.stroke.horizontal.icon {
+  color: rgb(143, 0, 187);
+}

@@ -44,4 +44,34 @@ const sortByIndex = (req, res) => {
   }
 };
 
-export default { sortByIndex };
+const sortByInterval = (req, res) => {
+  if (!req.body.index || !req.body.start || !req.body.end) {
+    res.send({ validated: false, message: "No empty params allowed" });
+  } else {
+    if (
+      (req.body.index === "Age" &&
+        validIntervalParam(req.body.start, req.body.end, 18, 100)) ||
+      (req.body.index === "Popularity" &&
+        validIntervalParam(req.body.start, req.body.end, 0, 100)) ||
+      (req.body.index === "Localisation" &&
+        validIntervalParam(req.body.start, req.body.end, 0, 300)) ||
+      (req.body.index === "Tags" && req.body.tagsName.length > 0)
+    ) {
+      //tag existe ?
+      res.send({
+        validated: true,
+        userMatchInfo: userMatchInfo.filter(user => {
+          return user.tags.map(tag => {
+            if (tag.name === req.body.tagsName) {
+              //
+            }
+          });
+        })
+      });
+    } else {
+      res.send({ validated: false, message: "Something wrong with params" });
+    }
+  }
+};
+
+export default { sortByIndex, sortByInterval };
