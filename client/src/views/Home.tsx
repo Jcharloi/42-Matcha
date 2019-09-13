@@ -101,10 +101,16 @@ class Home extends React.Component<Props, PState> {
   }
 
   public render() {
-    console.log(this.state.userMatchInfo.length);
+    // console.log(this.state.userMatchInfo.length);
     return (
       <div>
         <TopMenu current="home" />
+        <div>
+          <button className="ui button">Button</button>
+          <button className="ui button">Button</button>
+          <button className="ui button">Button</button>
+          <button className="ui button">Button</button>
+        </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(crayon => (
             <UserCard key={crayon.id.toString()} userInfo={crayon} />
