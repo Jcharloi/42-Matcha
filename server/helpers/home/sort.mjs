@@ -48,7 +48,22 @@ const sortByInterval = (req, res) => {
           return hasToDelete;
         });
       } else if (req.body.index === "Age") {
-        //
+        userMatchInfo = req.body.userMatchInfo.filter(user => {
+          return user.age >= req.body.start && user.age <= req.body.end;
+        });
+      } else if (req.body.index === "Localisation") {
+        userMatchInfo = req.body.userMatchInfo.filter(user => {
+          return (
+            user.distance >= req.body.start && user.distance <= req.body.end
+          );
+        });
+      } else if (req.body.index === "Popularity") {
+        userMatchInfo = req.body.userMatchInfo.filter(user => {
+          return (
+            user.popularityScore >= req.body.start &&
+            user.popularityScore <= req.body.end
+          );
+        });
       }
       res.send({
         validated: true,
@@ -70,7 +85,7 @@ const sortByIndex = (req, res) => {
     if (req.body.index === "Age") {
       res.send({
         validated: true,
-        userMatchInfo: sortByAge(req.body.userMatchInfo)
+        userMatchInfo: sortByAge(req.body.userMatchInfo, req.body.age)
       });
     } else if (req.body.index === "Localisation") {
       res.send({
