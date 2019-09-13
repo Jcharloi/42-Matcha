@@ -96,6 +96,24 @@ class Home extends React.Component<Props, PState> {
       // .then(data => console.log(data))
       .catch(err => console.error(err));
   }
+  callApiIndexed(indexBy: string) {
+    var userAge = new Date().getFullYear() - +this.props.birthday.split("/")[2];
+    console.log(userAge.toString());
+    // if (indexBy == "Age") {
+    // userAge = new Date().getFullYear() -
+
+    Axios.post("http://localhost:5000/home/sort-by-index", {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      index: indexBy,
+      age: userAge.toString(),
+      userMatchInfo: this.state.userMatchInfo
+    })
+      .then(({ data: { userMatchInfo } }) => {
+        this.setState({ userMatchInfo: userMatchInfo, isLoading: false });
+      })
+      .catch(err => console.error(err));
+  }
   componentWillMount() {
     this.callAPI();
   }
@@ -106,10 +124,30 @@ class Home extends React.Component<Props, PState> {
       <div>
         <TopMenu current="home" />
         <div>
-          <button className="ui button">Button</button>
-          <button className="ui button">Button</button>
-          <button className="ui button">Button</button>
-          <button className="ui button">Button</button>
+          <button
+            className="ui button"
+            onClick={() => this.callApiIndexed("Age")}
+          >
+            Age
+          </button>
+          <button
+            className="ui button"
+            onClick={() => this.callApiIndexed("Localisation")}
+          >
+            Localisation
+          </button>
+          <button
+            className="ui button"
+            onClick={() => this.callApiIndexed("Popularity")}
+          >
+            Popularity
+          </button>
+          <button
+            className="ui button"
+            onClick={() => this.callApiIndexed("Tags")}
+          >
+            Tags
+          </button>
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(crayon => (
