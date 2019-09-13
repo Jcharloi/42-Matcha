@@ -2,6 +2,9 @@ import * as React from "react";
 import "../styles/stylesUserHome.css";
 import Pictures from "./Pictures";
 
+//todo popularity score
+//gender icon/
+//button
 interface Props {
   userInfo: {
     id: string;
@@ -25,12 +28,25 @@ interface Props {
     ];
   };
 }
+interface TagProps {
+  tagInfo: {
+    tag_id: string;
+    name: string;
+    custom: boolean;
+  };
+}
 
-class TagButton extends React.Component {
+class TagLabel extends React.Component<TagProps> {
   public render() {
-    return <button className="mini ui button">Mini</button>;
+    return (
+      <button className="mini ui tag label">{this.props.tagInfo.name}</button>
+    );
   }
 }
+
+// class UserTags extends React.Component {
+// public
+// }
 
 class UserCard extends React.Component<Props> {
   public render() {
@@ -63,7 +79,9 @@ class UserCard extends React.Component<Props> {
             <span className="date">{this.props.userInfo.city}</span>
           </div>
           <div className="description">
-            <TagButton />
+            {this.props.userInfo.tags.map(tag => (
+              <TagLabel tagInfo={tag} />
+            ))}
           </div>
         </div>
         <div className="extra content">
