@@ -105,6 +105,9 @@ class App extends React.Component<Props, AppState> {
 
   render() {
     //  A faire :
+    // - Toasts pour les update
+    // - Afficher les tags
+    // - Creer les 4 boutons de tri
     // - Obtenir le bon age de naissance
     // - Intervalle
     return (
