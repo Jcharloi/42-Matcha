@@ -110,7 +110,4 @@ const validateAccount = async (req, res) => {
     .catch(e => console.error(e.stack));
 };
 
-export default {
-  inscription,
-  validateAccount
-};
+export { inscription, validateAccount };

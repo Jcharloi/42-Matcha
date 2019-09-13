@@ -3,49 +3,62 @@ import path from "path";
 
 const router = express.Router();
 
-import tokenRoutes from "./token.mjs";
-import userInfosRoutes from "./helpers/profile/getUserInfos.mjs";
+import { tokenMiddleware, verifyToken } from "./token.mjs";
+import { getUserAll } from "./helpers/profile/getUserInfos.mjs";
 
-import signInRoutes from "./helpers/auth/signIn.mjs";
-import signUpRoutes from "./helpers/auth/signUp.mjs";
-import passwordRoutes from "./helpers/auth/resetPassword.mjs";
-import getUserRoutes from "./helpers/profile/getUserInfos.mjs";
-import profileRoutes from "./helpers/profile/profile.mjs";
-import picturesRoutes from "./helpers/profile/pictures.mjs";
-import tagRoutes from "./helpers/profile/tags.mjs";
-import matchRoutes from "./helpers/home/match.mjs";
-import sortRoutes from "./helpers/home/sort.mjs";
+import { connection } from "./helpers/auth/signIn.mjs";
+import { inscription, validateAccount } from "./helpers/auth/signUp.mjs";
+import {
+  resetPassword,
+  newPassword,
+  resetPasswordId
+} from "./helpers/auth/resetPassword.mjs";
+import { getUserCity, getTags } from "./helpers/profile/getUserInfos.mjs";
+import {
+  changePersonalInfos,
+  changePreferenceInfos,
+  changePassword
+} from "./helpers/profile/profile.mjs";
+import {
+  uploadPictures,
+  setMainPictures,
+  deletePictures
+} from "./helpers/profile/pictures.mjs";
+import {
+  selectTags,
+  deleteTags,
+  addCustomTags
+} from "./helpers/profile/tags.mjs";
+import { getUsersByPreference } from "./helpers/home/match.mjs";
+import { sortByIndex, sortByInterval } from "./helpers/home/sort.mjs";
 
-router.all("/profile/*", tokenRoutes.tokenMiddleware);
-router.all("/home/*", tokenRoutes.tokenMiddleware);
-router.put("/verify-token", tokenRoutes.verifyToken);
-router.get("/get-user-infos?:id", userInfosRoutes.getUserAll);
+router.all("/profile/*", tokenMiddleware);
+router.all("/home/*", tokenMiddleware);
+router.put("/verify-token", verifyToken);
+router.get("/get-user-infos?:id", getUserAll);
 
-router.post("/inscription", signUpRoutes.inscription);
-router.get("/validate-account/:id", signUpRoutes.validateAccount);
-router.put("/reset-password", passwordRoutes.resetPassword);
-router.get("/reset-password/:id", passwordRoutes.resetPasswordId);
-router.put("/new-password", passwordRoutes.newPassword);
-router.post("/connection", signInRoutes.connection);
+router.post("/inscription", inscription);
+router.get("/validate-account/:id", validateAccount);
+router.put("/reset-password", resetPassword);
+router.get("/reset-password/:id", resetPasswordId);
+router.put("/new-password", newPassword);
+router.post("/connection", connection);
 
-router.put("/profile/get-user-city", getUserRoutes.getUserCity);
-router.post("/profile/get-tags", getUserRoutes.getTags);
-router.post("/profile/upload-pictures", picturesRoutes.uploadPictures);
-router.put("/profile/set-main-pictures", picturesRoutes.setMainPictures);
-router.put("/profile/delete-pictures", picturesRoutes.deletePictures);
-router.put("/profile/change-personal-infos", profileRoutes.changePersonalInfos);
-router.put(
-  "/profile/change-preference-infos",
-  profileRoutes.changePreferenceInfos
-);
-router.put("/profile/select-tags", tagRoutes.selectTags);
-router.put("/profile/delete-tags", tagRoutes.deleteTags);
-router.post("/profile/add-custom-tags", tagRoutes.addCustomTags);
-router.put("/profile/change-password", profileRoutes.changePassword);
+router.put("/profile/get-user-city", getUserCity);
+router.post("/profile/get-tags", getTags);
+router.post("/profile/upload-pictures", uploadPictures);
+router.put("/profile/set-main-pictures", setMainPictures);
+router.put("/profile/delete-pictures", deletePictures);
+router.put("/profile/change-personal-infos", changePersonalInfos);
+router.put("/profile/change-preference-infos", changePreferenceInfos);
+router.put("/profile/select-tags", selectTags);
+router.put("/profile/delete-tags", deleteTags);
+router.post("/profile/add-custom-tags", addCustomTags);
+router.put("/profile/change-password", changePassword);
 
-router.post("/home/get-users-by-preference", matchRoutes.getUsersByPreference);
-router.post("/home/sort-by-index", sortRoutes.sortByIndex);
-router.post("/home/sort-by-interval", sortRoutes.sortByInterval);
+router.post("/home/get-users-by-preference", getUsersByPreference);
+router.post("/home/sort-by-index", sortByIndex);
+router.post("/home/sort-by-interval", sortByInterval);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
