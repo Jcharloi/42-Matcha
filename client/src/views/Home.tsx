@@ -2,8 +2,11 @@ import * as React from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
+
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
+import SortIndex from "../components/SortIndex";
+import SortInterval from "../components/SortInterval";
 
 import "../styles/stylesUserHome.css";
 
@@ -25,6 +28,8 @@ interface Props {
 
 interface HState {
   isLoading: boolean;
+  isFirst: boolean;
+
   userMatchInfo: [
     {
       id: string;
@@ -58,6 +63,7 @@ class Home extends React.Component<Props, HState> {
     super(props);
     this.state = {
       isLoading: true,
+      isFirst: false,
       userMatchInfo: [
         {
           id: "",
@@ -84,6 +90,8 @@ class Home extends React.Component<Props, HState> {
         }
       ]
     };
+    this.sortByIndex = this.sortByIndex.bind(this);
+    this.sortByInterval = this.sortByInterval.bind(this);
   }
 
   componentWillMount() {
@@ -102,10 +110,9 @@ class Home extends React.Component<Props, HState> {
       .catch(err => console.error(err));
   }
 
-  callApiIndexed(indexBy: string) {
+  sortByIndex(indexBy: string) {
     const userAge =
       new Date().getFullYear() - +this.props.birthday.split("/")[2];
-
     Axios.post("http://localhost:5000/home/sort-by-index", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -122,35 +129,39 @@ class Home extends React.Component<Props, HState> {
       .catch(err => console.error(err));
   }
 
+  sortByInterval(index: string, start: number, end: number) {
+    let newMatch;
+    if (!this.state.isFirst) {
+      newMatch = [...this.state.userMatchInfo];
+      this.setState({
+        // userMatchInfo: newMatch,
+        isFirst: true
+      });
+    }
+    Axios.post("http://localhost:5000/home/sort-by-interval/", {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      // userMatchInfo: newMatch,
+      index,
+      start: start.toString(),
+      end: end.toString()
+    })
+      .then(({ data: { validated, message, userMatchInfo } }) => {
+        if (validated) {
+          this.setState({ userMatchInfo });
+        }
+        this.setState({ messageHome: message, isLoading: false });
+      })
+      .catch(err => console.error(err));
+  }
+
   public render() {
     return (
       <div>
         <TopMenu current="home" />
         <div>
-          <button
-            className="ui button"
-            onClick={() => this.callApiIndexed("Age")}
-          >
-            Age
-          </button>
-          <button
-            className="ui button"
-            onClick={() => this.callApiIndexed("Localisation")}
-          >
-            Localisation
-          </button>
-          <button
-            className="ui button"
-            onClick={() => this.callApiIndexed("Popularity")}
-          >
-            Popularity
-          </button>
-          <button
-            className="ui button"
-            onClick={() => this.callApiIndexed("Tags")}
-          >
-            Tags
-          </button>
+          <SortIndex sortByIndex={this.sortByIndex} />
+          <SortInterval sortByInterval={this.sortByInterval} />
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
