@@ -51,9 +51,9 @@ const tags = [
 
 faker.locale = "fr";
 
-const capitalizeFirstLetter = (string) => {
+const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
 const getUserCoordinatesByCity = async city => {
   return await opencage
@@ -101,7 +101,7 @@ pgtools
               .catch(e => {
                 console.error(e.stack);
               });
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 100; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
