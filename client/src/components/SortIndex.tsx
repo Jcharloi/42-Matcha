@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import "rc-slider/assets/index.css";
 
 interface Props {
@@ -6,9 +7,6 @@ interface Props {
 }
 
 class sortIndex extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
   public render() {
     return (
       <div>

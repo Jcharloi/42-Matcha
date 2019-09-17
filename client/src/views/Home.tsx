@@ -28,9 +28,32 @@ interface Props {
 
 interface HState {
   isLoading: boolean;
-  isFirst: boolean;
-
   userMatchInfo: [
+    {
+      id: string;
+      name: string;
+      city: string;
+      age: string;
+      connection: string;
+      gender: string;
+      popularityScore: string;
+      pictures: [
+        {
+          path: string;
+          date: string;
+          main: boolean;
+        }
+      ];
+      tags: [
+        {
+          tag_id: string;
+          name: string;
+          custom: boolean;
+        }
+      ];
+    }
+  ];
+  copyUserMatch: [
     {
       id: string;
       name: string;
@@ -63,8 +86,32 @@ class Home extends React.Component<Props, HState> {
     super(props);
     this.state = {
       isLoading: true,
-      isFirst: false,
       userMatchInfo: [
+        {
+          id: "",
+          name: "",
+          city: "",
+          age: "",
+          connection: "",
+          gender: "",
+          popularityScore: "",
+          pictures: [
+            {
+              path: "",
+              date: "",
+              main: false
+            }
+          ],
+          tags: [
+            {
+              tag_id: "",
+              name: "",
+              custom: false
+            }
+          ]
+        }
+      ],
+      copyUserMatch: [
         {
           id: "",
           name: "",
@@ -90,8 +137,6 @@ class Home extends React.Component<Props, HState> {
         }
       ]
     };
-    this.sortByIndex = this.sortByIndex.bind(this);
-    this.sortByInterval = this.sortByInterval.bind(this);
   }
 
   componentWillMount() {
@@ -103,14 +148,14 @@ class Home extends React.Component<Props, HState> {
     })
       .then(({ data: { validated, message, userMatchInfo } }) => {
         if (validated) {
-          this.setState({ userMatchInfo });
+          this.setState({ userMatchInfo, copyUserMatch: userMatchInfo });
         }
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
   }
 
-  sortByIndex(indexBy: string) {
+  sortByIndex = (indexBy: string) => {
     const userAge =
       new Date().getFullYear() - +this.props.birthday.split("/")[2];
     Axios.post("http://localhost:5000/home/sort-by-index", {
@@ -127,21 +172,13 @@ class Home extends React.Component<Props, HState> {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
-  }
+  };
 
-  sortByInterval(index: string, start: number, end: number) {
-    let newMatch;
-    if (!this.state.isFirst) {
-      newMatch = [...this.state.userMatchInfo];
-      this.setState({
-        // userMatchInfo: newMatch,
-        isFirst: true
-      });
-    }
+  sortByInterval = (index: string, start: number, end: number) => {
     Axios.post("http://localhost:5000/home/sort-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
-      // userMatchInfo: newMatch,
+      userMatchInfo: this.state.copyUserMatch,
       index,
       start: start.toString(),
       end: end.toString()
@@ -153,7 +190,7 @@ class Home extends React.Component<Props, HState> {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
-  }
+  };
 
   public render() {
     return (
