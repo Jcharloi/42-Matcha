@@ -110,9 +110,9 @@ class App extends React.Component<Props, AppState> {
     - Tester le tri
     - Tester l'interval
     - Infinite scroll
-
-    Partie back :
     - Generer last connection en dynamique : Adapter par rapport aux heures/minutes
+    
+    Partie back :
     - Obtenir le bon age de naissance
     */
     return (
