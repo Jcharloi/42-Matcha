@@ -28,13 +28,14 @@ const sortByInterval = (req, res) => {
   ) {
     res.send({ validated: false, message: "No empty params allowed" });
   } else {
+    const start = parseInt(req.body.start);
+    const end = parseInt(req.body.end);
     if (
-      (req.body.index === "Age" &&
-        validIntervalParam(req.body.start, req.body.end, 18, 100)) ||
+      (req.body.index === "Age" && validIntervalParam(start, end, 18, 100)) ||
       (req.body.index === "Popularity" &&
-        validIntervalParam(req.body.start, req.body.end, 0, 100)) ||
+        validIntervalParam(start, end, 0, 100)) ||
       (req.body.index === "Localisation" &&
-        validIntervalParam(req.body.start, req.body.end, 0, 300)) ||
+        validIntervalParam(start, end, 0, 300)) ||
       (req.body.index === "Tags" && req.body.tagsName.length > 0)
     ) {
       let userMatchInfo = req.body.userMatchInfo;
@@ -50,20 +51,15 @@ const sortByInterval = (req, res) => {
         });
       } else if (req.body.index === "Age") {
         userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return user.age >= req.body.start && user.age <= req.body.end;
+          return user.age >= start && user.age <= end;
         });
       } else if (req.body.index === "Localisation") {
         userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return (
-            user.distance >= req.body.start && user.distance <= req.body.end
-          );
+          return user.distance >= start && user.distance <= end;
         });
       } else if (req.body.index === "Popularity") {
         userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return (
-            user.popularityScore >= req.body.start &&
-            user.popularityScore <= req.body.end
-          );
+          return user.popularityScore >= start && user.popularityScore <= end;
         });
       }
       res.send({
