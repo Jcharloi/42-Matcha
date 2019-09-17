@@ -2,6 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
+import { UserMatchInfos } from "../models/models";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
@@ -28,56 +29,9 @@ interface Props {
 
 interface HState {
   isLoading: boolean;
-  userMatchInfo: [
-    {
-      id: string;
-      name: string;
-      city: string;
-      age: string;
-      connection: string;
-      gender: string;
-      popularityScore: string;
-      pictures: [
-        {
-          path: string;
-          date: string;
-          main: boolean;
-        }
-      ];
-      tags: [
-        {
-          tag_id: string;
-          name: string;
-          custom: boolean;
-        }
-      ];
-    }
-  ];
-  copyUserMatch: [
-    {
-      id: string;
-      name: string;
-      city: string;
-      age: string;
-      connection: string;
-      gender: string;
-      popularityScore: string;
-      pictures: [
-        {
-          path: string;
-          date: string;
-          main: boolean;
-        }
-      ];
-      tags: [
-        {
-          tag_id: string;
-          name: string;
-          custom: boolean;
-        }
-      ];
-    }
-  ];
+  clearList: boolean;
+  userMatchInfo: Array<UserMatchInfos>;
+  copyUserMatch: Array<UserMatchInfos>;
   messageHome?: string;
 }
 
@@ -86,56 +40,9 @@ class Home extends React.Component<Props, HState> {
     super(props);
     this.state = {
       isLoading: true,
-      userMatchInfo: [
-        {
-          id: "",
-          name: "",
-          city: "",
-          age: "",
-          connection: "",
-          gender: "",
-          popularityScore: "",
-          pictures: [
-            {
-              path: "",
-              date: "",
-              main: false
-            }
-          ],
-          tags: [
-            {
-              tag_id: "",
-              name: "",
-              custom: false
-            }
-          ]
-        }
-      ],
-      copyUserMatch: [
-        {
-          id: "",
-          name: "",
-          city: "",
-          age: "",
-          connection: "",
-          gender: "",
-          popularityScore: "",
-          pictures: [
-            {
-              path: "",
-              date: "",
-              main: false
-            }
-          ],
-          tags: [
-            {
-              tag_id: "",
-              name: "",
-              custom: false
-            }
-          ]
-        }
-      ]
+      clearList: false,
+      userMatchInfo: [],
+      copyUserMatch: []
     };
   }
 
@@ -174,14 +81,21 @@ class Home extends React.Component<Props, HState> {
       .catch(err => console.error(err));
   };
 
-  sortByInterval = (index: string, start: number, end: number) => {
+  sortByInterval = (
+    index: string,
+    start: number,
+    end: number,
+    tagsName: Array<string>
+  ) => {
+    console.log(tagsName);
     Axios.post("http://localhost:5000/home/sort-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       userMatchInfo: this.state.copyUserMatch,
       index,
       start: start.toString(),
-      end: end.toString()
+      end: end.toString(),
+      tagsName
     })
       .then(({ data: { validated, message, userMatchInfo } }) => {
         if (validated) {
@@ -192,13 +106,20 @@ class Home extends React.Component<Props, HState> {
       .catch(err => console.error(err));
   };
 
+  clearMatch = () => {
+    this.setState({ userMatchInfo: this.state.copyUserMatch });
+  };
+
   public render() {
     return (
       <div>
         <TopMenu current="home" />
         <div>
           <SortIndex sortByIndex={this.sortByIndex} />
-          <SortInterval sortByInterval={this.sortByInterval} />
+          <SortInterval
+            sortByInterval={this.sortByInterval}
+            clearMatch={this.clearMatch}
+          />
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
