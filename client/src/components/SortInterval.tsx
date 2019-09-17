@@ -5,6 +5,7 @@ import { Tags } from "../models/models";
 
 import { Button, Icon } from "semantic-ui-react";
 import "rc-slider/assets/index.css";
+import "../styles/stylesUserHome.css";
 
 interface Props {
   sortByInterval(
@@ -60,14 +61,25 @@ class SortInterval extends React.Component<Props, State> {
   };
 
   tagsClick = (name: string) => {
-    this.state.list.push(name);
-    this.props.sortByInterval("Tags", 0, 0, this.state.list);
+    if (this.state.list.indexOf(name) == -1) {
+      this.state.list.push(name);
+      this.props.sortByInterval("Tags", 0, 0, this.state.list);
+    } else {
+      if (this.state.list.length == 1) {
+        this.props.clearMatch();
+        this.state.list.splice(this.state.list.indexOf(name), 1);
+      } else {
+        this.state.list.splice(this.state.list.indexOf(name), 1);
+        this.props.sortByInterval("Tags", 0, 0, this.state.list);
+      }
+    }
   };
 
   public render() {
     if (this.state.messageTags) {
       setTimeout(() => this.setState({ messageTags: "" }), 4000);
     }
+    // console.log(this.state.list);
     return (
       <div>
         <div className="container-range">
@@ -130,11 +142,21 @@ class SortInterval extends React.Component<Props, State> {
             />
             <span>100%</span>
           </div>
-          <div>
+          Sort by tags :
+          <div className="tagList">
             {this.state.tags.map(({ id, name }) => (
-              <Button key={id} onClick={() => this.tagsClick(name)}>
+              <button
+                key={id}
+                onClick={() => this.tagsClick(name)}
+                className={
+                  this.state.list.indexOf(name) > -1
+                    ? "ui tag label active"
+                    : "ui tag label"
+                }
+              >
+                {/* {console.log(this.state.list)} */}
                 {name}
-              </Button>
+              </button>
             ))}
           </div>
           <br />
