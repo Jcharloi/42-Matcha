@@ -2,13 +2,7 @@ import { sortByAge } from "./sortBy.mjs";
 import { sortByDistance } from "./sortBy.mjs";
 import { sortByPopularity } from "./sortBy.mjs";
 import { sortByTagsInCommon } from "./sortBy.mjs";
-
-const validIntervalParam = (start, end, startNb, endNb) => {
-  if (start >= startNb && start <= endNb && end >= startNb && end <= endNb) {
-    return true;
-  }
-  return false;
-};
+import { validIntervalParam } from "../validInfos.mjs";
 
 const compareTag = (myTags, tagUser) => {
   return (
@@ -18,24 +12,29 @@ const compareTag = (myTags, tagUser) => {
   );
 };
 
-const sortByInterval = (req, res) => {
+const filterByInterval = (req, res) => {
   if (
-    !req.body.userMatchInfo ||
     !req.body.index ||
-    !req.body.start ||
-    !req.body.end ||
+    !req.body.startAge ||
+    !req.body.endAge ||
+    !req.body.startLoc ||
+    !req.body.endLoc ||
+    !req.body.startPop ||
+    !req.body.endPop ||
     !req.body.userMatchInfo
   ) {
     res.send({ validated: false, message: "No empty params allowed" });
   } else {
-    const start = parseInt(req.body.start);
-    const end = parseInt(req.body.end);
+    const startAge = parseInt(req.body.startAge);
+    const endAge = parseInt(req.body.endAge);
+    const startLoc = parseInt(req.body.startLoc);
+    const endLoc = parseInt(req.body.endLoc);
+    const startPop = parseInt(req.body.startPop);
+    const endPop = parseInt(req.body.endPop);
     if (
-      (req.body.index === "Age" && validIntervalParam(start, end, 18, 100)) ||
-      (req.body.index === "Popularity" &&
-        validIntervalParam(start, end, 0, 100)) ||
-      (req.body.index === "Localisation" &&
-        validIntervalParam(start, end, 0, 300)) ||
+      (validIntervalParam(startAge, endAge, 18, 100) &&
+        validIntervalParam(startLoc, endLoc, 0, 1000) &&
+        validIntervalParam(startPop, endPop, 0, 100)) ||
       (req.body.index === "Tags" && req.body.tagsName.length > 0)
     ) {
       let userMatchInfo = req.body.userMatchInfo;
@@ -49,17 +48,17 @@ const sortByInterval = (req, res) => {
           });
           return hasToDelete;
         });
-      } else if (req.body.index === "Age") {
-        userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return user.age >= start && user.age <= end;
+      } else {
+        userMatchInfo = userMatchInfo.filter(user => {
+          return user.age >= startAge && user.age <= endAge;
         });
-      } else if (req.body.index === "Localisation") {
-        userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return user.distance >= start && user.distance <= end;
+        userMatchInfo = userMatchInfo.filter(user => {
+          return user.distance >= startLoc && user.distance <= endLoc;
         });
-      } else if (req.body.index === "Popularity") {
-        userMatchInfo = req.body.userMatchInfo.filter(user => {
-          return user.popularityScore >= start && user.popularityScore <= end;
+        userMatchInfo = userMatchInfo.filter(user => {
+          return (
+            user.popularityScore >= startPop && user.popularityScore <= endPop
+          );
         });
       }
       res.send({
@@ -112,4 +111,4 @@ const sortByIndex = (req, res) => {
   }
 };
 
-export { sortByIndex, sortByInterval };
+export { sortByIndex, filterByInterval };
