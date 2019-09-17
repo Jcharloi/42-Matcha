@@ -3,7 +3,6 @@ import Axios from "axios";
 import { Range } from "rc-slider";
 import { Tags } from "../models/models";
 
-import { Button, Icon } from "semantic-ui-react";
 import "rc-slider/assets/index.css";
 import "../styles/stylesUserHome.css";
 
@@ -37,12 +36,12 @@ class FilterInterval extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      startAge: 50,
-      endAge: 70,
-      startLoc: 130,
-      endLoc: 180,
-      startPop: 40,
-      endPop: 64,
+      startAge: 18,
+      endAge: 100,
+      startLoc: 0,
+      endLoc: 1000,
+      startPop: 0,
+      endPop: 100,
       list: [],
       tags: []
     };
@@ -65,39 +64,33 @@ class FilterInterval extends React.Component<Props, State> {
   };
 
   tagsClick = (name: string) => {
-    if (this.state.list.indexOf(name) == -1) {
+    if (this.state.list.indexOf(name) === -1) {
       this.state.list.push(name);
     } else {
       this.state.list.splice(this.state.list.indexOf(name), 1);
     }
-    this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
-    console.log(this.state.list);
-    // if (this.state.list.length == 1) {
-    //   this.props.clearMatch();
-    //   console.log("entered");
-    //   // this.setState({
-    //   //   list: []
-    //   // });
-    //   // this.props.sortByInterval("Tags", 0, 0, this.state.list);
-    //   this.state.list.splice(this.state.list.indexOf(name), 1);
-    // } else {
-    //   this.state.list.splice(this.state.list.indexOf(name), 1);
-    //   this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
-    // }
+    this.props.filterByInterval(
+      "Tags",
+      this.state.startAge,
+      this.state.endAge,
+      this.state.startLoc,
+      this.state.endLoc,
+      this.state.startPop,
+      this.state.endPop,
+      this.state.list.length > 0 ? this.state.list : []
+    );
   };
 
   public render() {
     if (this.state.messageTags) {
       setTimeout(() => this.setState({ messageTags: "" }), 4000);
     }
-    // console.log(this.state.list);
     return (
       <div>
         <div className="container-range">
           <h3>Filter by age :</h3>
           <div>
-            <span>{this.state.startAge}</span>
-            <span>{this.state.endAge}</span>
+            <span>{this.state.startAge}</span>-<span>{this.state.endAge}</span>
           </div>
           <div className="range">
             <span>
@@ -106,7 +99,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={18}
               max={100}
-              defaultValue={[50, 70]}
+              defaultValue={[18, 100]}
               onChange={value => {
                 this.setState({ startAge: value[0], endAge: value[1] });
                 this.props.filterByInterval(
@@ -117,7 +110,7 @@ class FilterInterval extends React.Component<Props, State> {
                   this.state.endLoc,
                   this.state.startPop,
                   this.state.endPop,
-                  []
+                  this.state.list
                 );
               }}
             />
@@ -127,8 +120,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <h3>Filter by location :</h3>
           <div>
-            <span>{this.state.startLoc}</span>
-            <span>{this.state.endLoc}</span>
+            <span>{this.state.startLoc}</span>-<span>{this.state.endLoc}</span>
           </div>
           <div className="range">
             <span>
@@ -137,7 +129,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={0}
               max={1000}
-              defaultValue={[400, 666]}
+              defaultValue={[0, 1000]}
               onChange={value => {
                 this.setState({ startLoc: value[0], endLoc: value[1] });
                 this.props.filterByInterval(
@@ -148,7 +140,7 @@ class FilterInterval extends React.Component<Props, State> {
                   value[1],
                   this.state.startPop,
                   this.state.endPop,
-                  []
+                  this.state.list
                 );
               }}
             />
@@ -158,8 +150,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <h3>Filter by popularity :</h3>
           <div>
-            <span>{this.state.startPop}</span>
-            <span>{this.state.endPop}</span>
+            <span>{this.state.startPop}</span>-<span>{this.state.endPop}</span>
           </div>
           <div className="range">
             <span>
@@ -168,7 +159,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={0}
               max={100}
-              defaultValue={[40, 64]}
+              defaultValue={[0, 100]}
               onChange={value => {
                 this.setState({ startPop: value[0], endPop: value[1] });
                 this.props.filterByInterval(
@@ -179,7 +170,7 @@ class FilterInterval extends React.Component<Props, State> {
                   this.state.endLoc,
                   value[0],
                   value[1],
-                  []
+                  this.state.list
                 );
               }}
             />
@@ -199,7 +190,6 @@ class FilterInterval extends React.Component<Props, State> {
                     : "ui tag label"
                 }
               >
-                {/* {console.log(this.state.list)} */}
                 {name}
               </button>
             ))}
@@ -216,7 +206,6 @@ class FilterInterval extends React.Component<Props, State> {
           >
             <i className="close icon"></i>
             Clear filters
-            {/* <Icon name="close" /> */}
           </button>
           {this.state.messageTags && (
             <div className="toast-message ui blue floating message">

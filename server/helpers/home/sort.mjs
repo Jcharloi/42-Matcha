@@ -38,7 +38,18 @@ const filterByInterval = (req, res) => {
       (req.body.index === "Tags" && req.body.tagsName.length > 0)
     ) {
       let userMatchInfo = req.body.userMatchInfo;
-      if (req.body.index === "Tags") {
+      userMatchInfo = userMatchInfo.filter(user => {
+        return user.age >= startAge && user.age <= endAge;
+      });
+      userMatchInfo = userMatchInfo.filter(user => {
+        return user.distance >= startLoc && user.distance <= endLoc;
+      });
+      userMatchInfo = userMatchInfo.filter(user => {
+        return (
+          user.popularityScore >= startPop && user.popularityScore <= endPop
+        );
+      });
+      if (req.body.tagsName.length > 0) {
         userMatchInfo = userMatchInfo.filter(user => {
           let hasToDelete = false;
           user.tags.map(tag => {
@@ -47,18 +58,6 @@ const filterByInterval = (req, res) => {
             }
           });
           return hasToDelete;
-        });
-      } else {
-        userMatchInfo = userMatchInfo.filter(user => {
-          return user.age >= startAge && user.age <= endAge;
-        });
-        userMatchInfo = userMatchInfo.filter(user => {
-          return user.distance >= startLoc && user.distance <= endLoc;
-        });
-        userMatchInfo = userMatchInfo.filter(user => {
-          return (
-            user.popularityScore >= startPop && user.popularityScore <= endPop
-          );
         });
       }
       res.send({
