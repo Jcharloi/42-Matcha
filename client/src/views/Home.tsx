@@ -7,7 +7,7 @@ import { UserMatchInfos } from "../models/models";
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
 import SortIndex from "../components/SortIndex";
-import SortInterval from "../components/SortInterval";
+import FilterInterval from "../components/FilterInterval";
 
 import "../styles/stylesUserHome.css";
 
@@ -81,20 +81,27 @@ class Home extends React.Component<Props, HState> {
       .catch(err => console.error(err));
   };
 
-  sortByInterval = (
+  filterByInterval = (
     index: string,
-    start: number,
-    end: number,
+    startAge: number,
+    endAge: number,
+    startLoc: number,
+    endLoc: number,
+    startPop: number,
+    endPop: number,
     tagsName: Array<string>
   ) => {
-    console.log(tagsName);
-    Axios.post("http://localhost:5000/home/sort-by-interval/", {
+    Axios.post("http://localhost:5000/home/filter-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       userMatchInfo: this.state.copyUserMatch,
       index,
-      start: start.toString(),
-      end: end.toString(),
+      startAge: startAge.toString(),
+      endAge: endAge.toString(),
+      startLoc: startLoc.toString(),
+      endLoc: endLoc.toString(),
+      startPop: startPop.toString(),
+      endPop: endPop.toString(),
       tagsName
     })
       .then(({ data: { validated, message, userMatchInfo } }) => {
@@ -116,8 +123,8 @@ class Home extends React.Component<Props, HState> {
         <TopMenu current="home" />
         <div>
           <SortIndex sortByIndex={this.sortByIndex} />
-          <SortInterval
-            sortByInterval={this.sortByInterval}
+          <FilterInterval
+            filterByInterval={this.filterByInterval}
             clearMatch={this.clearMatch}
           />
         </div>
