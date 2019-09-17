@@ -111,6 +111,7 @@ class App extends React.Component<Props, AppState> {
     - Tester l'interval
     - Infinite scroll
     - Generer last connection en dynamique : Adapter par rapport aux heures/minutes
+    - HandleChange
     
     Partie back :
     - Obtenir le bon age de naissance
