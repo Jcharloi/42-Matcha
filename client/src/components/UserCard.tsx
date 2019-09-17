@@ -37,8 +37,7 @@ class UserCard extends React.Component<Props, CState> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      genderIcon:
-        this.props.userInfo.gender === "Woman" ? "venus icon" : "mars icon",
+      genderIcon: "mars stroke horizontal icon",
       lastSeenSince:
         (+new Date().setHours(0, 0, 0, 0) -
           +new Date(this.props.userInfo.connection).setHours(0, 0, 0, 0)) /
@@ -56,6 +55,11 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   public render() {
+    if (this.props.userInfo.gender === "Woman") {
+      this.setState({ genderIcon: "venus icon" });
+    } else if (this.props.userInfo.gender === "Man") {
+      this.setState({ genderIcon: "mars icon" });
+    }
     return (
       <div className="ui card user">
         <div className="image">
