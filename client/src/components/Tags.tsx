@@ -70,7 +70,7 @@ class Tags extends React.Component<Props, TState> {
       <div className="media-container">
         <div className="title-container-tag">
           <Header as="h3" dividing className="title">
-            Some tags who represents me
+            Some tags that represents me
           </Header>
         </div>
         <div className="tag-container">
