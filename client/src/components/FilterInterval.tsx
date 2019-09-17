@@ -8,10 +8,14 @@ import "rc-slider/assets/index.css";
 import "../styles/stylesUserHome.css";
 
 interface Props {
-  sortByInterval(
+  filterByInterval(
     index: string,
-    start: number,
-    end: number,
+    startAge: number,
+    endAge: number,
+    startLoc: number,
+    endLoc: number,
+    startPop: number,
+    endPop: number,
     tagsName: Array<string>
   ): void;
   clearMatch(): void;
@@ -29,7 +33,7 @@ interface State {
   messageTags?: string;
 }
 
-class SortInterval extends React.Component<Props, State> {
+class FilterInterval extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -63,7 +67,7 @@ class SortInterval extends React.Component<Props, State> {
   tagsClick = (name: string) => {
     if (this.state.list.indexOf(name) == -1) {
       this.state.list.push(name);
-      this.props.sortByInterval("Tags", 0, 0, this.state.list);
+      this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
     } else {
       if (this.state.list.length == 1) {
         this.props.clearMatch();
@@ -75,7 +79,7 @@ class SortInterval extends React.Component<Props, State> {
         this.state.list.splice(this.state.list.indexOf(name), 1);
       } else {
         this.state.list.splice(this.state.list.indexOf(name), 1);
-        this.props.sortByInterval("Tags", 0, 0, this.state.list);
+        this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
       }
     }
   };
@@ -103,7 +107,16 @@ class SortInterval extends React.Component<Props, State> {
               defaultValue={[50, 70]}
               onChange={value => {
                 this.setState({ startAge: value[0], endAge: value[1] });
-                this.props.sortByInterval("Age", value[0], value[1], []);
+                this.props.filterByInterval(
+                  "Age",
+                  value[0],
+                  value[1],
+                  this.state.startLoc,
+                  this.state.endLoc,
+                  this.state.startPop,
+                  this.state.endPop,
+                  []
+                );
               }}
             />
             <span>
@@ -121,20 +134,24 @@ class SortInterval extends React.Component<Props, State> {
             </span>
             <Range
               min={0}
-              max={300}
-              defaultValue={[130, 180]}
+              max={1000}
+              defaultValue={[400, 666]}
               onChange={value => {
                 this.setState({ startLoc: value[0], endLoc: value[1] });
-                this.props.sortByInterval(
+                this.props.filterByInterval(
                   "Localisation",
+                  this.state.startAge,
+                  this.state.endAge,
                   value[0],
                   value[1],
+                  this.state.startPop,
+                  this.state.endPop,
                   []
                 );
               }}
             />
             <span>
-              <h5>300&nbsp;km</h5>
+              <h5>1 000&nbsp;km</h5>
             </span>
           </div>
           <h3>Filter by popularity :</h3>
@@ -152,7 +169,16 @@ class SortInterval extends React.Component<Props, State> {
               defaultValue={[40, 64]}
               onChange={value => {
                 this.setState({ startPop: value[0], endPop: value[1] });
-                this.props.sortByInterval("Popularity", value[0], value[1], []);
+                this.props.filterByInterval(
+                  "Popularity",
+                  this.state.startAge,
+                  this.state.endAge,
+                  this.state.startLoc,
+                  this.state.endLoc,
+                  value[0],
+                  value[1],
+                  []
+                );
               }}
             />
             <span>
@@ -201,4 +227,4 @@ class SortInterval extends React.Component<Props, State> {
   }
 }
 
-export default SortInterval;
+export default FilterInterval;
