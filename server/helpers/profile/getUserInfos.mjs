@@ -169,6 +169,34 @@ const getUserCity = async (req, res) => {
   }
 };
 
+const getAllTags = async (req, res) => {
+  const userId = await getUserId(req.body.userName);
+  if (!userId) {
+    res.send({ validated: false });
+  } else {
+    let text = `SELECT name, tag_id FROM tag WHERE custom=false`;
+    await client
+      .query(text)
+      .then(async ({ rowCount, rows }) => {
+        let tags = [];
+        for (let i = 0; i < rowCount; i++) {
+          tags.push({
+            id: rows[i].tag_id,
+            name: rows[i].name
+          });
+        }
+        res.send({ validated: true, tags });
+      })
+      .catch(e => {
+        console.error(e);
+        res.send({
+          validated: false,
+          message: "We got a problem with our database, please try again "
+        });
+      });
+  }
+};
+
 const getTags = async (req, res) => {
   const userId = await getUserId(req.body.userName);
   if (!userId) {
@@ -218,5 +246,6 @@ export {
   getUserTags,
   getUserLatitudeAndLongitude,
   getUserCity,
+  getAllTags,
   getTags
 };

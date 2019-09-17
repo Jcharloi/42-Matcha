@@ -4,7 +4,12 @@ import path from "path";
 const router = express.Router();
 
 import { tokenMiddleware, verifyToken } from "./token.mjs";
-import { getUserAll } from "./helpers/profile/getUserInfos.mjs";
+import {
+  getUserAll,
+  getAllTags,
+  getUserCity,
+  getTags
+} from "./helpers/profile/getUserInfos.mjs";
 
 import { connection } from "./helpers/auth/signIn.mjs";
 import { inscription, validateAccount } from "./helpers/auth/signUp.mjs";
@@ -13,7 +18,7 @@ import {
   newPassword,
   resetPasswordId
 } from "./helpers/auth/resetPassword.mjs";
-import { getUserCity, getTags } from "./helpers/profile/getUserInfos.mjs";
+
 import {
   changePersonalInfos,
   changePreferenceInfos,
@@ -45,6 +50,7 @@ router.put("/new-password", newPassword);
 router.post("/connection", connection);
 
 router.put("/profile/get-user-city", getUserCity);
+router.put("/profile/get-all-tags", getAllTags);
 router.post("/profile/get-tags", getTags);
 router.post("/profile/upload-pictures", uploadPictures);
 router.put("/profile/set-main-pictures", setMainPictures);

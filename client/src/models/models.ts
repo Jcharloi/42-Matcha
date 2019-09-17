@@ -30,3 +30,32 @@ export interface UserTags {
   name: string;
   custom: boolean;
 }
+
+export interface Tags {
+  id: string;
+  name: string;
+}
+
+export interface UserMatchInfos {
+  id: string;
+  name: string;
+  city: string;
+  age: string;
+  connection: string;
+  gender: string;
+  popularityScore: string;
+  pictures: [
+    {
+      path: string;
+      date: string;
+      main: boolean;
+    }
+  ];
+  tags: [
+    {
+      tag_id: string;
+      name: string;
+      custom: boolean;
+    }
+  ];
+}
