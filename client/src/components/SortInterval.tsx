@@ -67,6 +67,11 @@ class SortInterval extends React.Component<Props, State> {
     } else {
       if (this.state.list.length == 1) {
         this.props.clearMatch();
+        console.log("entered");
+        // this.setState({
+        //   list: []
+        // });
+        // this.props.sortByInterval("Tags", 0, 0, this.state.list);
         this.state.list.splice(this.state.list.indexOf(name), 1);
       } else {
         this.state.list.splice(this.state.list.indexOf(name), 1);
