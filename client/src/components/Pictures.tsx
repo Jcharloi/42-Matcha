@@ -131,6 +131,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               ) {
                 picture.main = true;
               }
+              return 1;
             });
             const newData = {
               ...this.props,
