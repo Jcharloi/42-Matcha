@@ -74,3 +74,10 @@
   margin: 2px 1.5em 0 0;
   outline: none;
 }
+.container-range .range span {
+  padding: 0 10px 0 30px;
+}
+.ui.compact.menu {
+  /* border: 2px solid red !important; */
+  margin: 0px 0px 0px 25px;
+}

@@ -10,32 +10,8 @@ class sortIndex extends React.Component<Props> {
   public render() {
     return (
       <div>
-        {/* <button
-          className="ui button"
-          onClick={() => this.props.sortByIndex("Age")}
-        >
-          Age
-        </button>
-        <button
-          className="ui button"
-          onClick={() => this.props.sortByIndex("Localisation")}
-        >
-          Localisation
-        </button>
-        <button
-          className="ui button"
-          onClick={() => this.props.sortByIndex("Popularity")}
-        >
-          Popularity
-        </button>
-        <button
-          className="ui button"
-          onClick={() => this.props.sortByIndex("Tags")}
-        >
-          Tags
-        </button> */}
         <div className="ui compact menu">
-          <div className="ui simple dropdown item">
+          <div className="ui simple dropdown item sortBy">
             Sort by
             <i className="dropdown icon"></i>
             <div className="menu">
