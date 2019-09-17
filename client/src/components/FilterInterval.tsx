@@ -5,6 +5,7 @@ import { Tags } from "../models/models";
 
 import { Button, Icon } from "semantic-ui-react";
 import "rc-slider/assets/index.css";
+import "../styles/stylesUserHome.css";
 
 interface Props {
   filterByInterval(
@@ -64,24 +65,37 @@ class FilterInterval extends React.Component<Props, State> {
   };
 
   tagsClick = (name: string) => {
-    this.state.list.push(name);
-    this.props.filterByInterval("Tags", 18, 100, 0, 0, 0, 0, this.state.list);
+    if (this.state.list.indexOf(name) == -1) {
+      this.state.list.push(name);
+      this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
+    } else {
+      if (this.state.list.length == 1) {
+        this.props.clearMatch();
+        this.state.list.splice(this.state.list.indexOf(name), 1);
+      } else {
+        this.state.list.splice(this.state.list.indexOf(name), 1);
+        this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
+      }
+    }
   };
 
   public render() {
     if (this.state.messageTags) {
       setTimeout(() => this.setState({ messageTags: "" }), 4000);
     }
+    // console.log(this.state.list);
     return (
       <div>
         <div className="container-range">
-          Sort by age :
+          <h3>Filter by age :</h3>
           <div>
             <span>{this.state.startAge}</span>
             <span>{this.state.endAge}</span>
           </div>
           <div className="range">
-            <span>18</span>
+            <span>
+              <h5>18</h5>
+            </span>
             <Range
               min={18}
               max={100}
@@ -100,15 +114,19 @@ class FilterInterval extends React.Component<Props, State> {
                 );
               }}
             />
-            <span>100 yo</span>
+            <span>
+              <h5>100&nbsp;yo</h5>
+            </span>
           </div>
-          Sort by location :
+          <h3>Filter by location :</h3>
           <div>
             <span>{this.state.startLoc}</span>
             <span>{this.state.endLoc}</span>
           </div>
           <div className="range">
-            <span>0</span>
+            <span>
+              <h5>0</h5>
+            </span>
             <Range
               min={0}
               max={1000}
@@ -127,15 +145,19 @@ class FilterInterval extends React.Component<Props, State> {
                 );
               }}
             />
-            <span>1 000 km</span>
+            <span>
+              <h5>1 000&nbsp;km</h5>
+            </span>
           </div>
-          Sort by popularity :
+          <h3>Filter by popularity :</h3>
           <div>
             <span>{this.state.startPop}</span>
             <span>{this.state.endPop}</span>
           </div>
           <div className="range">
-            <span>0</span>
+            <span>
+              <h5>0</h5>
+            </span>
             <Range
               min={0}
               max={100}
@@ -154,17 +176,30 @@ class FilterInterval extends React.Component<Props, State> {
                 );
               }}
             />
-            <span>100%</span>
+            <span>
+              <h5>100&nbsp;%</h5>
+            </span>
           </div>
-          <div>
+          <h3>Filter by tags :</h3>
+          <div className="tagList">
             {this.state.tags.map(({ id, name }) => (
-              <Button key={id} onClick={() => this.tagsClick(name)}>
+              <button
+                key={id}
+                onClick={() => this.tagsClick(name)}
+                className={
+                  this.state.list.indexOf(name) > -1
+                    ? "ui tag label active"
+                    : "ui tag label"
+                }
+              >
+                {/* {console.log(this.state.list)} */}
                 {name}
-              </Button>
+              </button>
             ))}
           </div>
           <br />
-          <Button
+          <button
+            className="negative tiny ui button"
             onClick={() => {
               this.setState({
                 list: []
@@ -172,9 +207,10 @@ class FilterInterval extends React.Component<Props, State> {
               this.props.clearMatch();
             }}
           >
-            Clear filters
-            <Icon name="close" />
-          </Button>
+            <i className="close icon"></i>
+            Clear tags
+            {/* <Icon name="close" /> */}
+          </button>
           {this.state.messageTags && (
             <div className="toast-message ui blue floating message">
               {this.state.messageTags}
