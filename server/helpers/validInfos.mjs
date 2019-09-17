@@ -8,7 +8,7 @@ const compareTag = (tagsList, potentialUserTag) => {
     }
   });
   return tagsList;
-}
+};
 
 const validFile = (name, size, type) => {
   if (!name) {
@@ -24,9 +24,9 @@ const validFile = (name, size, type) => {
     return false;
   }
   return true;
-}
+};
 
-const validMail = (mail) => {
+const validMail = mail => {
   let regex = new RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -34,7 +34,7 @@ const validMail = (mail) => {
     return false;
   }
   return true;
-}
+};
 
 const validCurrentPassword = async (userName, currentPassword) => {
   let answer;
@@ -64,7 +64,7 @@ const validCurrentPassword = async (userName, currentPassword) => {
   return answer;
 };
 
-const validPassword = (password) => {
+const validPassword = password => {
   let regex = new RegExp(
     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
   );
@@ -72,7 +72,7 @@ const validPassword = (password) => {
     return false;
   }
   return true;
-}
+};
 
 const validBirthday = (day, monthBody, year) => {
   const months = [
@@ -99,16 +99,16 @@ const validBirthday = (day, monthBody, year) => {
     return false;
   }
   return true;
-}
+};
 
-const validGender = (gender) => {
+const validGender = gender => {
   if (gender === "Man" || gender === "Woman" || gender === "Other") {
     return true;
   }
   return false;
-}
+};
 
-const validOrientation = (orientation) => {
+const validOrientation = orientation => {
   if (
     orientation === "Man" ||
     orientation === "Woman" ||
@@ -118,7 +118,14 @@ const validOrientation = (orientation) => {
     return true;
   }
   return false;
-}
+};
+
+const validIntervalParam = (start, end, startNb, endNb) => {
+  if (start >= startNb && start <= endNb && end >= startNb && end <= endNb) {
+    return true;
+  }
+  return false;
+};
 
 export {
   compareTag,
@@ -128,5 +135,6 @@ export {
   validPassword,
   validBirthday,
   validGender,
-  validOrientation
+  validOrientation,
+  validIntervalParam
 };
