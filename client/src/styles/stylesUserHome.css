@@ -17,6 +17,12 @@
   position: relative;
   float: left;
   margin-left: 30px;
+  max-height: 415px;
+}
+.ui.card.user .content .description {
+  /* border: 2px solid red; */
+  max-height: 35px;
+  display: inline-block;
 }
 
 .popularity {
@@ -40,6 +46,9 @@
 
 .tag-home {
   margin: 0.5rem !important;
+  max-width: 120px;
+  /* font-size: 12px !important; */
+  max-height: 33px;
 }
 
 .container-range {
