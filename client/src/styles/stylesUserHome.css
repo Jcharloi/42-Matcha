@@ -61,3 +61,15 @@
   display: flex;
   width: 50% !important;
 }
+
+.container-range .tagList {
+  /* border: 2px solid red; */
+  position: relative;
+  top: 10px;
+  width: 900px;
+  /* margin-left: 30px; */
+  /* padding: 10px; */
+}
+.container-range .tagList .ui.tag.label {
+  margin: 2px 1.5em 0 0;
+}
