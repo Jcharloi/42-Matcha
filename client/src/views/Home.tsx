@@ -46,7 +46,7 @@ class Home extends React.Component<Props, HState> {
     };
   }
 
-  componentWillMount() {
+  componentWillMount = () => {
     Axios.post("http://localhost:5000/home/get-users-by-preference/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -60,7 +60,7 @@ class Home extends React.Component<Props, HState> {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
-  }
+  };
 
   sortByIndex = (indexBy: string) => {
     const userAge =
