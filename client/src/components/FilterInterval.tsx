@@ -67,21 +67,23 @@ class FilterInterval extends React.Component<Props, State> {
   tagsClick = (name: string) => {
     if (this.state.list.indexOf(name) == -1) {
       this.state.list.push(name);
-      this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
     } else {
-      if (this.state.list.length == 1) {
-        this.props.clearMatch();
-        console.log("entered");
-        // this.setState({
-        //   list: []
-        // });
-        // this.props.sortByInterval("Tags", 0, 0, this.state.list);
-        this.state.list.splice(this.state.list.indexOf(name), 1);
-      } else {
-        this.state.list.splice(this.state.list.indexOf(name), 1);
-        this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
-      }
+      this.state.list.splice(this.state.list.indexOf(name), 1);
     }
+    this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
+    console.log(this.state.list);
+    // if (this.state.list.length == 1) {
+    //   this.props.clearMatch();
+    //   console.log("entered");
+    //   // this.setState({
+    //   //   list: []
+    //   // });
+    //   // this.props.sortByInterval("Tags", 0, 0, this.state.list);
+    //   this.state.list.splice(this.state.list.indexOf(name), 1);
+    // } else {
+    //   this.state.list.splice(this.state.list.indexOf(name), 1);
+    //   this.props.filterByInterval("Tags", 0, 0, 0, 0, 0, 0, this.state.list);
+    // }
   };
 
   public render() {
@@ -213,7 +215,7 @@ class FilterInterval extends React.Component<Props, State> {
             }}
           >
             <i className="close icon"></i>
-            Clear tags
+            Clear filters
             {/* <Icon name="close" /> */}
           </button>
           {this.state.messageTags && (
