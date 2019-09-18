@@ -1,16 +1,11 @@
-import { sortByAge } from "./sortBy.mjs";
-import { sortByDistance } from "./sortBy.mjs";
-import { sortByPopularity } from "./sortBy.mjs";
-import { sortByTagsInCommon } from "./sortBy.mjs";
+import {
+  sortByAge,
+  sortByDistance,
+  sortByPopularity,
+  sortByTagsInCommon
+} from "./sortBy.mjs";
 import { validIntervalParam } from "../validInfos.mjs";
-
-const compareTag = (myTags, tagUser) => {
-  return (
-    myTags.findIndex(myTag => {
-      return myTag === tagUser;
-    }) != -1
-  );
-};
+import { compareTag } from "../../common.mjs";
 
 const filterByInterval = (req, res) => {
   if (
