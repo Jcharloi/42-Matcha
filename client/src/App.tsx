@@ -14,6 +14,7 @@ import CompletedRoutes from "./components/CompletedRoutes";
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
+import SearchMatch from "./components/SearchMatch";
 
 interface AppState {
   isLoading: boolean;
@@ -107,8 +108,7 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Design mdr
-    - Tester le tri
-    - Tester l'interval
+    - Tester l'interval -> done
     - Infinite scroll
     - Generer last connection en dynamique : Adapter par rapport aux heures/minutes
     - HandleChange
@@ -140,6 +140,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/home"
                 component={Home}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/search"
+                component={SearchMatch}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
