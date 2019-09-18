@@ -36,8 +36,18 @@ interface CState {
 class UserCard extends React.Component<Props, CState> {
   constructor(props: Props) {
     super(props);
+    // if (this.props.userInfo.gender === "Woman") {
+    //   this.setState({ genderIcon: "venus icon" });
+    // } else if (this.props.userInfo.gender === "Man") {
+    //   this.setState({ genderIcon: "mars icon" });
+    // }
     this.state = {
-      genderIcon: "mars stroke horizontal icon",
+      genderIcon:
+        this.props.userInfo.gender === "Woman"
+          ? "venus icon"
+          : this.props.userInfo.gender === "Man"
+          ? "mars icon"
+          : "mars stroke horizontal icon",
       lastSeenSince:
         (+new Date().setHours(0, 0, 0, 0) -
           +new Date(this.props.userInfo.connection).setHours(0, 0, 0, 0)) /
@@ -75,11 +85,7 @@ class UserCard extends React.Component<Props, CState> {
 
   public render() {
     // console.log(this.find_time_unit(this.props.userInfo.connection));
-    if (this.props.userInfo.gender === "Woman") {
-      this.setState({ genderIcon: "venus icon" });
-    } else if (this.props.userInfo.gender === "Man") {
-      this.setState({ genderIcon: "mars icon" });
-    }
+
     return (
       <div className="ui card user">
         <div className="image">
