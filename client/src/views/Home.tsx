@@ -8,6 +8,8 @@ import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
 import SortIndex from "../components/SortIndex";
 import FilterInterval from "../components/FilterInterval";
+import Example from "../components/Modal";
+import { Transition } from "semantic-ui-react";
 
 import "../styles/stylesUserHome.css";
 
@@ -122,12 +124,17 @@ class Home extends React.Component<Props, HState> {
       <div>
         <TopMenu current="home" />
         <div>
-          <SortIndex sortByIndex={this.sortByIndex} />
-          <FilterInterval
-            filterByInterval={this.filterByInterval}
-            clearMatch={this.clearMatch}
-          />
+          <span>
+            <SortIndex sortByIndex={this.sortByIndex} />
+            <Example clearMatch={this.clearMatch}>
+              <FilterInterval
+                filterByInterval={this.filterByInterval}
+                clearMatch={this.clearMatch}
+              />
+            </Example>
+          </span>
         </div>
+
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
             <UserCard key={user.id} userInfo={user} />
