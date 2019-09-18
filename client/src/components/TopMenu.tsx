@@ -5,7 +5,7 @@ import { store } from "../redux/store";
 import { updateUserAuth } from "../redux/actions/actions";
 
 interface Props {
-  current: string;
+  current?: string;
 }
 
 class TopMenu extends React.Component<Props> {
@@ -36,6 +36,16 @@ class TopMenu extends React.Component<Props> {
               }}
             >
               Profile
+            </div>
+          ) : null}
+          {this.props.current !== "search" ? (
+            <div
+              className="item item-page"
+              onClick={() => {
+                history.push("/search");
+              }}
+            >
+              Search
             </div>
           ) : null}
           <div className="item item-page">Visits</div>
