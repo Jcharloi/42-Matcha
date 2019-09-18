@@ -113,7 +113,6 @@ class App extends React.Component<Props, AppState> {
     - HandleChange
     
     Partie back :
-    - Obtenir le bon age de naissance
     */
     return (
       <div>
