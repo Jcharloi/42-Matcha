@@ -1,6 +1,18 @@
+import client from "../../sql/sql.mjs";
+import {
+  getUserPictures,
+  getUserTags,
+  getUserLatitudeAndLongitude
+} from "../profile/getUserInfos.mjs";
 import { validIntervalParam, validOrientation } from "../validInfos.mjs";
+import {
+  calculateDistance,
+  calculateAge,
+  getUserId,
+  compareTag
+} from "../../common.mjs";
 
-const searchMatch = async (req, res) => {
+const getUsersBySearch = async (req, res) => {
   const startAge = parseInt(req.body.startAge);
   const endAge = parseInt(req.body.endAge);
   const startLoc = parseInt(req.body.startLoc);
@@ -22,8 +34,11 @@ const searchMatch = async (req, res) => {
       validIntervalParam(startPop, endPop, 0, 100) &&
       (req.body.preference && validOrientation(req.body.preference))
     ) {
-      let text = `SELECT user_id, user_name, score, city, latitude, longitude, birthday, gender, last_connection FROM users WHERE gender='${req.body.preference}'`;
-      let values = [req.body.preference];
+      let text =
+        `SELECT user_id, user_name, score, city, latitude, longitude, birthday, gender, last_connection FROM users ` +
+        selectGender(req.body.preference) +
+        ` AND score >= $1 AND score <= $2`;
+      let values = [startPop, endPop];
       await client
         .query(text, values)
         .then(async ({ rows, rowCount }) => {
@@ -38,11 +53,31 @@ const searchMatch = async (req, res) => {
               city: rows[i].city,
               latitude: rows[i].latitude,
               longitude: rows[i].longitude,
-              age: 2019 - rows[i].birthday.split("/")[2],
+              age: calculateAge(rows[i].birthday),
               connection: new Date(rows[i].last_connection * 1000),
               pictures: await getUserPictures(rows[i].user_id),
               tags: await getUserTags(rows[i].user_id),
               popularityScore: rows[i].score
+            });
+          }
+          userMatchInfo = userMatchInfo.filter(user => {
+            return user.age >= startAge && user.age <= endAge;
+          });
+          const userId = await getUserId(req.body.userName);
+          const myCoordinates = await getUserLatitudeAndLongitude(userId);
+          userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
+          userMatchInfo = userMatchInfo.filter(user => {
+            return user.distance >= startLoc && user.distance <= endLoc;
+          });
+          if (req.body.tagsName.length > 0) {
+            userMatchInfo = userMatchInfo.filter(user => {
+              let hasToDelete = false;
+              user.tags.map(tag => {
+                if (!hasToDelete) {
+                  hasToDelete = compareTag(req.body.tagsName, tag.name);
+                }
+              });
+              return hasToDelete;
             });
           }
           res.send({ validated: true, userMatchInfo });
@@ -60,4 +95,9 @@ const searchMatch = async (req, res) => {
   }
 };
 
-export { searchMatch };
+const selectGender = gender => {
+  if (gender === "Both") return "WHERE (gender='Man' OR gender='Woman')";
+  else return `WHERE gender='${gender}'`;
+};
+
+export { getUsersBySearch };
