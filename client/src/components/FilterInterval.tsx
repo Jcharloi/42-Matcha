@@ -232,7 +232,7 @@ class FilterInterval extends React.Component<Props, State> {
             ))}
           </div>
           <br />
-          <button
+          {/* <button
             className="negative tiny ui button"
             onClick={() => {
               this.setState({
@@ -243,7 +243,7 @@ class FilterInterval extends React.Component<Props, State> {
           >
             <i className="close icon"></i>
             Clear filters
-          </button>
+          </button> */}
           {this.state.messageTags && (
             <div className="toast-message ui blue floating message">
               {this.state.messageTags}
