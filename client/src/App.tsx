@@ -110,11 +110,9 @@ class App extends React.Component<Props, AppState> {
     - Design mdr
     - Tester l'interval -> done
     - Infinite scroll
-    - Generer last connection en dynamique : Adapter par rapport aux heures/minutes
     - HandleChange
     
     Partie back :
-    - Obtenir le bon age de naissance
     */
     return (
       <div>
