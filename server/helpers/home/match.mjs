@@ -98,6 +98,22 @@ const finalSortByMe = (userMatchInfo, userId) => {
   return userMatchInfo;
 };
 
+function getMonthFromString(mon) {
+  var d = Date.parse(mon + "2, 2019");
+  if (!isNaN(d)) {
+    return new Date(d).getMonth() + 1;
+  }
+  return -1;
+}
+function calculateAge(birthday) {
+  var day = birthday.split("/")[1];
+  var month = getMonthFromString(birthday.split("/")[0]);
+  var year = birthday.split("/")[2];
+  var dob = new Date(+year, +month - 1, +day);
+  var diff_ms = Date.now() - dob.getTime();
+  var age_dt = new Date(diff_ms);
+  return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
 const getUsersByPreference = async (req, res) => {
   if (validOrientation(req.body.preference) && validGender(req.body.gender)) {
     let text =
@@ -118,13 +134,14 @@ const getUsersByPreference = async (req, res) => {
             latitude: rows[i].latitude,
             longitude: rows[i].longitude,
             //get the right age
-            age: 2019 - rows[i].birthday.split("/")[2],
+            age: calculateAge(rows[i].birthday),
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
             popularityScore: rows[i].score
           });
         }
+
         const userId = await getUserId(req.body.userName);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
