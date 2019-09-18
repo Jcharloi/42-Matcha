@@ -54,7 +54,27 @@ class UserCard extends React.Component<Props, CState> {
     return "hsl(" + c + ", 120%, 40%)";
   }
 
+  find_last_since(lastseen: string) {
+    var dateSeen: any = new Date(lastseen);
+    var dateNow: any = new Date();
+    var plural: string = "s";
+
+    var seconds = Math.floor((dateNow - dateSeen) / 1000);
+    var minutes = Math.floor(seconds / 60);
+    var hours = Math.floor(minutes / 60);
+    var days = Math.floor(hours / 24);
+    var months = Math.floor(days / 31);
+    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
+
+    if (months) return months.toString() + " month" + plural + " ago";
+    if (days) return days.toString() + " day" + plural + " ago";
+    if (hours) return hours.toString() + " hour" + plural + " ago";
+    if (minutes) return minutes.toString() + " minute" + plural + " ago";
+    return "Just Now";
+  }
+
   public render() {
+    // console.log(this.find_time_unit(this.props.userInfo.connection));
     if (this.props.userInfo.gender === "Woman") {
       this.setState({ genderIcon: "venus icon" });
     } else if (this.props.userInfo.gender === "Man") {
@@ -100,7 +120,7 @@ class UserCard extends React.Component<Props, CState> {
             {this.props.userInfo.age} years old
           </span>
           <span className="right floated">
-            Last seen {this.state.lastSeenSince} days ago
+            Last seen {this.find_last_since(this.props.userInfo.connection)}
           </span>
         </div>
       </div>
