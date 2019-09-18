@@ -124,7 +124,8 @@ class Home extends React.Component<Props, HState> {
         <div>
           <SortIndex sortByIndex={this.sortByIndex} />
           <FilterInterval
-            filterByInterval={this.filterByInterval}
+            isSearch={false}
+            byInterval={this.filterByInterval}
             clearMatch={this.clearMatch}
           />
         </div>
