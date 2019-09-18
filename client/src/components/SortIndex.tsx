@@ -6,7 +6,7 @@ interface Props {
   sortByIndex(index: string): any;
 }
 
-class sortIndex extends React.Component<Props> {
+class SortIndex extends React.Component<Props> {
   public render() {
     return (
       <div>
@@ -47,4 +47,4 @@ class sortIndex extends React.Component<Props> {
   }
 }
 
-export default sortIndex;
+export default SortIndex;
