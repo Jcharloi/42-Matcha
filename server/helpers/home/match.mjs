@@ -1,5 +1,4 @@
 import client from "../../sql/sql.mjs";
-import geodist from "geodist";
 
 import {
   getUserLatitudeAndLongitude,
@@ -7,8 +6,8 @@ import {
   getUserTags
 } from "../profile/getUserInfos.mjs";
 import { validGender, validOrientation } from "../validInfos.mjs";
-import { getUserId } from "../../common.mjs";
 import { sortByDistance } from "./sortBy.mjs";
+import { getUserId, calculateAge, calculateDistance } from "../../common.mjs";
 
 //Orientation = Man, Woman, Other, Both
 /*
@@ -54,28 +53,6 @@ const calculateCommonTags = (myTags, userMatchInfo) => {
   return userMatchInfo;
 };
 
-const matchByCity = (myCoordinates, userMatchInfo) => {
-  userMatchInfo.map(user => {
-    const potentialMatchCoordinates = {
-      lat: user.latitude,
-      lon: user.longitude
-    };
-    user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
-      unit: "km"
-    });
-    if (user.distance < 100) {
-      user.scoreDistance = 10;
-    } else if (user.distance < 200) {
-      user.scoreDistance = 5;
-    } else {
-      user.scoreDistance = 0;
-    }
-    return user;
-  });
-  userMatchInfo = sortByDistance(userMatchInfo);
-  return userMatchInfo;
-};
-
 const finalSortByMe = (userMatchInfo, userId) => {
   userMatchInfo
     .sort((userA, userB) => {
@@ -98,22 +75,6 @@ const finalSortByMe = (userMatchInfo, userId) => {
   return userMatchInfo;
 };
 
-function getMonthFromString(mon) {
-  var d = Date.parse(mon + "2, 2019");
-  if (!isNaN(d)) {
-    return new Date(d).getMonth() + 1;
-  }
-  return -1;
-}
-function calculateAge(birthday) {
-  var day = birthday.split("/")[1];
-  var month = getMonthFromString(birthday.split("/")[0]);
-  var year = birthday.split("/")[2];
-  var dob = new Date(+year, +month - 1, +day);
-  var diff_ms = Date.now() - dob.getTime();
-  var age_dt = new Date(diff_ms);
-  return Math.abs(age_dt.getUTCFullYear() - 1970);
-}
 const getUsersByPreference = async (req, res) => {
   if (validOrientation(req.body.preference) && validGender(req.body.gender)) {
     let text =
@@ -133,7 +94,6 @@ const getUsersByPreference = async (req, res) => {
             city: rows[i].city,
             latitude: rows[i].latitude,
             longitude: rows[i].longitude,
-            //get the right age
             age: calculateAge(rows[i].birthday),
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
@@ -141,11 +101,11 @@ const getUsersByPreference = async (req, res) => {
             popularityScore: rows[i].score
           });
         }
-
         const userId = await getUserId(req.body.userName);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
-        userMatchInfo = await matchByCity(myCoordinates, userMatchInfo);
+        userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
+        userMatchInfo = await sortByDistance(userMatchInfo);
         userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
         userMatchInfo = await finalSortByMe(userMatchInfo, userId);
         res.send({ validated: true, userMatchInfo });

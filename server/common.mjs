@@ -2,6 +2,7 @@ import client from "./sql/sql.mjs";
 import opencage from "opencage-api-client";
 import nodemailer from "nodemailer";
 import keys from "./keys.json";
+import geodist from "geodist";
 
 const { mail_password, odg_api_key } = keys;
 
@@ -96,10 +97,60 @@ const createRandomId = length => {
   return result;
 };
 
+const getMonthFromString = mon => {
+  var d = Date.parse(mon + "2, 2019");
+  if (!isNaN(d)) {
+    return new Date(d).getMonth() + 1;
+  }
+  return -1;
+};
+
+const calculateAge = birthday => {
+  var day = birthday.split("/")[1];
+  var month = getMonthFromString(birthday.split("/")[0]);
+  var year = birthday.split("/")[2];
+  var dob = new Date(+year, +month - 1, +day);
+  var diff_ms = Date.now() - dob.getTime();
+  var age_dt = new Date(diff_ms);
+  return Math.abs(age_dt.getUTCFullYear() - 1970);
+};
+
+const compareTag = (myTags, tagUser) => {
+  return (
+    myTags.findIndex(myTag => {
+      return myTag === tagUser;
+    }) != -1
+  );
+};
+
+const calculateDistance = (myCoordinates, userMatchInfo) => {
+  userMatchInfo.map(user => {
+    const potentialMatchCoordinates = {
+      lat: user.latitude,
+      lon: user.longitude
+    };
+    user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
+      unit: "km"
+    });
+    if (user.distance < 100) {
+      user.scoreDistance = 10;
+    } else if (user.distance < 200) {
+      user.scoreDistance = 5;
+    } else {
+      user.scoreDistance = 0;
+    }
+    return user;
+  });
+  return userMatchInfo;
+};
+
 export {
   getUserCoordinatesByCity,
   getUserCityByCoordinates,
   sendMail,
   getUserId,
-  createRandomId
+  createRandomId,
+  calculateAge,
+  compareTag,
+  calculateDistance
 };

@@ -36,7 +36,7 @@ import {
 } from "./helpers/profile/tags.mjs";
 import { getUsersByPreference } from "./helpers/home/match.mjs";
 import { sortByIndex, filterByInterval } from "./helpers/home/sort.mjs";
-import { searchMatch } from "./helpers/home/search.mjs";
+import { getUsersBySearch } from "./helpers/home/search.mjs";
 
 router.all("/profile/*", tokenMiddleware);
 router.all("/home/*", tokenMiddleware);
@@ -67,7 +67,7 @@ router.put("/profile/change-password", changePassword);
 router.post("/home/get-users-by-preference", getUsersByPreference);
 router.post("/home/sort-by-index", sortByIndex);
 router.post("/home/filter-by-interval", filterByInterval);
-router.put("/search/get-users-by-search", searchMatch);
+router.put("/search/get-users-by-search", getUsersBySearch);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
