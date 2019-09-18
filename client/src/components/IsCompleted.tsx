@@ -7,7 +7,7 @@ class IsCompleted extends React.Component {
   render() {
     return (
       <div className="main-container">
-        <TopMenu current="home" />
+        <TopMenu />
         <h1>You did not completed your profile :(</h1>
         <h2>
           We need you to complete your profile (with some tags and a picture of
