@@ -108,11 +108,14 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Design mdr
+    - Fix top menu
+
     - Tester l'interval -> done
     - Infinite scroll
     - HandleChange
     
     Partie back :
+    - Retirer son propre resultat
     */
     return (
       <div>

@@ -19,9 +19,23 @@ const getUsersBySearch = async (req, res) => {
   const endLoc = parseInt(req.body.endLoc);
   const startPop = parseInt(req.body.startPop);
   const endPop = parseInt(req.body.endPop);
-  if (req.body.index === "Tags" && req.body.tagsName.length <= 0) {
-    res.send({ validated: false, message: "Something wrong with params" });
+
+  if (req.body.index === "Tags" && req.body.tagsName.length == 0) {
+    // index: "Tags"
+    // tagsName: []
+    // preference != "" && ft == false
+    res.send({
+      validated: false,
+      message: "Tags or preference is/are not correct"
+    });
   } else {
+    // Index: ""
+    // TagsName: [] || [a, b, c]
+    // OU
+    // Index: "Tags"
+    // tagsName: [a, b, c]
+
+    // preference == null
     if (
       req.body.startAge &&
       req.body.endAge &&
@@ -31,14 +45,15 @@ const getUsersBySearch = async (req, res) => {
       validIntervalParam(startLoc, endLoc, 0, 1000) &&
       req.body.startPop &&
       req.body.endPop &&
-      validIntervalParam(startPop, endPop, 0, 100) &&
-      (req.body.preference && validOrientation(req.body.preference))
+      validIntervalParam(startPop, endPop, 0, 100)
     ) {
+      console.log(startPop, endPop);
       let text =
         `SELECT user_id, user_name, score, city, latitude, longitude, birthday, gender, last_connection FROM users ` +
         selectGender(req.body.preference) +
-        ` AND score >= $1 AND score <= $2`;
+        ` score >= $1 AND score <= $2`;
       let values = [startPop, endPop];
+      console.log(text);
       await client
         .query(text, values)
         .then(async ({ rows, rowCount }) => {
@@ -80,6 +95,12 @@ const getUsersBySearch = async (req, res) => {
               return hasToDelete;
             });
           }
+          const indexYourself = userMatchInfo.findIndex(user => {
+            return user.id === userId;
+          });
+          if (indexYourself != -1) {
+            userMatchInfo.splice(indexYourself, 1);
+          }
           res.send({ validated: true, userMatchInfo });
         })
         .catch(e => {
@@ -90,14 +111,18 @@ const getUsersBySearch = async (req, res) => {
           });
         });
     } else {
-      res.send({ validated: false, message: "Something wrong with params" });
+      res.send({
+        validated: false,
+        message: "Something wrong with params"
+      });
     }
   }
 };
 
 const selectGender = gender => {
-  if (gender === "Both") return "WHERE (gender='Man' OR gender='Woman')";
-  else return `WHERE gender='${gender}'`;
+  if (gender === "Both") return "WHERE (gender='Man' OR gender='Woman') AND";
+  else if (gender) return `WHERE gender='${gender}' AND`;
+  else return ` WHERE`;
 };
 
 export { getUsersBySearch };
