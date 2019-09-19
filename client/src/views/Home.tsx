@@ -84,7 +84,6 @@ class Home extends React.Component<Props, HState> {
   };
 
   filterByInterval = (
-    index: string,
     startAge: number,
     endAge: number,
     startLoc: number,
@@ -97,13 +96,12 @@ class Home extends React.Component<Props, HState> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       userMatchInfo: this.state.copyUserMatch,
-      index,
-      startAge: startAge.toString(),
-      endAge: endAge.toString(),
-      startLoc: startLoc.toString(),
-      endLoc: endLoc.toString(),
-      startPop: startPop.toString(),
-      endPop: endPop.toString(),
+      startAge,
+      endAge,
+      startLoc,
+      endLoc,
+      startPop,
+      endPop,
       tagsName
     })
       .then(({ data: { validated, message, userMatchInfo } }) => {
@@ -135,7 +133,6 @@ class Home extends React.Component<Props, HState> {
             </Example>
           </span>
         </div>
-
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
             <UserCard key={user.id} userInfo={user} />
