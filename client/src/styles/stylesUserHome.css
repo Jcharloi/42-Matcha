@@ -12,15 +12,14 @@
 }
 
 .ui.card.user {
-  /* left: 20px; */
   display: block;
   position: relative;
   float: left;
   margin-left: 30px;
   max-height: 415px;
 }
+
 .ui.card.user .content .description {
-  /* border: 2px solid red; */
   max-height: 35px;
   display: inline-block;
 }
@@ -47,6 +46,22 @@
 .tag-home {
   margin: 0.5rem !important;
   max-width: 120px;
+}
+
+.container-sort {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}
+
+.divider-match {
+  transform: rotate(90deg);
+  width: 3.5rem !important;
+}
+
+.button-modal {
+  display: flex;
+  justify-content: space-around;
 }
 
 .modal-header {
@@ -83,6 +98,7 @@ h5 {
 .container-range .tagList {
   max-width: 60rem;
 }
+
 .container-range .tagList .ui.tag.label {
   margin: 2px 1.5em 0 0;
   outline: none;
@@ -95,19 +111,4 @@ h5 {
 .ui.compact.menu {
   margin: 0px 0px 0px 25px;
   float: left;
-}
-
-.open_button {
-  position: relative;
-  left: 10px;
-}
-
-.testdiv {
-  position: relative;
-  height: 50px;
-}
-
-.button-modal {
-  display: flex;
-  justify-content: space-around;
 }

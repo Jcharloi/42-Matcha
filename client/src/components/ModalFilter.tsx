@@ -17,11 +17,9 @@ class ModalFilter extends React.Component<Props> {
     return (
       <div>
         <Button
-          className="open_button"
-          primary
+          className="basic black open_button"
           onClick={this.show}
-          size="large"
-          color="pink"
+          size="medium"
         >
           <i className="align justify icon"></i>
           Filter by
