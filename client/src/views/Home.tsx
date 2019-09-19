@@ -30,6 +30,13 @@ interface Props {
 }
 
 interface HState {
+  startAge: number;
+  endAge: number;
+  startLoc: number;
+  endLoc: number;
+  startPop: number;
+  endPop: number;
+  tagsName: Array<string>;
   isLoading: boolean;
   clearList: boolean;
   userMatchInfo: Array<UserMatchInfos>;
@@ -41,6 +48,13 @@ class Home extends React.Component<Props, HState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      startAge: 18,
+      endAge: 100,
+      startLoc: 0,
+      endLoc: 1000,
+      startPop: 0,
+      endPop: 100,
+      tagsName: [],
       isLoading: true,
       clearList: false,
       userMatchInfo: [],
@@ -111,10 +125,28 @@ class Home extends React.Component<Props, HState> {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
+    this.setState({
+      startAge,
+      endAge,
+      startLoc,
+      endLoc,
+      startPop,
+      endPop,
+      tagsName
+    });
   };
 
   clearMatch = () => {
-    this.setState({ userMatchInfo: this.state.copyUserMatch });
+    this.setState({
+      userMatchInfo: this.state.copyUserMatch,
+      startAge: 18,
+      endAge: 100,
+      startLoc: 0,
+      endLoc: 1000,
+      startPop: 0,
+      endPop: 100,
+      tagsName: []
+    });
   };
 
   public render() {
@@ -126,6 +158,14 @@ class Home extends React.Component<Props, HState> {
           <Divider className="divider-match" />
           <ModalFilter disableInfoText={true} clearMatch={this.clearMatch}>
             <FilterInterval
+              startAge={this.state.startAge}
+              endAge={this.state.endAge}
+              startLoc={this.state.startLoc}
+              endLoc={this.state.endLoc}
+              startPop={this.state.startPop}
+              endPop={this.state.endPop}
+              preference={""}
+              tagsName={this.state.tagsName}
               isSearch={false}
               byInterval={this.filterByInterval}
               clearMatch={this.clearMatch}

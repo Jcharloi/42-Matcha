@@ -24,7 +24,7 @@ class SortIndex extends React.Component<Props> {
             onClick={() => this.props.sortByIndex("Localisation")}
           >
             <Icon name="map signs" />
-            Localisation
+            Location
           </Button>
           <Button
             className="basic purple item button-sort"
