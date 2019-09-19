@@ -45,7 +45,24 @@
 .tag-home {
   margin: 0.5rem !important;
   max-width: 120px;
+<<<<<<< HEAD
   max-height: 33px;
+=======
+}
+
+.modal-header {
+  text-align: center;
+  font-size: 2.5rem !important;
+  background: #f9fafb !important;
+}
+
+h5 {
+  width: 5rem;
+}
+
+.left-filter-number {
+  text-align: center;
+>>>>>>> caaa2f45a8e2a315426de5c3972144f9a5202531
 }
 
 .container-range {
@@ -56,21 +73,33 @@
 
 .range {
   display: flex;
-  width: 50% !important;
+  width: 65% !important;
+}
+
+.tagList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .container-range .tagList {
+<<<<<<< HEAD
   position: relative;
   top: 10px;
   max-width: 900px;
+=======
+  max-width: 60rem;
+>>>>>>> caaa2f45a8e2a315426de5c3972144f9a5202531
 }
 .container-range .tagList .ui.tag.label {
   margin: 2px 1.5em 0 0;
   outline: none;
 }
+
 .container-range .range span {
   padding: 0 10px 0 30px;
 }
+
 .ui.compact.menu {
   margin: 0px 0px 0px 25px;
   float: left;
@@ -80,7 +109,13 @@
   position: relative;
   left: 10px;
 }
+
 .testdiv {
   position: relative;
   height: 50px;
+}
+
+.button-modal {
+  display: flex;
+  justify-content: space-around;
 }
