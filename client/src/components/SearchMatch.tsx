@@ -49,7 +49,7 @@ class Search extends React.Component<Props, HState> {
   sortByIndex = (indexBy: string) => {
     const userAge =
       new Date().getFullYear() - +this.props.birthday.split("/")[2];
-    Axios.post("http://localhost:5000/home/sort-by-index", {
+    Axios.put("http://localhost:5000/home/sort-by-index", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       index: indexBy,
