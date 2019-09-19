@@ -12,7 +12,6 @@
 }
 
 .ui.card.user {
-  /* left: 20px; */
   display: block;
   position: relative;
   float: left;
@@ -20,7 +19,6 @@
   max-height: 415px;
 }
 .ui.card.user .content .description {
-  /* border: 2px solid red; */
   max-height: 35px;
   display: inline-block;
 }
@@ -47,7 +45,6 @@
 .tag-home {
   margin: 0.5rem !important;
   max-width: 120px;
-  /* font-size: 12px !important; */
   max-height: 33px;
 }
 
@@ -63,12 +60,9 @@
 }
 
 .container-range .tagList {
-  /* border: 2px solid red; */
   position: relative;
   top: 10px;
   max-width: 900px;
-  /* margin-left: 30px; */
-  /* padding: 10px; */
 }
 .container-range .tagList .ui.tag.label {
   margin: 2px 1.5em 0 0;
@@ -78,17 +72,13 @@
   padding: 0 10px 0 30px;
 }
 .ui.compact.menu {
-  /* border: 2px solid red !important; */
   margin: 0px 0px 0px 25px;
   float: left;
 }
 
 .open_button {
   position: relative;
-  /* border: 2px solid red; */
   left: 10px;
-  /* top: 0px; */
-  /* float: left; */
 }
 .testdiv {
   position: relative;
