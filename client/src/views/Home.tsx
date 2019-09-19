@@ -123,17 +123,15 @@ class Home extends React.Component<Props, HState> {
     return (
       <div>
         <TopMenu current="home" />
-        <div>
-          <span>
-            <SortIndex sortByIndex={this.sortByIndex} />
-            <Example clearMatch={this.clearMatch}>
-              <FilterInterval
-                isSearch={false}
-                byInterval={this.filterByInterval}
-                clearMatch={this.clearMatch}
-              />
-            </Example>
-          </span>
+        <div className="testdiv">
+          <SortIndex sortByIndex={this.sortByIndex} />
+          <Example clearMatch={this.clearMatch}>
+            <FilterInterval
+              isSearch={false}
+              byInterval={this.filterByInterval}
+              clearMatch={this.clearMatch}
+            />
+          </Example>
         </div>
 
         {!this.state.isLoading &&
