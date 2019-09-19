@@ -118,8 +118,9 @@ class FilterInterval extends React.Component<Props, State> {
         <div className="container-range">
           {this.props.isSearch ? (
             <div>
-              <Icon name="heart" color="red" />
-              <span className="text-preferences">I'm interested by</span>
+              <span className="text-preference-search">
+                Filter by orientation :
+              </span>
               <select
                 value={this.state.preference}
                 onChange={({ target: { value } }) => {
@@ -231,7 +232,7 @@ class FilterInterval extends React.Component<Props, State> {
                 onClick={() => this.tagsClick(name)}
                 className={
                   this.state.list.indexOf(name) > -1
-                    ? "ui tag label active"
+                    ? "ui tag grey label active"
                     : "ui tag label"
                 }
               >
