@@ -35,7 +35,7 @@ interface HState {
   messageHome?: string;
 }
 
-class Search extends React.Component<Props, HState> {
+class SearchMatch extends React.Component<Props, HState> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -130,4 +130,4 @@ const mapStateToProps = (state: State): Props => {
   return state.user;
 };
 
-export default connect(mapStateToProps)(Search);
+export default connect(mapStateToProps)(SearchMatch);
