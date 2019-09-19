@@ -131,7 +131,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <div className="range">
             <span>
-              <h5>18</h5>
+              <h5 className="left-filter-number">18</h5>
             </span>
             <Range
               min={18}
@@ -161,7 +161,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <div className="range">
             <span>
-              <h5>0</h5>
+              <h5 className="left-filter-number">0</h5>
             </span>
             <Range
               min={0}
@@ -182,7 +182,7 @@ class FilterInterval extends React.Component<Props, State> {
               }}
             />
             <span>
-              <h5>1 000&nbsp;km</h5>
+              <h5>1 000 km</h5>
             </span>
           </div>
           <h3>Filter by popularity :</h3>
@@ -191,7 +191,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <div className="range">
             <span>
-              <h5>0</h5>
+              <h5 className="left-filter-number">0</h5>
             </span>
             <Range
               min={0}
@@ -232,7 +232,6 @@ class FilterInterval extends React.Component<Props, State> {
             ))}
           </div>
           <br />
-
           {this.state.messageTags && (
             <div className="toast-message ui blue floating message">
               {this.state.messageTags}

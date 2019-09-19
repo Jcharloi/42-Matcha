@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { Button, Header, Image, Modal, Transition } from "semantic-ui-react";
-import FilterInterval from "./FilterInterval";
+import * as React from "react";
+import { Button, Modal, Transition } from "semantic-ui-react";
+
 import "../styles/stylesUserHome.css";
 
 interface Props {
@@ -13,7 +13,6 @@ class ModalFilter extends React.Component<Props> {
   close = () => this.setState({ visible: false });
 
   public render() {
-    // console.log(this.props.children);
     const { visible } = this.state;
     return (
       <div>
@@ -31,13 +30,19 @@ class ModalFilter extends React.Component<Props> {
           <Modal
             open={visible}
             onClose={this.close}
-            // trigger={<Button>Show Modal</Button>}
             centered={false}
             size="large"
           >
+            <Modal.Header className="modal-header">
+              Who do you want to see today ?
+            </Modal.Header>
             <Modal.Content>{this.props.children}</Modal.Content>
             <Modal.Actions>
               <div className="button-modal">
+                <Button positive onClick={this.close}>
+                  <i className="check icon"></i>
+                  Ok
+                </Button>
                 <button
                   className="negative ui button"
                   onClick={() => {
@@ -50,9 +55,6 @@ class ModalFilter extends React.Component<Props> {
                   <i className="close icon"></i>
                   Clear
                 </button>
-                <Button positive onClick={this.close}>
-                  Ok
-                </Button>
               </div>
             </Modal.Actions>
           </Modal>
