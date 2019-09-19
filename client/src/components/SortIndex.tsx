@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { Button, Icon } from "semantic-ui-react";
 import "rc-slider/assets/index.css";
 
 interface Props {
@@ -10,37 +11,35 @@ class SortIndex extends React.Component<Props> {
   public render() {
     return (
       <div>
-        <div className="ui compact menu">
-          <div className="ui simple dropdown item sortBy">
-            Sort by
-            <i className="dropdown icon"></i>
-            <div className="menu">
-              <div
-                className="item"
-                onClick={() => this.props.sortByIndex("Age")}
-              >
-                Age
-              </div>
-              <div
-                className="item"
-                onClick={() => this.props.sortByIndex("Localisation")}
-              >
-                Localisation
-              </div>
-              <div
-                className="item"
-                onClick={() => this.props.sortByIndex("Popularity")}
-              >
-                Popularity
-              </div>
-              <div
-                className="item"
-                onClick={() => this.props.sortByIndex("Tags")}
-              >
-                Tags
-              </div>
-            </div>
-          </div>
+        <div className="menu">
+          <Button
+            className="basic blue item button-sort"
+            onClick={() => this.props.sortByIndex("Age")}
+          >
+            <Icon name="birthday" />
+            Age
+          </Button>
+          <Button
+            className="basic violet item button-sort"
+            onClick={() => this.props.sortByIndex("Localisation")}
+          >
+            <Icon name="map signs" />
+            Localisation
+          </Button>
+          <Button
+            className="basic purple item button-sort"
+            onClick={() => this.props.sortByIndex("Popularity")}
+          >
+            <Icon name="hand point up" />
+            Popularity
+          </Button>
+          <Button
+            className="basic pink item button-sort"
+            onClick={() => this.props.sortByIndex("Tags")}
+          >
+            <Icon name="hashtag" />
+            Tags
+          </Button>
         </div>
       </div>
     );
