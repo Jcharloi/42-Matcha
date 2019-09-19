@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Header, Image, Modal, Transition } from "semantic-ui-react";
 import FilterInterval from "../components/FilterInterval";
+import "../styles/stylesUserHome.css";
 
 interface Props {
   clearMatch(): void;
@@ -15,8 +16,14 @@ class ModalExample extends React.Component<Props> {
     const { visible } = this.state;
     return (
       <div>
-        <Button primary onClick={this.show}>
-          Show Modal
+        <Button
+          className="open_button"
+          primary
+          onClick={this.show}
+          size="large"
+        >
+          <i className="align justify icon"></i>
+          Filters
         </Button>
         <Transition visible={visible} animation="fly down" duration={600}>
           <Modal
