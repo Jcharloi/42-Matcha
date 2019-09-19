@@ -45,9 +45,6 @@
 .tag-home {
   margin: 0.5rem !important;
   max-width: 120px;
-<<<<<<< HEAD
-  max-height: 33px;
-=======
 }
 
 .modal-header {
@@ -62,7 +59,6 @@ h5 {
 
 .left-filter-number {
   text-align: center;
->>>>>>> caaa2f45a8e2a315426de5c3972144f9a5202531
 }
 
 .container-range {
@@ -83,13 +79,7 @@ h5 {
 }
 
 .container-range .tagList {
-<<<<<<< HEAD
-  position: relative;
-  top: 10px;
-  max-width: 900px;
-=======
   max-width: 60rem;
->>>>>>> caaa2f45a8e2a315426de5c3972144f9a5202531
 }
 .container-range .tagList .ui.tag.label {
   margin: 2px 1.5em 0 0;
