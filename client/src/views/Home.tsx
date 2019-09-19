@@ -124,7 +124,7 @@ class Home extends React.Component<Props, HState> {
         <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
           <Divider className="divider-match" />
-          <ModalFilter clearMatch={this.clearMatch}>
+          <ModalFilter disableInfoText={true} clearMatch={this.clearMatch}>
             <FilterInterval
               isSearch={false}
               byInterval={this.filterByInterval}
