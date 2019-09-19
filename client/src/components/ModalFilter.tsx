@@ -36,7 +36,7 @@ class ModalFilter extends React.Component<Props, State> {
           <i className="align justify icon"></i>
           Filter by
         </Button>
-        <Transition visible={visible} animation="fly down" duration={600}>
+        <Transition visible={visible} animation="fly down" duration={400}>
           <Modal
             open={visible}
             onClose={this.close}
@@ -53,8 +53,8 @@ class ModalFilter extends React.Component<Props, State> {
                   <i className="check icon"></i>
                   Ok
                 </Button>
-                <button
-                  className="negative ui button"
+                <Button
+                  negative
                   onClick={() => {
                     this.setState({
                       openedOnce: false
@@ -65,7 +65,7 @@ class ModalFilter extends React.Component<Props, State> {
                 >
                   <i className="close icon"></i>
                   Clear
-                </button>
+                </Button>
               </div>
             </Modal.Actions>
           </Modal>

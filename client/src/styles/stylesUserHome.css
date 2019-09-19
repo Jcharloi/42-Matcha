@@ -48,6 +48,8 @@
   max-width: 120px;
 }
 
+/*Sort and filter buttons*/
+
 .container-sort {
   display: flex;
   justify-content: center;
@@ -64,10 +66,22 @@
   justify-content: space-around;
 }
 
+/*Inside the modal*/
+
 .modal-header {
   text-align: center;
   font-size: 2.5rem !important;
   background: #f9fafb !important;
+}
+
+.text-preference-search {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.rc-slider-track {
+  background-color: rgb(241, 217, 80) !important;
+  height: 0.4rem !important;
 }
 
 h5 {
