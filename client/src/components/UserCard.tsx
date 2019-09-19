@@ -84,8 +84,6 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   public render() {
-    // console.log(this.find_time_unit(this.props.userInfo.connection));
-
     return (
       <div className="ui card user">
         <div className="image">
