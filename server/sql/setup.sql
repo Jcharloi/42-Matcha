@@ -11,7 +11,7 @@ CREATE TABLE users
     orientation varchar(250),
     situation varchar(250) NULL,
     presentation text,
-    score varchar(250),
+    score integer,
     city varchar(250),
     latitude varchar(250),
     longitude varchar(250),
