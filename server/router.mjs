@@ -35,7 +35,8 @@ import {
   addCustomTags
 } from "./helpers/profile/tags.mjs";
 import { getUsersByPreference } from "./helpers/home/match.mjs";
-import { sortByIndex, filterByInterval } from "./helpers/home/sort.mjs";
+import { sortByIndex } from "./helpers/home/sort.mjs";
+import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
 
 router.all("/profile/*", tokenMiddleware);
@@ -64,9 +65,9 @@ router.put("/profile/delete-tags", deleteTags);
 router.post("/profile/add-custom-tags", addCustomTags);
 router.put("/profile/change-password", changePassword);
 
-router.post("/home/get-users-by-preference", getUsersByPreference);
-router.post("/home/sort-by-index", sortByIndex);
-router.post("/home/filter-by-interval", filterByInterval);
+router.put("/home/get-users-by-preference", getUsersByPreference);
+router.put("/home/sort-by-index", sortByIndex);
+router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
