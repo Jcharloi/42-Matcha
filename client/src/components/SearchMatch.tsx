@@ -7,9 +7,11 @@ import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
 import SortIndex from "../components/SortIndex";
 import FilterInterval from "../components/FilterInterval";
+import ModalFilter from "../components/ModalFilter";
 
 import "../styles/stylesUserHome.css";
 import { connect } from "react-redux";
+import { Divider } from "semantic-ui-react";
 
 interface Props {
   user_id: string;
@@ -101,16 +103,20 @@ class SearchMatch extends React.Component<Props, HState> {
   };
 
   public render() {
+    var openedOnce = false;
     return (
       <div>
         <TopMenu current="search" />
-        <div>
+        <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
-          <FilterInterval
-            isSearch={true}
-            byInterval={this.searchByInterval}
-            clearMatch={this.clearMatch}
-          />
+          <Divider className="divider-match" />
+          <ModalFilter disableInfoText={false} clearMatch={this.clearMatch}>
+            <FilterInterval
+              isSearch={true}
+              byInterval={this.searchByInterval}
+              clearMatch={this.clearMatch}
+            />
+          </ModalFilter>
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
