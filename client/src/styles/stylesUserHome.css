@@ -80,4 +80,17 @@
 .ui.compact.menu {
   /* border: 2px solid red !important; */
   margin: 0px 0px 0px 25px;
+  float: left;
+}
+
+.open_button {
+  position: relative;
+  /* border: 2px solid red; */
+  left: 10px;
+  /* top: 0px; */
+  /* float: left; */
+}
+.testdiv {
+  position: relative;
+  height: 50px;
 }
