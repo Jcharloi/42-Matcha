@@ -10,7 +10,6 @@ import { Icon } from "semantic-ui-react";
 interface Props {
   isSearch: boolean;
   byInterval(
-    index: string,
     startAge: number,
     endAge: number,
     startLoc: number,
@@ -32,7 +31,7 @@ interface State {
   endPop: number;
   tags: Array<Tags>;
   list: Array<string>;
-  preference?: string;
+  preference: string;
   messageTags?: string;
 }
 
@@ -46,6 +45,7 @@ class FilterInterval extends React.Component<Props, State> {
       endLoc: 1000,
       startPop: 0,
       endPop: 100,
+      preference: "Man",
       list: [],
       tags: []
     };
@@ -74,14 +74,30 @@ class FilterInterval extends React.Component<Props, State> {
       this.state.list.splice(this.state.list.indexOf(name), 1);
     }
     this.props.byInterval(
-      "Tags",
       this.state.startAge,
       this.state.endAge,
       this.state.startLoc,
       this.state.endLoc,
       this.state.startPop,
       this.state.endPop,
-      this.state.list.length > 0 ? this.state.list : []
+      this.state.list.length > 0 ? this.state.list : [],
+      this.state.preference
+    );
+  };
+
+  handleSelectChange = async (value: string) => {
+    await this.setState({
+      preference: value
+    });
+    this.props.byInterval(
+      this.state.startAge,
+      this.state.endAge,
+      this.state.startLoc,
+      this.state.endLoc,
+      this.state.startPop,
+      this.state.endPop,
+      this.state.list,
+      this.state.preference
     );
   };
 
@@ -99,20 +115,7 @@ class FilterInterval extends React.Component<Props, State> {
               <select
                 value={this.state.preference}
                 onChange={({ target: { value } }) => {
-                  this.setState({
-                    preference: value
-                  });
-                  this.props.byInterval(
-                    "",
-                    this.state.startAge,
-                    this.state.endAge,
-                    this.state.startLoc,
-                    this.state.endLoc,
-                    this.state.startPop,
-                    this.state.endPop,
-                    this.state.list,
-                    value
-                  );
+                  this.handleSelectChange(value);
                 }}
               >
                 <option value="Man">Man</option>
@@ -137,7 +140,6 @@ class FilterInterval extends React.Component<Props, State> {
               onChange={value => {
                 this.setState({ startAge: value[0], endAge: value[1] });
                 this.props.byInterval(
-                  "Age",
                   value[0],
                   value[1],
                   this.state.startLoc,
@@ -168,7 +170,6 @@ class FilterInterval extends React.Component<Props, State> {
               onChange={value => {
                 this.setState({ startLoc: value[0], endLoc: value[1] });
                 this.props.byInterval(
-                  "Localisation",
                   this.state.startAge,
                   this.state.endAge,
                   value[0],
@@ -199,7 +200,6 @@ class FilterInterval extends React.Component<Props, State> {
               onChange={value => {
                 this.setState({ startPop: value[0], endPop: value[1] });
                 this.props.byInterval(
-                  "Popularity",
                   this.state.startAge,
                   this.state.endAge,
                   this.state.startLoc,
@@ -232,18 +232,7 @@ class FilterInterval extends React.Component<Props, State> {
             ))}
           </div>
           <br />
-          {/* <button
-            className="negative tiny ui button"
-            onClick={() => {
-              this.setState({
-                list: []
-              });
-              this.props.clearMatch();
-            }}
-          >
-            <i className="close icon"></i>
-            Clear filters
-          </button> */}
+
           {this.state.messageTags && (
             <div className="toast-message ui blue floating message">
               {this.state.messageTags}
