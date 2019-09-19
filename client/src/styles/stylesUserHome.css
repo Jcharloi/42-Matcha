@@ -11,7 +11,7 @@
   object-fit: contain;
 }
 
-.ui.card {
+.ui.card.user {
   /* left: 20px; */
   display: block;
   position: relative;
