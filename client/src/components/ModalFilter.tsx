@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import { Button, Header, Image, Modal, Transition } from "semantic-ui-react";
-import FilterInterval from "../components/FilterInterval";
+import FilterInterval from "./FilterInterval";
 import "../styles/stylesUserHome.css";
 
 interface Props {
   clearMatch(): void;
 }
 
-class ModalExample extends React.Component<Props> {
+class ModalFilter extends React.Component<Props> {
   state = { visible: false };
   show = () => this.setState({ visible: true });
   close = () => this.setState({ visible: false });
+
   public render() {
-    console.log(this.props.children);
+    // console.log(this.props.children);
     const { visible } = this.state;
     return (
       <div>
@@ -21,9 +22,10 @@ class ModalExample extends React.Component<Props> {
           primary
           onClick={this.show}
           size="large"
+          color="pink"
         >
           <i className="align justify icon"></i>
-          Filters
+          Filter by
         </Button>
         <Transition visible={visible} animation="fly down" duration={600}>
           <Modal
@@ -35,23 +37,23 @@ class ModalExample extends React.Component<Props> {
           >
             <Modal.Content>{this.props.children}</Modal.Content>
             <Modal.Actions>
-              <button
-                className="negative ui button"
-                onClick={() => {
-                  this.setState({
-                    list: []
-                  });
-
-                  this.props.clearMatch();
-                }}
-              >
-                <i className="close icon"></i>
-                Clear filters
-              </button>
-
-              <Button positive onClick={this.close}>
-                Ok
-              </Button>
+              <div className="button-modal">
+                <button
+                  className="negative ui button"
+                  onClick={() => {
+                    this.setState({
+                      list: []
+                    });
+                    this.props.clearMatch();
+                  }}
+                >
+                  <i className="close icon"></i>
+                  Clear
+                </button>
+                <Button positive onClick={this.close}>
+                  Ok
+                </Button>
+              </div>
             </Modal.Actions>
           </Modal>
         </Transition>
@@ -60,4 +62,4 @@ class ModalExample extends React.Component<Props> {
   }
 }
 
-export default ModalExample;
+export default ModalFilter;

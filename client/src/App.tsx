@@ -10,11 +10,11 @@ import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
 import PublicRoutes from "./components/PublicRoutes";
 import PrivateRoutes from "./components/PrivateRoutes";
 import CompletedRoutes from "./components/CompletedRoutes";
+import SearchMatch from "./components/SearchMatch";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
-import SearchMatch from "./components/SearchMatch";
 
 interface AppState {
   isLoading: boolean;
@@ -108,14 +108,11 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Design mdr
-    - Fix top menu
-
     - Tester l'interval -> done
     - Infinite scroll
     - HandleChange
     
     Partie back :
-    - Retirer son propre resultat
     */
     return (
       <div>
