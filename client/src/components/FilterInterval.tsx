@@ -9,6 +9,14 @@ import { Icon } from "semantic-ui-react";
 
 interface Props {
   isSearch: boolean;
+  startAge: number;
+  endAge: number;
+  startLoc: number;
+  endLoc: number;
+  startPop: number;
+  endPop: number;
+  preference: string;
+  tagsName: Array<string>;
   byInterval(
     startAge: number,
     endAge: number,
@@ -39,14 +47,14 @@ class FilterInterval extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      startAge: 18,
-      endAge: 100,
-      startLoc: 0,
-      endLoc: 1000,
-      startPop: 0,
-      endPop: 100,
-      preference: "Man",
-      list: [],
+      startAge: this.props.startAge,
+      endAge: this.props.endAge,
+      startLoc: this.props.startLoc,
+      endLoc: this.props.endLoc,
+      startPop: this.props.startPop,
+      endPop: this.props.endPop,
+      preference: this.props.preference,
+      list: this.props.tagsName,
       tags: []
     };
   }
@@ -136,7 +144,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={18}
               max={100}
-              defaultValue={[18, 100]}
+              defaultValue={[this.state.startAge, this.state.endAge]}
               onChange={value => {
                 this.setState({ startAge: value[0], endAge: value[1] });
                 this.props.byInterval(
@@ -166,7 +174,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={0}
               max={1000}
-              defaultValue={[0, 1000]}
+              defaultValue={[this.state.startLoc, this.state.endLoc]}
               onChange={value => {
                 this.setState({ startLoc: value[0], endLoc: value[1] });
                 this.props.byInterval(
@@ -196,7 +204,7 @@ class FilterInterval extends React.Component<Props, State> {
             <Range
               min={0}
               max={100}
-              defaultValue={[0, 100]}
+              defaultValue={[this.state.startPop, this.state.endPop]}
               onChange={value => {
                 this.setState({ startPop: value[0], endPop: value[1] });
                 this.props.byInterval(

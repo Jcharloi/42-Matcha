@@ -112,3 +112,14 @@ h5 {
   margin: 0px 0px 0px 25px;
   float: left;
 }
+
+.text-search {
+  font-size: 2rem;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  left: 0;
+}

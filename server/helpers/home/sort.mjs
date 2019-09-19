@@ -19,7 +19,7 @@ const sortByIndex = (req, res) => {
     if (req.body.index === "Age") {
       res.send({
         validated: true,
-        userMatchInfo: sortByAge(req.body.userMatchInfo, req.body.age)
+        userMatchInfo: sortByAge(req.body.userMatchInfo, parseInt(req.body.age))
       });
     } else if (req.body.index === "Localisation") {
       res.send({

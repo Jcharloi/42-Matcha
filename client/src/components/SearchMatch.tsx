@@ -30,6 +30,14 @@ interface Props {
 }
 
 interface HState {
+  startAge: number;
+  endAge: number;
+  startLoc: number;
+  endLoc: number;
+  startPop: number;
+  endPop: number;
+  preference: string;
+  tagsName: Array<string>;
   isLoading: boolean;
   clearList: boolean;
   userMatchInfo: Array<UserMatchInfos>;
@@ -41,6 +49,14 @@ class SearchMatch extends React.Component<Props, HState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      startAge: 18,
+      endAge: 100,
+      startLoc: 0,
+      endLoc: 1000,
+      startPop: 0,
+      endPop: 100,
+      preference: "Man",
+      tagsName: [],
       isLoading: true,
       clearList: false,
       userMatchInfo: [],
@@ -49,22 +65,29 @@ class SearchMatch extends React.Component<Props, HState> {
   }
 
   sortByIndex = (indexBy: string) => {
-    const userAge =
-      new Date().getFullYear() - +this.props.birthday.split("/")[2];
-    Axios.put("http://localhost:5000/home/sort-by-index", {
-      userName: localStorage.getItem("user_name"),
-      token: localStorage.getItem("token"),
-      index: indexBy,
-      age: userAge.toString(),
-      userMatchInfo: this.state.userMatchInfo
-    })
-      .then(({ data: { validated, message, userMatchInfo } }) => {
-        if (validated) {
-          this.setState({ userMatchInfo });
-        }
-        this.setState({ messageHome: message, isLoading: false });
+    if (this.state.userMatchInfo.length <= 0) {
+      this.setState({
+        messageHome:
+          "There are no current matchers, please select your filters first"
+      });
+    } else {
+      const userAge =
+        new Date().getFullYear() - +this.props.birthday.split("/")[2];
+      Axios.put("http://localhost:5000/home/sort-by-index", {
+        userName: localStorage.getItem("user_name"),
+        token: localStorage.getItem("token"),
+        index: indexBy,
+        age: userAge.toString(),
+        userMatchInfo: this.state.userMatchInfo
       })
-      .catch(err => console.error(err));
+        .then(({ data: { validated, message, userMatchInfo } }) => {
+          if (validated) {
+            this.setState({ userMatchInfo });
+          }
+          this.setState({ messageHome: message, isLoading: false });
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   searchByInterval = (
@@ -96,14 +119,33 @@ class SearchMatch extends React.Component<Props, HState> {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
+    this.setState({
+      startAge,
+      endAge,
+      startLoc,
+      endLoc,
+      startPop,
+      endPop,
+      preference,
+      tagsName
+    });
   };
 
   clearMatch = () => {
-    this.setState({ userMatchInfo: this.state.copyUserMatch });
+    this.setState({
+      userMatchInfo: this.state.copyUserMatch,
+      startAge: 18,
+      endAge: 100,
+      startLoc: 0,
+      endLoc: 1000,
+      startPop: 0,
+      endPop: 100,
+      preference: "Man",
+      tagsName: []
+    });
   };
 
   public render() {
-    var openedOnce = false;
     return (
       <div>
         <TopMenu current="search" />
@@ -112,6 +154,14 @@ class SearchMatch extends React.Component<Props, HState> {
           <Divider className="divider-match" />
           <ModalFilter disableInfoText={false} clearMatch={this.clearMatch}>
             <FilterInterval
+              startAge={this.state.startAge}
+              endAge={this.state.endAge}
+              startLoc={this.state.startLoc}
+              endLoc={this.state.endLoc}
+              startPop={this.state.startPop}
+              endPop={this.state.endPop}
+              preference={this.state.preference}
+              tagsName={this.state.tagsName}
               isSearch={true}
               byInterval={this.searchByInterval}
               clearMatch={this.clearMatch}
