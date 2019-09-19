@@ -10,6 +10,7 @@ import SortIndex from "../components/SortIndex";
 import FilterInterval from "../components/FilterInterval";
 import ModalFilter from "../components/ModalFilter";
 
+import { Divider } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";
 
 interface Props {
@@ -120,8 +121,9 @@ class Home extends React.Component<Props, HState> {
     return (
       <div>
         <TopMenu current="home" />
-        <div className="testdiv">
+        <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
+          <Divider className="divider-match" />
           <ModalFilter clearMatch={this.clearMatch}>
             <FilterInterval
               isSearch={false}
