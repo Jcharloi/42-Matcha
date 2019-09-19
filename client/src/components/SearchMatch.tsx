@@ -105,7 +105,7 @@ class Search extends React.Component<Props, HState> {
   public render() {
     return (
       <div>
-        <TopMenu current="home" />
+        <TopMenu current="search" />
         <div>
           {/* <SortIndex sortByIndex={this.sortByIndex} /> */}
           <FilterInterval
