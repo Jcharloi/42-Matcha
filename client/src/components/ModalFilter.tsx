@@ -4,16 +4,27 @@ import { Button, Modal, Transition } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";
 
 interface Props {
+  disableInfoText: boolean;
   clearMatch(): void;
 }
 
 class ModalFilter extends React.Component<Props> {
-  state = { visible: false };
-  show = () => this.setState({ visible: true });
+  state = { visible: false, openedOnce: this.props.disableInfoText };
+
+  show = () => {
+    this.setState({ visible: true });
+
+    this.setState({ openedOnce: true });
+  };
   close = () => this.setState({ visible: false });
 
   public render() {
     const { visible } = this.state;
+
+    // if (this.props.disableInfoText == true) {
+    //   this.setState({ openedOnce: true });
+    // }
+    // console.log;
     return (
       <div>
         <Button
@@ -59,6 +70,7 @@ class ModalFilter extends React.Component<Props> {
             </Modal.Actions>
           </Modal>
         </Transition>
+        {this.state.openedOnce ? null : <p>Use filters to display profiles</p>}
       </div>
     );
   }
