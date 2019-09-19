@@ -46,27 +46,26 @@ class Search extends React.Component<Props, HState> {
     };
   }
 
-  // sortByIndex = (indexBy: string) => {
-  //   const userAge =
-  //     new Date().getFullYear() - +this.props.birthday.split("/")[2];
-  //   Axios.post("http://localhost:5000/home/sort-by-index", {
-  //     userName: localStorage.getItem("user_name"),
-  //     token: localStorage.getItem("token"),
-  //     index: indexBy,
-  //     age: userAge.toString(),
-  //     userMatchInfo: this.state.userMatchInfo
-  //   })
-  //     .then(({ data: { validated, message, userMatchInfo } }) => {
-  //       if (validated) {
-  //         this.setState({ userMatchInfo });
-  //       }
-  //       this.setState({ messageHome: message, isLoading: false });
-  //     })
-  //     .catch(err => console.error(err));
-  // };
+  sortByIndex = (indexBy: string) => {
+    const userAge =
+      new Date().getFullYear() - +this.props.birthday.split("/")[2];
+    Axios.post("http://localhost:5000/home/sort-by-index", {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      index: indexBy,
+      age: userAge.toString(),
+      userMatchInfo: this.state.userMatchInfo
+    })
+      .then(({ data: { validated, message, userMatchInfo } }) => {
+        if (validated) {
+          this.setState({ userMatchInfo });
+        }
+        this.setState({ messageHome: message, isLoading: false });
+      })
+      .catch(err => console.error(err));
+  };
 
   searchByInterval = (
-    index: string,
     startAge: number,
     endAge: number,
     startLoc: number,
@@ -79,7 +78,6 @@ class Search extends React.Component<Props, HState> {
     Axios.put("http://localhost:5000/search/get-users-by-search/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
-      index,
       preference,
       startAge: startAge.toString(),
       endAge: endAge.toString(),
@@ -107,7 +105,7 @@ class Search extends React.Component<Props, HState> {
       <div>
         <TopMenu current="search" />
         <div>
-          {/* <SortIndex sortByIndex={this.sortByIndex} /> */}
+          <SortIndex sortByIndex={this.sortByIndex} />
           <FilterInterval
             isSearch={true}
             byInterval={this.searchByInterval}
