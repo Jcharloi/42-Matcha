@@ -8,7 +8,7 @@ import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
 import SortIndex from "../components/SortIndex";
 import FilterInterval from "../components/FilterInterval";
-import Example from "../components/Modal";
+import ModalFilter from "../components/ModalFilter";
 
 import "../styles/stylesUserHome.css";
 
@@ -95,12 +95,12 @@ class Home extends React.Component<Props, HState> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       userMatchInfo: this.state.copyUserMatch,
-      startAge,
-      endAge,
-      startLoc,
-      endLoc,
-      startPop,
-      endPop,
+      startAge: startAge.toString(),
+      endAge: endAge.toString(),
+      startLoc: startLoc.toString(),
+      endLoc: endLoc.toString(),
+      startPop: startPop.toString(),
+      endPop: endPop.toString(),
       tagsName
     })
       .then(({ data: { validated, message, userMatchInfo } }) => {
@@ -122,13 +122,13 @@ class Home extends React.Component<Props, HState> {
         <TopMenu current="home" />
         <div className="testdiv">
           <SortIndex sortByIndex={this.sortByIndex} />
-          <Example clearMatch={this.clearMatch}>
+          <ModalFilter clearMatch={this.clearMatch}>
             <FilterInterval
               isSearch={false}
               byInterval={this.filterByInterval}
               clearMatch={this.clearMatch}
             />
-          </Example>
+          </ModalFilter>
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
