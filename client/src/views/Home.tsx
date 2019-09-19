@@ -122,7 +122,7 @@ class Home extends React.Component<Props, HState> {
         <TopMenu current="home" />
         <div className="testdiv">
           <SortIndex sortByIndex={this.sortByIndex} />
-          <ModalFilter clearMatch={this.clearMatch}>
+          <ModalFilter disableInfoText={true} clearMatch={this.clearMatch}>
             <FilterInterval
               isSearch={false}
               byInterval={this.filterByInterval}
