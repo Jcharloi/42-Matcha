@@ -8,13 +8,19 @@ interface Props {
   clearMatch(): void;
 }
 
-class ModalFilter extends React.Component<Props> {
-  state = { visible: false, openedOnce: this.props.disableInfoText };
+interface State {
+  visible: boolean;
+  openedOnce: boolean;
+}
+
+class ModalFilter extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { visible: false, openedOnce: this.props.disableInfoText };
+  }
 
   show = () => {
-    this.setState({ visible: true });
-
-    this.setState({ openedOnce: true });
+    this.setState({ visible: true, openedOnce: true });
   };
   close = () => this.setState({ visible: false });
 
@@ -51,9 +57,10 @@ class ModalFilter extends React.Component<Props> {
                   className="negative ui button"
                   onClick={() => {
                     this.setState({
-                      list: []
+                      openedOnce: false
                     });
                     this.props.clearMatch();
+                    this.close();
                   }}
                 >
                   <i className="close icon"></i>
@@ -63,7 +70,11 @@ class ModalFilter extends React.Component<Props> {
             </Modal.Actions>
           </Modal>
         </Transition>
-        {this.state.openedOnce ? null : <p>Use filters to display profiles</p>}
+        {this.state.openedOnce ? null : (
+          <div className="text-search">
+            Use filters to display some profiles (:
+          </div>
+        )}
       </div>
     );
   }
