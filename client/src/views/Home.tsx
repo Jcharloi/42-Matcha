@@ -9,7 +9,6 @@ import UserCard from "../components/UserCard";
 import SortIndex from "../components/SortIndex";
 import FilterInterval from "../components/FilterInterval";
 import Example from "../components/Modal";
-import { Transition } from "semantic-ui-react";
 
 import "../styles/stylesUserHome.css";
 
@@ -49,7 +48,7 @@ class Home extends React.Component<Props, HState> {
   }
 
   componentDidMount = () => {
-    Axios.post("http://localhost:5000/home/get-users-by-preference/", {
+    Axios.put("http://localhost:5000/home/get-users-by-preference/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       gender: this.props.gender,
@@ -67,7 +66,7 @@ class Home extends React.Component<Props, HState> {
   sortByIndex = (indexBy: string) => {
     const userAge =
       new Date().getFullYear() - +this.props.birthday.split("/")[2];
-    Axios.post("http://localhost:5000/home/sort-by-index", {
+    Axios.put("http://localhost:5000/home/sort-by-index", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       index: indexBy,
@@ -92,7 +91,7 @@ class Home extends React.Component<Props, HState> {
     endPop: number,
     tagsName: Array<string>
   ) => {
-    Axios.post("http://localhost:5000/home/filter-by-interval/", {
+    Axios.put("http://localhost:5000/home/filter-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
       userMatchInfo: this.state.copyUserMatch,
