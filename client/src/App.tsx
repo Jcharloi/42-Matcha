@@ -107,12 +107,11 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - Design mdr
-    - Tester l'interval -> done
     - Infinite scroll
-    - HandleChange
+    - Clear filter
     
     Partie back :
+    - Ne pas delete si y a encore la photo sur la db !
     */
     return (
       <div>
