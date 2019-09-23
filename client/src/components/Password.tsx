@@ -19,6 +19,14 @@ class Password extends React.Component<{}, State> {
     };
   }
 
+  setcurrentPassword = (currentPassword: string) => {
+    this.setState({ currentPassword });
+  };
+
+  setNewPassword = (newPassword: string) => {
+    this.setState({ newPassword });
+  };
+
   public render() {
     if (this.state.messagePassword) {
       setTimeout(() => this.setState({ messagePassword: "" }), 4000);
@@ -38,7 +46,7 @@ class Password extends React.Component<{}, State> {
               type="password"
               placeholder="Current password"
               onChange={({ target: { value } }) =>
-                this.setState({ currentPassword: value })
+                this.setcurrentPassword(value)
               }
             />
           </div>
@@ -49,9 +57,7 @@ class Password extends React.Component<{}, State> {
               className="input-value"
               type="password"
               placeholder="New password"
-              onChange={({ target: { value } }) =>
-                this.setState({ newPassword: value })
-              }
+              onChange={({ target: { value } }) => this.setNewPassword(value)}
             />
           </div>
           <Button

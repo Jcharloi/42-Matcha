@@ -59,6 +59,38 @@ class SignUp extends React.Component<{}, State> {
     this.setState({ loading: false });
   };
 
+  setLastName = (lastName: string) => {
+    this.setState({ lastName });
+  };
+
+  setFirstName = (firstName: string) => {
+    this.setState({ firstName });
+  };
+
+  setMonth = (month: string) => {
+    this.setState({ month });
+  };
+
+  setDay = (day: string) => {
+    this.setState({ day });
+  };
+
+  setYear = (year: string) => {
+    this.setState({ year });
+  };
+
+  setMail = (mail: string) => {
+    this.setState({ mail });
+  };
+
+  setUserName = (userName: string) => {
+    this.setState({ userName });
+  };
+
+  setPassword = (password: string) => {
+    this.setState({ password });
+  };
+
   public render() {
     const months = [
       "January",
@@ -113,7 +145,7 @@ class SignUp extends React.Component<{}, State> {
                     fluid
                     placeholder="First name"
                     onChange={({ target: { value } }) => {
-                      this.setState({ firstName: value });
+                      this.setFirstName(value);
                     }}
                   />
                   <Form.Input
@@ -122,7 +154,7 @@ class SignUp extends React.Component<{}, State> {
                     fluid
                     placeholder="Last name"
                     onChange={({ target: { value } }) => {
-                      this.setState({ lastName: value });
+                      this.setLastName(value);
                     }}
                   />
                 </Form.Group>
@@ -134,7 +166,7 @@ class SignUp extends React.Component<{}, State> {
                     selection
                     options={months}
                     onChange={(e, { name, value }) => {
-                      this.setState({ month: String(value).substring(0, 3) });
+                      this.setMonth(String(value).substring(0, 3));
                     }}
                   />
                   <Form.Dropdown
@@ -144,7 +176,7 @@ class SignUp extends React.Component<{}, State> {
                     selection
                     options={days}
                     onChange={(e, { name, value }) => {
-                      this.setState({ day: String(value) });
+                      this.setDay(String(value));
                     }}
                   />
                   <Form.Dropdown
@@ -154,7 +186,7 @@ class SignUp extends React.Component<{}, State> {
                     selection
                     options={years}
                     onChange={(e, { name, value }) => {
-                      this.setState({ year: String(value) });
+                      this.setYear(String(value));
                     }}
                   />
                 </Form.Group>
@@ -165,7 +197,7 @@ class SignUp extends React.Component<{}, State> {
                   placeholder="Username"
                   icon="user"
                   onChange={({ target: { value } }) => {
-                    this.setState({ userName: value });
+                    this.setUserName(value);
                   }}
                   maxLength="20"
                 />
@@ -176,7 +208,7 @@ class SignUp extends React.Component<{}, State> {
                     placeholder="Email address"
                     icon="mail"
                     onChange={({ target: { value } }) => {
-                      this.setState({ mail: value });
+                      this.setMail(value);
                     }}
                   />
                 </Form.Field>
@@ -187,7 +219,7 @@ class SignUp extends React.Component<{}, State> {
                     placeholder="Password"
                     icon="lock"
                     onChange={({ target: { value } }) => {
-                      this.setState({ password: value });
+                      this.setPassword(value);
                     }}
                   />
                 </Form.Field>

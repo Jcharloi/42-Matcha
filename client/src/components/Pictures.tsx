@@ -189,6 +189,38 @@ class Pictures extends React.Component<Props, PicturesState> {
     }
   };
 
+  setDisplayPictures = () => {
+    if (this.props.pictures[0].date !== "1") {
+      this.setState({ displayPictures: true });
+    }
+  };
+
+  setDisplayPicturesFalse = () => {
+    this.setState({ displayPictures: false });
+  };
+
+  showLeftPicture = (event: Event) => {
+    event.stopPropagation();
+    const pictureIndex =
+      this.state.pictureIndex === 0
+        ? this.props.pictures.length - 1
+        : this.state.pictureIndex - 1;
+    this.setState({
+      pictureIndex
+    });
+  };
+
+  showRightPicture = (event: Event) => {
+    event.stopPropagation();
+    const pictureIndex =
+      this.state.pictureIndex === this.props.pictures.length - 1
+        ? 0
+        : this.state.pictureIndex + 1;
+    this.setState({
+      pictureIndex
+    });
+  };
+
   public render() {
     if (this.state.messagePictures) {
       setTimeout(() => this.setState({ messagePictures: "" }), 4000);
@@ -205,9 +237,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               circular
               src={`http://localhost:5000/public/profile-pictures/${this.props.pictures[0].path}`}
               onClick={() => {
-                if (this.props.pictures[0].date !== "1") {
-                  this.setState({ displayPictures: true });
-                }
+                this.setDisplayPictures();
               }}
             />
           </span>
@@ -236,7 +266,7 @@ class Pictures extends React.Component<Props, PicturesState> {
           <div
             className="hidden-container"
             onClick={() => {
-              this.setState({ displayPictures: false });
+              this.setDisplayPicturesFalse();
             }}
           >
             <div className="display-image-container">
@@ -246,14 +276,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                   className="picture-arrow-left"
                   size="huge"
                   onClick={(event: Event) => {
-                    event.stopPropagation();
-                    const pictureIndex =
-                      this.state.pictureIndex === 0
-                        ? this.props.pictures.length - 1
-                        : this.state.pictureIndex - 1;
-                    this.setState({
-                      pictureIndex
-                    });
+                    this.showLeftPicture(event);
                   }}
                 />
                 <div className="managing-picture">
@@ -285,14 +308,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                   className="picture-arrow-right"
                   size="huge"
                   onClick={(event: Event) => {
-                    event.stopPropagation();
-                    const pictureIndex =
-                      this.state.pictureIndex === this.props.pictures.length - 1
-                        ? 0
-                        : this.state.pictureIndex + 1;
-                    this.setState({
-                      pictureIndex
-                    });
+                    this.showRightPicture(event);
                   }}
                 />
               </div>
