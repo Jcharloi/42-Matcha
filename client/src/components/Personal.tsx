@@ -330,31 +330,32 @@ class Personal extends React.Component<Props, PState> {
                   .then(({ data: { validToken, message } }) => {
                     if (validToken === false) {
                       deleteUser();
+                    } else {
+                      const newData = {
+                        ...this.props,
+                        last_name: this.state.lastName,
+                        first_name: this.state.firstName,
+                        mail: this.state.mail,
+                        birthday:
+                          this.state.month.substring(0, 3) +
+                          "/" +
+                          this.state.day +
+                          "/" +
+                          this.state.year
+                      };
+                      store.dispatch(insertUserProfile(newData));
+                      let isCompleted = isProfileCompleted(
+                        this.props.city,
+                        this.props.gender,
+                        this.props.presentation,
+                        this.props.pictures,
+                        this.props.tags
+                      );
+                      store.dispatch(
+                        updateUserAuth({ isAuth: true, isCompleted })
+                      );
+                      this.setState({ messagePersonal: message });
                     }
-                    const newData = {
-                      ...this.props,
-                      last_name: this.state.lastName,
-                      first_name: this.state.firstName,
-                      mail: this.state.mail,
-                      birthday:
-                        this.state.month.substring(0, 3) +
-                        "/" +
-                        this.state.day +
-                        "/" +
-                        this.state.year
-                    };
-                    store.dispatch(insertUserProfile(newData));
-                    let isCompleted = isProfileCompleted(
-                      this.props.city,
-                      this.props.gender,
-                      this.props.presentation,
-                      this.props.pictures,
-                      this.props.tags
-                    );
-                    store.dispatch(
-                      updateUserAuth({ isAuth: true, isCompleted })
-                    );
-                    this.setState({ messagePersonal: message });
                   })
                   .catch(error => console.error(error));
               }
