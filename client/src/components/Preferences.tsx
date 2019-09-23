@@ -42,6 +42,7 @@ class Preferences extends React.Component<Props, PState> {
       bio: this.props.presentation
     };
   }
+  timer!: NodeJS.Timeout;
 
   setGender = (gender: string) => {
     this.setState({ gender });
@@ -57,9 +58,18 @@ class Preferences extends React.Component<Props, PState> {
     this.setState({ bio });
   };
 
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  };
+
   public render() {
     if (this.state.messagePreference) {
-      setTimeout(() => this.setState({ messagePreference: "" }), 4000);
+      this.timer = setTimeout(
+        () => this.setState({ messagePreference: "" }),
+        4000
+      );
     }
     return (
       <div className="media-container-preferences">
@@ -148,6 +158,7 @@ class Preferences extends React.Component<Props, PState> {
                       store.dispatch(
                         updateUserAuth({ isAuth: true, isCompleted })
                       );
+                      if (this.timer) clearTimeout(this.timer);
                       this.setState({
                         messagePreference: message
                       });
