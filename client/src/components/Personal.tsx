@@ -81,6 +81,7 @@ class Personal extends React.Component<Props, PState> {
       year: this.props.birthday.split("/")[2]
     };
   }
+  timer!: NodeJS.Timeout;
 
   async componentDidMount() {
     if (!this.state.city) {
@@ -170,9 +171,16 @@ class Personal extends React.Component<Props, PState> {
     this.setState({ mail });
   };
 
+  componentWillUnmount = () => {
+    if (this.timer) clearTimeout(this.timer);
+  };
+
   public render() {
     if (this.state.messagePersonal) {
-      setTimeout(() => this.setState({ messagePersonal: "" }), 4000);
+      this.timer = setTimeout(
+        () => this.setState({ messagePersonal: "" }),
+        4000
+      );
     }
     const months = [
       "January",
@@ -354,6 +362,7 @@ class Personal extends React.Component<Props, PState> {
                       store.dispatch(
                         updateUserAuth({ isAuth: true, isCompleted })
                       );
+                      if (this.timer) clearTimeout(this.timer);
                       this.setState({ messagePersonal: message });
                     }
                   })

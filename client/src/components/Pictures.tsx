@@ -43,11 +43,13 @@ class Pictures extends React.Component<Props, PicturesState> {
       displayPictures: false
     };
   }
+  timer!: any;
 
   uploadPicture = async ({ target }: any) => {
     if (target.files && target.files.length > 0) {
       const valid = validFile(target.files[0]);
       if (!valid.valid) {
+        if (this.timer) clearTimeout(this.timer);
         this.setState({ messagePictures: valid.message });
       } else {
         const isUnknownPicture =
@@ -95,6 +97,10 @@ class Pictures extends React.Component<Props, PicturesState> {
                 this.props.tags
               );
               store.dispatch(updateUserAuth({ isAuth: true, isCompleted }));
+              if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+              }
               this.setState({
                 picturesNb: isUnknownPicture
                   ? this.state.picturesNb
@@ -139,6 +145,10 @@ class Pictures extends React.Component<Props, PicturesState> {
             };
             store.dispatch(insertUserProfile(newData));
           }
+          if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+          }
           this.setState({
             messagePictures: message
           });
@@ -178,11 +188,19 @@ class Pictures extends React.Component<Props, PicturesState> {
               });
               store.dispatch(insertUserProfile(newData));
             }
+            if (this.timer) {
+              clearTimeout(this.timer);
+              this.timer = null;
+            }
             this.setState({ messagePictures: message });
           }
         })
         .catch(error => console.error(error));
     } else {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
       this.setState({
         messagePictures: "You can't delete your only picture"
       });
@@ -221,9 +239,17 @@ class Pictures extends React.Component<Props, PicturesState> {
     });
   };
 
+  componentWillUnmount = () => {
+    clearTimeout(this.timer);
+    this.timer = null;
+  };
+
   public render() {
-    if (this.state.messagePictures) {
-      setTimeout(() => this.setState({ messagePictures: "" }), 4000);
+    if (this.state.messagePictures && !this.timer) {
+      this.timer = setTimeout(
+        () => this.setState({ messagePictures: "" }),
+        4000
+      );
     }
     return (
       <div>
