@@ -2,6 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { Range } from "rc-slider";
 import { Tags } from "../models/models";
+import { debounce } from "throttle-debounce";
 
 import "rc-slider/assets/index.css";
 import "../styles/stylesUserHome.css";
@@ -187,9 +188,9 @@ class FilterInterval extends React.Component<Props, State> {
               min={18}
               max={100}
               defaultValue={[this.state.startAge, this.state.endAge]}
-              onChange={value => {
+              onChange={debounce(500, value => {
                 this.setAgeInterval(value[0], value[1]);
-              }}
+              })}
             />
             <span>
               <h5>100&nbsp;yo</h5>
@@ -207,9 +208,9 @@ class FilterInterval extends React.Component<Props, State> {
               min={0}
               max={1000}
               defaultValue={[this.state.startLoc, this.state.endLoc]}
-              onChange={value => {
+              onChange={debounce(500, value => {
                 this.setLocInterval(value[0], value[1]);
-              }}
+              })}
             />
             <span>
               <h5>1 000 km</h5>
@@ -227,9 +228,9 @@ class FilterInterval extends React.Component<Props, State> {
               min={0}
               max={100}
               defaultValue={[this.state.startPop, this.state.endPop]}
-              onChange={value => {
+              onChange={debounce(500, value => {
                 this.setPopInterval(value[0], value[1]);
-              }}
+              })}
             />
             <span>
               <h5>100&nbsp;%</h5>
