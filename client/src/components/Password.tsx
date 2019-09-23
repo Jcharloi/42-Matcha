@@ -19,6 +19,7 @@ class Password extends React.Component<{}, State> {
       newPassword: null
     };
   }
+  timer!: NodeJS.Timeout;
 
   setcurrentPassword = (currentPassword: string) => {
     this.setState({ currentPassword });
@@ -28,9 +29,16 @@ class Password extends React.Component<{}, State> {
     this.setState({ newPassword });
   };
 
+  componentWillUnmount = () => {
+    clearTimeout(this.timer);
+  };
+
   public render() {
     if (this.state.messagePassword) {
-      setTimeout(() => this.setState({ messagePassword: "" }), 4000);
+      this.timer = setTimeout(
+        () => this.setState({ messagePassword: null }),
+        4000
+      );
     }
     return (
       <div className="media-container-password">
@@ -84,6 +92,7 @@ class Password extends React.Component<{}, State> {
                     if (validToken === false) {
                       deleteUser();
                     } else {
+                      if (this.timer) clearTimeout(this.timer);
                       this.setState({ messagePassword: message });
                     }
                   })

@@ -42,6 +42,7 @@ class Tags extends React.Component<Props, TState> {
       customTag: ""
     };
   }
+  timer!: any;
 
   async componentDidMount() {
     await Axios.post(`http://localhost:5000/profile/get-tags`, {
@@ -96,11 +97,19 @@ class Tags extends React.Component<Props, TState> {
                 tagsList: this.state.tagsList
               });
             }
+            if (this.timer) {
+              clearTimeout(this.timer);
+              this.timer = null;
+            }
             this.setState({ messageTags: message });
           }
         })
         .catch(error => console.error(error));
     } else {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
       this.setState({
         messageTags: "You can't delete your only tag"
       });
@@ -153,6 +162,10 @@ class Tags extends React.Component<Props, TState> {
               })
             );
           }
+          if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+          }
           this.setState({
             messageTags: message
           });
@@ -203,6 +216,10 @@ class Tags extends React.Component<Props, TState> {
                 })
               );
             }
+            if (this.timer) {
+              clearTimeout(this.timer);
+              this.timer = null;
+            }
             this.setState({
               messageTags: message
             });
@@ -210,15 +227,28 @@ class Tags extends React.Component<Props, TState> {
         })
         .catch(error => console.error(error));
     } else {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
       this.setState({
         messageTags: "You need to provide a valid tag, under 15 characters"
       });
     }
   };
 
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  };
+
   public render() {
-    if (this.state.messageTags) {
-      setTimeout(() => this.setState({ messageTags: "" }), 4000);
+    if (this.state.messageTags && !this.timer) {
+      this.timer = setTimeout(() => {
+        this.setState({ messageTags: "" });
+      }, 4000);
     }
     return (
       <div className="media-container">
@@ -283,12 +313,12 @@ class Tags extends React.Component<Props, TState> {
                 >
                   Add my tag
                 </Button>
-                {this.state.messageTags && (
-                  <div className="toast-message ui blue floating message">
-                    <p>{this.state.messageTags}</p>
-                  </div>
-                )}
               </div>
+            </div>
+          )}
+          {this.state.messageTags && (
+            <div className="toast-message ui blue floating message">
+              <p>{this.state.messageTags}</p>
             </div>
           )}
         </div>
