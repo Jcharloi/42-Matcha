@@ -5,7 +5,6 @@ import { Tags } from "../models/models";
 
 import "rc-slider/assets/index.css";
 import "../styles/stylesUserHome.css";
-import { Icon } from "semantic-ui-react";
 
 interface Props {
   isSearch: boolean;
@@ -75,7 +74,65 @@ class FilterInterval extends React.Component<Props, State> {
       });
   };
 
-  tagsClick = (name: string) => {
+  setOrientation = (value: string) => {
+    this.setState({
+      preference: value
+    });
+    this.props.byInterval(
+      this.state.startAge,
+      this.state.endAge,
+      this.state.startLoc,
+      this.state.endLoc,
+      this.state.startPop,
+      this.state.endPop,
+      this.state.list,
+      value
+    );
+  };
+
+  setAgeInterval = (startAge: number, endAge: number) => {
+    this.setState({ startAge, endAge });
+    this.props.byInterval(
+      startAge,
+      endAge,
+      this.state.startLoc,
+      this.state.endLoc,
+      this.state.startPop,
+      this.state.endPop,
+      this.state.list,
+      this.state.preference
+    );
+  };
+
+  setLocInterval = (startLoc: number, endLoc: number) => {
+    this.setState({ startLoc, endLoc });
+    this.props.byInterval(
+      this.props.startAge,
+      this.props.endAge,
+      startLoc,
+      endLoc,
+      this.state.startPop,
+      this.state.endPop,
+      this.state.list,
+      this.state.preference
+    );
+  };
+
+  setPopInterval = (startPop: number, endPop: number) => {
+    this.setState({ startPop, endPop });
+    this.props.byInterval(
+      this.state.startAge,
+      this.state.endAge,
+      this.state.startLoc,
+      this.state.endLoc,
+      startPop,
+      endPop,
+      this.state.list,
+      this.state.preference
+    );
+  };
+
+  setTags = (name: string) => {
     if (this.state.list.indexOf(name) === -1) {
       this.state.list.push(name);
     } else {
@@ -89,22 +146,6 @@ class FilterInterval extends React.Component<Props, State> {
       this.state.startPop,
       this.state.endPop,
       this.state.list.length > 0 ? this.state.list : [],
-      this.state.preference
-    );
-  };
-
-  handleSelectChange = async (value: string) => {
-    await this.setState({
-      preference: value
-    });
-    this.props.byInterval(
-      this.state.startAge,
-      this.state.endAge,
-      this.state.startLoc,
-      this.state.endLoc,
-      this.state.startPop,
-      this.state.endPop,
-      this.state.list,
       this.state.preference
     );
   };
@@ -124,7 +165,7 @@ class FilterInterval extends React.Component<Props, State> {
               <select
                 value={this.state.preference}
                 onChange={({ target: { value } }) => {
-                  this.handleSelectChange(value);
+                  this.setOrientation(value);
                 }}
               >
                 <option value="Man">Man</option>
@@ -147,17 +188,7 @@ class FilterInterval extends React.Component<Props, State> {
               max={100}
               defaultValue={[this.state.startAge, this.state.endAge]}
               onChange={value => {
-                this.setState({ startAge: value[0], endAge: value[1] });
-                this.props.byInterval(
-                  value[0],
-                  value[1],
-                  this.state.startLoc,
-                  this.state.endLoc,
-                  this.state.startPop,
-                  this.state.endPop,
-                  this.state.list,
-                  this.state.preference
-                );
+                this.setAgeInterval(value[0], value[1]);
               }}
             />
             <span>
@@ -177,17 +208,7 @@ class FilterInterval extends React.Component<Props, State> {
               max={1000}
               defaultValue={[this.state.startLoc, this.state.endLoc]}
               onChange={value => {
-                this.setState({ startLoc: value[0], endLoc: value[1] });
-                this.props.byInterval(
-                  this.state.startAge,
-                  this.state.endAge,
-                  value[0],
-                  value[1],
-                  this.state.startPop,
-                  this.state.endPop,
-                  this.state.list,
-                  this.state.preference
-                );
+                this.setLocInterval(value[0], value[1]);
               }}
             />
             <span>
@@ -207,17 +228,7 @@ class FilterInterval extends React.Component<Props, State> {
               max={100}
               defaultValue={[this.state.startPop, this.state.endPop]}
               onChange={value => {
-                this.setState({ startPop: value[0], endPop: value[1] });
-                this.props.byInterval(
-                  this.state.startAge,
-                  this.state.endAge,
-                  this.state.startLoc,
-                  this.state.endLoc,
-                  value[0],
-                  value[1],
-                  this.state.list,
-                  this.state.preference
-                );
+                this.setPopInterval(value[0], value[1]);
               }}
             />
             <span>
@@ -229,7 +240,7 @@ class FilterInterval extends React.Component<Props, State> {
             {this.state.tags.map(({ id, name }) => (
               <button
                 key={id}
-                onClick={() => this.tagsClick(name)}
+                onClick={() => this.setTags(name)}
                 className={
                   this.state.list.indexOf(name) > -1
                     ? "ui tag grey label active"

@@ -36,11 +36,6 @@ interface CState {
 class UserCard extends React.Component<Props, CState> {
   constructor(props: Props) {
     super(props);
-    // if (this.props.userInfo.gender === "Woman") {
-    //   this.setState({ genderIcon: "venus icon" });
-    // } else if (this.props.userInfo.gender === "Man") {
-    //   this.setState({ genderIcon: "mars icon" });
-    // }
     this.state = {
       genderIcon:
         this.props.userInfo.gender === "Woman"

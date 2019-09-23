@@ -98,6 +98,14 @@ class SignIn extends React.Component<Props, State> {
     }
   };
 
+  setUserName = (userName: string) => {
+    this.setState({ userName });
+  };
+
+  setPassword = (password: string) => {
+    this.setState({ password });
+  };
+
   public render() {
     const { loading } = this.state;
 
@@ -114,7 +122,7 @@ class SignIn extends React.Component<Props, State> {
                   required
                   icon="user"
                   onChange={({ target: { value } }) => {
-                    this.setState({ userName: value });
+                    this.setUserName(value);
                   }}
                 />
               </Form.Field>
@@ -125,7 +133,7 @@ class SignIn extends React.Component<Props, State> {
                   placeholder="Password"
                   icon="lock"
                   onChange={({ target: { value } }) => {
-                    this.setState({ password: value });
+                    this.setPassword(value);
                   }}
                 />
               </Form.Field>

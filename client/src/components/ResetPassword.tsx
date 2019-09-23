@@ -89,6 +89,14 @@ class ResetPassword extends React.Component<{}, State> {
     this.setState({ loading: false });
   };
 
+  setMail = (mail: string) => {
+    this.setState({ mail });
+  };
+
+  setPassword = (password: string) => {
+    this.setState({ password });
+  };
+
   public render() {
     return (
       <Form
@@ -117,9 +125,7 @@ class ResetPassword extends React.Component<{}, State> {
                       required
                       placeholder="Email address"
                       icon="mail"
-                      onChange={({ target: { value } }) =>
-                        this.setState({ mail: value })
-                      }
+                      onChange={({ target: { value } }) => this.setMail(value)}
                     />
                   </Form.Field>
                 ) : (
@@ -130,7 +136,7 @@ class ResetPassword extends React.Component<{}, State> {
                       placeholder="Password"
                       icon="lock"
                       onChange={({ target: { value } }) => {
-                        this.setState({ password: value });
+                        this.setPassword(value);
                       }}
                     />
                   </Form.Field>
