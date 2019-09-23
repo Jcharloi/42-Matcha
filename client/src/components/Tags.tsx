@@ -62,6 +62,160 @@ class Tags extends React.Component<Props, TState> {
       .catch(error => console.error(error));
   }
 
+  deleteTags = async (name: string, custom: boolean) => {
+    if (this.props.tags.length > 1) {
+      await Axios.put("http://localhost:5000/profile/delete-tags", {
+        tagName: name,
+        userName: localStorage.getItem("user_name"),
+        token: localStorage.getItem("token")
+      })
+        .then(({ data: { validToken, validated, tagId, message } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              const tagIndex = this.props.tags.findIndex((tag: any) => {
+                return tag.tag_id === tagId;
+              });
+              this.props.tags.splice(tagIndex, 1);
+              if (!custom) {
+                this.state.tagsList.push({
+                  id: tagId,
+                  name
+                });
+                this.setState({
+                  tagsList: this.state.tagsList
+                });
+              }
+              const newData = {
+                ...this.props,
+                tags: this.props.tags
+              };
+              store.dispatch(insertUserProfile(newData));
+              this.setState({
+                tagsList: this.state.tagsList
+              });
+            }
+            this.setState({ messageTags: message });
+          }
+        })
+        .catch(error => console.error(error));
+    } else {
+      this.setState({
+        messageTags: "You can't delete your only tag"
+      });
+    }
+  };
+
+  setDisplayCustom = () => {
+    this.setState({ displayCustom: true });
+  };
+
+  selectTags = async (name: string, id: string, index: number) => {
+    await Axios.put("http://localhost:5000/profile/select-tags", {
+      tagName: name,
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token")
+    })
+      .then(({ data: { validToken, validated, message } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            const newData = {
+              ...this.props,
+              tags: [
+                ...this.props.tags,
+                {
+                  tag_id: id,
+                  name,
+                  custom: false
+                }
+              ]
+            };
+            const tags = this.state.tagsList;
+            tags.splice(index, 1);
+            this.setState({
+              tagsList: tags
+            });
+            store.dispatch(insertUserProfile(newData));
+            let isCompleted = isProfileCompleted(
+              this.props.city,
+              this.props.gender,
+              this.props.presentation,
+              this.props.pictures,
+              this.props.tags
+            );
+            store.dispatch(
+              updateUserAuth({
+                isAuth: true,
+                isCompleted
+              })
+            );
+          }
+          this.setState({
+            messageTags: message
+          });
+        }
+      })
+      .catch(error => console.error(error));
+  };
+
+  setCustomTag = (customTag: string) => {
+    this.setState({ customTag });
+  };
+
+  addTags = async () => {
+    if (this.state.customTag && this.state.customTag.length <= 15) {
+      await Axios.post("http://localhost:5000/profile/add-custom-tags", {
+        customTag: this.state.customTag,
+        userName: localStorage.getItem("user_name"),
+        token: localStorage.getItem("token")
+      })
+        .then(({ data: { validToken, validated, message, randomId } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              const newData = {
+                ...this.props,
+                tags: [
+                  ...this.props.tags,
+                  {
+                    tag_id: randomId,
+                    name: this.state.customTag,
+                    custom: true
+                  }
+                ]
+              };
+              store.dispatch(insertUserProfile(newData));
+              let isCompleted = isProfileCompleted(
+                this.props.city,
+                this.props.gender,
+                this.props.presentation,
+                this.props.pictures,
+                this.props.tags
+              );
+              store.dispatch(
+                updateUserAuth({
+                  isAuth: true,
+                  isCompleted
+                })
+              );
+            }
+            this.setState({
+              messageTags: message
+            });
+          }
+        })
+        .catch(error => console.error(error));
+    } else {
+      this.setState({
+        messageTags: "You need to provide a valid tag, under 15 characters"
+      });
+    }
+  };
+
   public render() {
     if (this.state.messageTags) {
       setTimeout(() => this.setState({ messageTags: "" }), 4000);
@@ -80,58 +234,8 @@ class Tags extends React.Component<Props, TState> {
                 <span>{tag.name}</span>
                 <Icon
                   name="close"
-                  onClick={async () => {
-                    if (this.props.tags.length > 1) {
-                      await Axios.put(
-                        "http://localhost:5000/profile/delete-tags",
-                        {
-                          tagName: tag.name,
-                          userName: localStorage.getItem("user_name"),
-                          token: localStorage.getItem("token")
-                        }
-                      )
-                        .then(
-                          ({
-                            data: { validToken, validated, tagId, message }
-                          }) => {
-                            if (validToken === false) {
-                              deleteUser();
-                            } else {
-                              if (validated) {
-                                const tagIndex = this.props.tags.findIndex(
-                                  (tag: any) => {
-                                    return tag.tag_id === tagId;
-                                  }
-                                );
-                                this.props.tags.splice(tagIndex, 1);
-                                if (!tag.custom) {
-                                  this.state.tagsList.push({
-                                    id: tagId,
-                                    name: tag.name
-                                  });
-                                  this.setState({
-                                    tagsList: this.state.tagsList
-                                  });
-                                }
-                                const newData = {
-                                  ...this.props,
-                                  tags: this.props.tags
-                                };
-                                store.dispatch(insertUserProfile(newData));
-                                this.setState({
-                                  tagsList: this.state.tagsList
-                                });
-                              }
-                              this.setState({ messageTags: message });
-                            }
-                          }
-                        )
-                        .catch(error => console.error(error));
-                    } else {
-                      this.setState({
-                        messageTags: "You can't delete your only tag"
-                      });
-                    }
+                  onClick={() => {
+                    this.deleteTags(tag.name, tag.custom);
                   }}
                 />
               </div>
@@ -140,7 +244,7 @@ class Tags extends React.Component<Props, TState> {
             <i
               className="icon plus"
               onClick={() => {
-                this.setState({ displayCustom: true });
+                this.setDisplayCustom();
               }}
             />
           </button>
@@ -151,59 +255,8 @@ class Tags extends React.Component<Props, TState> {
                 this.state.tagsList.map(({ id, name }, index) => (
                   <span key={id} className="tag-value ui tag label">
                     <span
-                      onClick={async () => {
-                        await Axios.put(
-                          "http://localhost:5000/profile/select-tags",
-                          {
-                            tagName: name,
-                            userName: localStorage.getItem("user_name"),
-                            token: localStorage.getItem("token")
-                          }
-                        )
-                          .then(
-                            ({ data: { validToken, validated, message } }) => {
-                              if (validToken === false) {
-                                deleteUser();
-                              } else {
-                                if (validated) {
-                                  const newData = {
-                                    ...this.props,
-                                    tags: [
-                                      ...this.props.tags,
-                                      {
-                                        tag_id: id,
-                                        name,
-                                        custom: false
-                                      }
-                                    ]
-                                  };
-                                  const tags = this.state.tagsList;
-                                  tags.splice(index, 1);
-                                  this.setState({
-                                    tagsList: tags
-                                  });
-                                  store.dispatch(insertUserProfile(newData));
-                                  let isCompleted = isProfileCompleted(
-                                    this.props.city,
-                                    this.props.gender,
-                                    this.props.presentation,
-                                    this.props.pictures,
-                                    this.props.tags
-                                  );
-                                  store.dispatch(
-                                    updateUserAuth({
-                                      isAuth: true,
-                                      isCompleted
-                                    })
-                                  );
-                                }
-                                this.setState({
-                                  messageTags: message
-                                });
-                              }
-                            }
-                          )
-                          .catch(error => console.error(error));
+                      onClick={() => {
+                        this.selectTags(name, id, index);
                       }}
                     >
                       {name}
@@ -218,73 +271,14 @@ class Tags extends React.Component<Props, TState> {
                     placeholder="Custom tag"
                     maxLength="15"
                     onChange={({ target: { value } }) => {
-                      this.setState({ customTag: value });
+                      this.setCustomTag(value);
                     }}
                   />
                 </div>
                 <Button
                   className="ui primary button button-valid-edit-tag"
                   onClick={async () => {
-                    if (
-                      this.state.customTag &&
-                      this.state.customTag.length <= 15
-                    ) {
-                      //pour la recherche, les tags dispos seront les utilisés par l'user et tout le reste
-                      await Axios.post(
-                        "http://localhost:5000/profile/add-custom-tags",
-                        {
-                          customTag: this.state.customTag,
-                          userName: localStorage.getItem("user_name"),
-                          token: localStorage.getItem("token")
-                        }
-                      )
-                        .then(
-                          ({
-                            data: { validToken, validated, message, randomId }
-                          }) => {
-                            if (validToken === false) {
-                              deleteUser();
-                            } else {
-                              if (validated) {
-                                const newData = {
-                                  ...this.props,
-                                  tags: [
-                                    ...this.props.tags,
-                                    {
-                                      tag_id: randomId,
-                                      name: this.state.customTag,
-                                      custom: true
-                                    }
-                                  ]
-                                };
-                                store.dispatch(insertUserProfile(newData));
-                                let isCompleted = isProfileCompleted(
-                                  this.props.city,
-                                  this.props.gender,
-                                  this.props.presentation,
-                                  this.props.pictures,
-                                  this.props.tags
-                                );
-                                store.dispatch(
-                                  updateUserAuth({
-                                    isAuth: true,
-                                    isCompleted
-                                  })
-                                );
-                              }
-                              this.setState({
-                                messageTags: message
-                              });
-                            }
-                          }
-                        )
-                        .catch(error => console.error(error));
-                    } else {
-                      this.setState({
-                        messageTags:
-                          "You need to provide a valid tag, under 15 characters"
-                      });
-                    }
+                    this.addTags();
                   }}
                 >
                   Add my tag

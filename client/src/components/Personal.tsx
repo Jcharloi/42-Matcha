@@ -142,6 +142,34 @@ class Personal extends React.Component<Props, PState> {
     return Math.abs(age_dt.getUTCFullYear() - 1970);
   }
 
+  setLastName = (lastName: string) => {
+    this.setState({ lastName });
+  };
+
+  setFirstName = (firstName: string) => {
+    this.setState({ firstName });
+  };
+
+  setCity = (city: string) => {
+    this.setState({ city });
+  };
+
+  setMonth = (month: string) => {
+    this.setState({ month });
+  };
+
+  setDay = (day: string) => {
+    this.setState({ day });
+  };
+
+  setYear = (year: string) => {
+    this.setState({ year });
+  };
+
+  setMail = (mail: string) => {
+    this.setState({ mail });
+  };
+
   public render() {
     if (this.state.messagePersonal) {
       setTimeout(() => this.setState({ messagePersonal: "" }), 4000);
@@ -181,9 +209,7 @@ class Personal extends React.Component<Props, PState> {
             <input
               className="input-value"
               value={this.state.lastName}
-              onChange={({ target: { value } }) =>
-                this.setState({ lastName: value })
-              }
+              onChange={({ target: { value } }) => this.setLastName(value)}
             />
           </div>
           <div className="ui divider" />
@@ -192,9 +218,7 @@ class Personal extends React.Component<Props, PState> {
             <input
               className="input-value"
               value={this.state.firstName}
-              onChange={({ target: { value } }) =>
-                this.setState({ firstName: value })
-              }
+              onChange={({ target: { value } }) => this.setFirstName(value)}
             />
           </div>
           <div className="ui divider" />
@@ -203,9 +227,7 @@ class Personal extends React.Component<Props, PState> {
             <input
               className="input-value"
               defaultValue={this.state.city}
-              onChange={({ target: { value } }) =>
-                this.setState({ city: value })
-              }
+              onChange={({ target: { value } }) => this.setCity(value)}
             />
           </div>
           <div className="ui divider" />
@@ -216,7 +238,7 @@ class Personal extends React.Component<Props, PState> {
                 this.state.day,
                 this.getMonthFromString(this.state.month),
                 this.state.year
-              )}{" "}
+              )}
               years old
             </span>
           </div>
@@ -228,7 +250,7 @@ class Personal extends React.Component<Props, PState> {
               placeholder="Month"
               value={this.state.month}
               onChange={({ target: { value } }) => {
-                this.setState({ month: value });
+                this.setMonth(value);
               }}
             >
               <option value="" disabled>
@@ -245,7 +267,7 @@ class Personal extends React.Component<Props, PState> {
               placeholder="Day"
               value={this.state.day}
               onChange={({ target: { value } }) => {
-                this.setState({ day: value });
+                this.setDay(value);
               }}
             >
               <option value="" disabled>
@@ -262,7 +284,7 @@ class Personal extends React.Component<Props, PState> {
               placeholder="Year"
               value={this.state.year}
               onChange={({ target: { value } }) => {
-                this.setState({ year: value });
+                this.setYear(value);
               }}
             >
               <option value="" disabled>
@@ -281,9 +303,7 @@ class Personal extends React.Component<Props, PState> {
             <input
               className="input-value"
               value={this.state.mail}
-              onChange={({ target: { value } }) =>
-                this.setState({ mail: value })
-              }
+              onChange={({ target: { value } }) => this.setMail(value)}
             />
           </div>
           <Button

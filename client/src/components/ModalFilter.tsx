@@ -19,10 +19,19 @@ class ModalFilter extends React.Component<Props, State> {
     this.state = { visible: false, openedOnce: this.props.disableInfoText };
   }
 
-  show = () => {
+  showModal = () => {
     this.setState({ visible: true, openedOnce: true });
   };
-  close = () => this.setState({ visible: false });
+
+  closeModal = () => this.setState({ visible: false });
+
+  clearEverything = () => {
+    this.setState({
+      openedOnce: false
+    });
+    this.props.clearMatch();
+    this.closeModal();
+  };
 
   public render() {
     const { visible } = this.state;
@@ -30,7 +39,7 @@ class ModalFilter extends React.Component<Props, State> {
       <div>
         <Button
           className="basic black open_button"
-          onClick={this.show}
+          onClick={this.showModal}
           size="medium"
         >
           <i className="align justify icon"></i>
@@ -39,7 +48,7 @@ class ModalFilter extends React.Component<Props, State> {
         <Transition visible={visible} animation="fly down" duration={400}>
           <Modal
             open={visible}
-            onClose={this.close}
+            onClose={this.closeModal}
             centered={false}
             size="large"
           >
@@ -49,18 +58,14 @@ class ModalFilter extends React.Component<Props, State> {
             <Modal.Content>{this.props.children}</Modal.Content>
             <Modal.Actions>
               <div className="button-modal">
-                <Button positive onClick={this.close}>
+                <Button positive onClick={this.closeModal}>
                   <i className="check icon"></i>
                   Ok
                 </Button>
                 <Button
                   negative
                   onClick={() => {
-                    this.setState({
-                      openedOnce: false
-                    });
-                    this.props.clearMatch();
-                    this.close();
+                    this.clearEverything();
                   }}
                 >
                   <i className="close icon"></i>
