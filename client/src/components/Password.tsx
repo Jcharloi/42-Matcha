@@ -1,5 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
+import { deleteUser } from "../App";
 
 import { Button, Header, Icon } from "semantic-ui-react";
 import "../styles/stylesUserPassword.css";
@@ -79,8 +80,12 @@ class Password extends React.Component<{}, State> {
                     token: localStorage.getItem("token")
                   }
                 )
-                  .then(({ data: { message } }) => {
-                    this.setState({ messagePassword: message });
+                  .then(({ data: { message, validToken } }) => {
+                    if (validToken === false) {
+                      deleteUser();
+                    } else {
+                      this.setState({ messagePassword: message });
+                    }
                   })
                   .catch(error => console.error(error));
               }

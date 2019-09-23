@@ -3,6 +3,7 @@ import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { UserMatchInfos } from "../models/models";
+import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/UserCard";
@@ -88,11 +89,15 @@ class Home extends React.Component<Props, HState> {
       age: userAge.toString(),
       userMatchInfo: this.state.userMatchInfo
     })
-      .then(({ data: { validated, message, userMatchInfo } }) => {
-        if (validated) {
-          this.setState({ userMatchInfo });
+      .then(({ data: { validToken, validated, message, userMatchInfo } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({ userMatchInfo });
+          }
+          this.setState({ messageHome: message, isLoading: false });
         }
-        this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
   };
@@ -118,11 +123,15 @@ class Home extends React.Component<Props, HState> {
       endPop: endPop.toString(),
       tagsName
     })
-      .then(({ data: { validated, message, userMatchInfo } }) => {
-        if (validated) {
-          this.setState({ userMatchInfo });
+      .then(({ data: { validToken, validated, message, userMatchInfo } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({ userMatchInfo });
+          }
+          this.setState({ messageHome: message, isLoading: false });
         }
-        this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
     this.setState({
