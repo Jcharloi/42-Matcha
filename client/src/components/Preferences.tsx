@@ -42,6 +42,21 @@ class Preferences extends React.Component<Props, PState> {
       bio: this.props.presentation
     };
   }
+
+  setGender = (gender: string) => {
+    this.setState({ gender });
+  };
+
+  setOrientation = (orientation: string) => {
+    this.setState({
+      orientation
+    });
+  };
+
+  setBio = (bio: string) => {
+    this.setState({ bio });
+  };
+
   public render() {
     if (this.state.messagePreference) {
       setTimeout(() => this.setState({ messagePreference: "" }), 4000);
@@ -60,9 +75,7 @@ class Preferences extends React.Component<Props, PState> {
               <span className="text-preferences">I am a</span>
               <select
                 value={this.state.gender ? this.state.gender : ""}
-                onChange={({ target: { value } }) =>
-                  this.setState({ gender: value })
-                }
+                onChange={({ target: { value } }) => this.setGender(value)}
               >
                 <option value="" disabled>
                   Gender
@@ -77,11 +90,7 @@ class Preferences extends React.Component<Props, PState> {
               <span className="text-preferences">I'm interested by</span>
               <select
                 value={this.state.orientation}
-                onChange={({ target: { value } }) =>
-                  this.setState({
-                    orientation: value
-                  })
-                }
+                onChange={({ target: { value } }) => this.setOrientation(value)}
               >
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
@@ -95,9 +104,7 @@ class Preferences extends React.Component<Props, PState> {
               className="bio"
               value={this.state.bio ? this.state.bio : ""}
               placeholder="Short description about yourself"
-              onChange={({ target: { value } }: any) =>
-                this.setState({ bio: value })
-              }
+              onChange={({ target: { value } }: any) => this.setBio(value)}
               maxLength="250"
             />
           </Form>
