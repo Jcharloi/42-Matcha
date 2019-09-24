@@ -10,6 +10,7 @@ import { store } from "../../redux/store";
 
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 import { deleteUser, isProfileCompleted } from "../../App";
+import { User } from "../../models/models";
 
 interface PicturesState {
   displayPictures: boolean;
@@ -18,24 +19,8 @@ interface PicturesState {
   messagePictures?: string | null;
 }
 
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: any;
-  tags: any;
-}
-
-class Pictures extends React.Component<Props, PicturesState> {
-  constructor(props: Props) {
+class Pictures extends React.Component<User, PicturesState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       picturesNb: this.props.pictures.length,
@@ -368,7 +353,7 @@ function validFile(file: File): { valid: boolean; message?: string } {
   };
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): User => {
   return {
     ...state.user,
     pictures:
