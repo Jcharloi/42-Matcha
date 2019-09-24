@@ -62,7 +62,7 @@ class UserCard extends React.Component<Props, CState> {
 
   selectProfile = () => {
     store.dispatch(insertOtherProfile(this.props.userInfo));
-    history.push(`/profile/` + this.props.userInfo.id);
+    history.push(`/profile/` + this.props.userInfo.name);
   };
 
   public render() {
