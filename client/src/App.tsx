@@ -5,7 +5,11 @@ import history from "./helpers/history";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
-import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
+import {
+  updateUserAuth,
+  insertUserProfile,
+  insertOtherProfile
+} from "./redux/actions/actions";
 import { Pictures, UserTags } from "./models/models";
 
 import PublicRoutes from "./components/Routes/PublicRoutes";
@@ -95,6 +99,25 @@ class App extends React.Component<Props, AppState> {
               .catch(error => {
                 console.log("Error : ", error.message);
               });
+            const url = window.location.pathname;
+            if (url && url.search("/profile/") !== -1) {
+              const urlArray = url.split("/");
+              if (urlArray[2]) {
+                await Axios.get(
+                  `http://localhost:5000/get-user-infos?userName=${urlArray[2]}`
+                )
+                  .then(({ data: { validated, userInfos } }) => {
+                    if (validated) {
+                      store.dispatch(insertOtherProfile(userInfos));
+                    } else {
+                      history.push("/");
+                    }
+                  })
+                  .catch(error => {
+                    console.log("Error : ", error.message);
+                  });
+              }
+            }
           } else {
             localStorage.clear();
           }
