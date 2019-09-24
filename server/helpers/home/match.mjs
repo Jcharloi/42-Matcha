@@ -98,7 +98,8 @@ const getUsersByPreference = async (req, res) => {
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
-            popularityScore: rows[i].score
+            popularityScore: rows[i].score,
+            liked: true
           });
         }
         const userId = await getUserId(req.body.userName);
@@ -108,6 +109,13 @@ const getUsersByPreference = async (req, res) => {
         userMatchInfo = await sortByDistance(userMatchInfo);
         userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
         userMatchInfo = await finalSortByMe(userMatchInfo, userId);
+        userMatchInfo.forEach(user => {
+          delete user["scoreTags"];
+          delete user["scoreDistance"];
+          delete user["longitude"];
+          delete user["latitude"];
+          delete user["distance"];
+        });
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
