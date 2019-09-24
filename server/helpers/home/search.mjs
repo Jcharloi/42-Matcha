@@ -83,6 +83,13 @@ const getUsersBySearch = async (req, res) => {
         if (indexYourself != -1) {
           userMatchInfo.splice(indexYourself, 1);
         }
+        userMatchInfo.forEach(user => {
+          delete user["scoreTags"];
+          delete user["scoreDistance"];
+          delete user["longitude"];
+          delete user["latitude"];
+          delete user["distance"];
+        });
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
