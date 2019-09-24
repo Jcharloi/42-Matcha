@@ -1,7 +1,7 @@
 import * as React from "react";
-import TopMenu from "./TopMenu";
-import history from "../helpers/history";
-import "../styles/stylesRedirect.css";
+import TopMenu from "../TopMenu";
+import history from "../../helpers/history";
+import "../../styles/stylesRedirect.css";
 
 class IsCompleted extends React.Component {
   render() {

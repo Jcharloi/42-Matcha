@@ -7,10 +7,10 @@ import { State } from "./redux/types/types";
 import { store } from "./redux/store";
 import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
 
-import PublicRoutes from "./components/PublicRoutes";
-import PrivateRoutes from "./components/PrivateRoutes";
-import CompletedRoutes from "./components/CompletedRoutes";
-import SearchMatch from "./components/SearchMatch";
+import PublicRoutes from "./components/Routes/PublicRoutes";
+import PrivateRoutes from "./components/Routes/PrivateRoutes";
+import CompletedRoutes from "./components/Routes/CompletedRoutes";
+import SearchMatch from "./components/Match/SearchMatch";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";

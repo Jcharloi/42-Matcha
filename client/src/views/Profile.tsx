@@ -1,12 +1,12 @@
 import * as React from "react";
 import TopMenu from "../components/TopMenu";
-import Pictures from "../components/Pictures";
-import Connection from "../components/Connection";
-import ProgressBar from "../components/ProgressBar";
-import Personal from "../components/Personal";
-import Preferences from "../components/Preferences";
-import Password from "../components/Password";
-import Tags from "../components/Tags";
+import Pictures from "../components/Profile/Pictures";
+import Connection from "../components/Profile/Connection";
+import ProgressBar from "../components/Profile/ProgressBar";
+import Personal from "../components/Profile/Personal";
+import Preferences from "../components/Profile/Preferences";
+import Password from "../components/Profile/Password";
+import Tags from "../components/Profile/Tags";
 
 import "../styles/stylesUserProfile.css";
 

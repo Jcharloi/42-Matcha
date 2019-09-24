@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Modal, Transition } from "semantic-ui-react";
 
-import "../styles/stylesUserHome.css";
+import "../../styles/stylesUserHome.css";
 
 interface Props {
   disableInfoText: boolean;
