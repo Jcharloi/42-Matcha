@@ -17,6 +17,19 @@ export interface User {
   city: string;
   pictures: Pictures[];
   tags: UserTags[];
+  liked: boolean;
+}
+
+export interface UserMatchInfos {
+  id: string;
+  name: string;
+  city: string;
+  age: string;
+  connection: string;
+  gender: string;
+  popularityScore: string;
+  pictures: Array<Pictures>;
+  tags: Array<UserTags>;
 }
 
 export interface Pictures {
@@ -34,28 +47,4 @@ export interface UserTags {
 export interface Tags {
   id: string;
   name: string;
-}
-
-export interface UserMatchInfos {
-  id: string;
-  name: string;
-  city: string;
-  age: string;
-  connection: string;
-  gender: string;
-  popularityScore: string;
-  pictures: [
-    {
-      path: string;
-      date: string;
-      main: boolean;
-    }
-  ];
-  tags: [
-    {
-      tag_id: string;
-      name: string;
-      custom: boolean;
-    }
-  ];
 }
