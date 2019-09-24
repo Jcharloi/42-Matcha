@@ -2,7 +2,9 @@ import {
   InsertProfileAction,
   INSERT_USER_PROFILE,
   UpdateAuthAction,
-  UPDATE_USER_AUTH
+  UPDATE_USER_AUTH,
+  INSERT_OTHER_PROFILE,
+  InsertOtherProfileAction
 } from "../types/types";
 import { User, VerifiedUser } from "../../models/models";
 
@@ -19,15 +21,19 @@ let initialState = {
   score: "",
   city: "",
   pictures: [{ path: "", date: "", main: false }],
-  tags: [{ tag_id: "", name: "", custom: false }]
+  tags: [{ tag_id: "", name: "", custom: false }],
+  liked: false
 };
 
 export const userProfileReducer = (
   state = initialState,
-  action: InsertProfileAction
+  action: InsertProfileAction | InsertOtherProfileAction
 ): User => {
   switch (action.type) {
     case INSERT_USER_PROFILE: {
+      return Object.assign({}, state, action.payload);
+    }
+    case INSERT_OTHER_PROFILE: {
       return Object.assign({}, state, action.payload);
     }
     default:
