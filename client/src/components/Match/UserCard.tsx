@@ -1,6 +1,8 @@
 import * as React from "react";
 import history from "../../helpers/history";
 import { UserMatchInfos } from "../../models/models";
+import { store } from "../../redux/store";
+import { insertOtherProfile } from "../../redux/actions/actions";
 
 import "../../styles/stylesUserHome.css";
 
@@ -59,6 +61,7 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   selectProfile = () => {
+    store.dispatch(insertOtherProfile(this.props.userInfo));
     history.push(`/profile/` + this.props.userInfo.id);
   };
 
