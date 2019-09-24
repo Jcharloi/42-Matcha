@@ -27,7 +27,7 @@ class ModalFilter extends React.Component<Props, State> {
 
   clearEverything = () => {
     this.setState({
-      openedOnce: false
+      openedOnce: this.props.disableInfoText
     });
     this.props.clearMatch();
     this.closeModal();
