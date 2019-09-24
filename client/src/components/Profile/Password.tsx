@@ -1,9 +1,9 @@
 import * as React from "react";
 import Axios from "axios";
-import { deleteUser } from "../App";
+import { deleteUser } from "../../App";
 
 import { Button, Header, Icon } from "semantic-ui-react";
-import "../styles/stylesUserPassword.css";
+import "../../styles/stylesUserPassword.css";
 
 interface State {
   currentPassword: string | null;

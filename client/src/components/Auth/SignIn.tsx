@@ -10,9 +10,9 @@ import {
   Header
 } from "semantic-ui-react";
 import { connect } from "react-redux";
-import history from "../helpers/history";
+import history from "../../helpers/history";
 import Axios from "axios";
-import { updateUserAuth, insertUserProfile } from "../redux/actions/actions";
+import { updateUserAuth, insertUserProfile } from "../../redux/actions/actions";
 import { Dispatch } from "redux";
 
 interface Props {

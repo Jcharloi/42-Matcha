@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Divider, Icon, Button } from "semantic-ui-react";
 
 import "../styles/stylesAuth.css";
-import SignUp from "../components/SignUp";
-import SignIn from "../components/SignIn";
-import ResetPassword from "../components/ResetPassword";
+import SignUp from "../components/Auth/SignUp";
+import SignIn from "../components/Auth/SignIn";
+import ResetPassword from "../components/Auth/ResetPassword";
 
 class Authentication extends React.Component {
   public render() {
