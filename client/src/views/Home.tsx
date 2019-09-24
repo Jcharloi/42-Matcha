@@ -2,7 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
-import { UserMatchInfos } from "../models/models";
+import { User } from "../models/models";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
@@ -14,22 +14,6 @@ import ModalFilter from "../components/Match/ModalFilter";
 import { Divider } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";
 
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: any;
-  tags: any;
-}
-
 interface HState {
   startAge: number;
   endAge: number;
@@ -40,13 +24,13 @@ interface HState {
   tagsName: Array<string>;
   isLoading: boolean;
   clearList: boolean;
-  userMatchInfo: Array<UserMatchInfos>;
-  copyUserMatch: Array<UserMatchInfos>;
+  userMatchInfo: Array<User>;
+  copyUserMatch: Array<User>;
   messageHome?: string;
 }
 
-class Home extends React.Component<Props, HState> {
-  constructor(props: Props) {
+class Home extends React.Component<User, HState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       startAge: 18,
@@ -183,7 +167,7 @@ class Home extends React.Component<Props, HState> {
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
-            <UserCard key={user.id} userInfo={user} />
+            <UserCard key={user.user_id} userInfo={user} />
           ))}
         {this.state.messageHome && (
           <div className="toast-message ui blue floating message">
@@ -195,7 +179,7 @@ class Home extends React.Component<Props, HState> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): User => {
   return state.user;
 };
 

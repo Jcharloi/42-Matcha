@@ -1,8 +1,9 @@
 import * as React from "react";
-import "../styles/stylesTopMenu.css";
 import history from "../helpers/history";
 import { store } from "../redux/store";
 import { updateUserAuth } from "../redux/actions/actions";
+
+import "../styles/stylesTopMenu.css";
 
 interface Props {
   current?: string;
