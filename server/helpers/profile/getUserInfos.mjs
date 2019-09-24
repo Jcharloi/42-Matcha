@@ -13,13 +13,17 @@ const getUserAll = async (params, res) => {
   let values = [params.query.userName];
   await client
     .query(text, values)
-    .then(async ({ rows }) => {
-      const userId = rows[0].user_id;
-      let userInfos = {};
-      userInfos = await getUserInfos(userId);
-      userInfos.pictures = await getUserPictures(userId);
-      userInfos.tags = await getUserTags(userId);
-      res.send({ userInfos });
+    .then(async ({ rowCount, rows }) => {
+      if (rowCount > 0) {
+        const userId = rows[0].user_id;
+        let userInfos = {};
+        userInfos = await getUserInfos(userId);
+        userInfos.pictures = await getUserPictures(userId);
+        userInfos.tags = await getUserTags(userId);
+        res.send({ validated: true, userInfos });
+      } else {
+        res.send({ validated: false });
+      }
     })
     .catch(e => {
       console.error(e);
