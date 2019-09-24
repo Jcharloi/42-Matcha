@@ -17,7 +17,6 @@ export interface User {
   city: string;
   pictures: Pictures[];
   tags: UserTags[];
-  liked: boolean;
 }
 
 export interface UserMatchInfos {
@@ -30,6 +29,7 @@ export interface UserMatchInfos {
   popularityScore: string;
   pictures: Array<Pictures>;
   tags: Array<UserTags>;
+  liked: boolean;
 }
 
 export interface Pictures {
