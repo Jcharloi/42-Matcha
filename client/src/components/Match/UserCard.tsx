@@ -1,32 +1,11 @@
 import * as React from "react";
 import history from "../../helpers/history";
+import { UserMatchInfos } from "../../models/models";
 
 import "../../styles/stylesUserHome.css";
 
 interface Props {
-  userInfo: {
-    id: string;
-    name: string;
-    city: string;
-    age: string;
-    connection: string;
-    gender: string;
-    popularityScore: string;
-    pictures: [
-      {
-        path: string;
-        date: string;
-        main: boolean;
-      }
-    ];
-    tags: [
-      {
-        tag_id: string;
-        name: string;
-        custom: boolean;
-      }
-    ];
-  };
+  userInfo: UserMatchInfos;
 }
 
 interface CState {
@@ -80,19 +59,17 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   selectProfile = () => {
-    console.log("redirect");
     history.push(`/profile/` + this.props.userInfo.id);
   };
 
   public render() {
     return (
-      <div className="ui card user">
+      <div className="ui card user" onClick={this.selectProfile}>
         <div className="image">
           <img
             alt="profile-pic"
             className="profile-pic-card"
             src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
-            onClick={this.selectProfile}
           />
         </div>
         <div className="content">

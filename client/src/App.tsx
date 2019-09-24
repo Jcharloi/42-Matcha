@@ -11,10 +11,12 @@ import PublicRoutes from "./components/Routes/PublicRoutes";
 import PrivateRoutes from "./components/Routes/PrivateRoutes";
 import CompletedRoutes from "./components/Routes/CompletedRoutes";
 import SearchMatch from "./components/Match/SearchMatch";
+import { Pictures, UserTags } from "./models/models";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
+import OtherProfile from "./components/OtherProfile/OtherProfile";
 
 interface AppState {
   isLoading: boolean;
@@ -36,8 +38,8 @@ export function isProfileCompleted(
   city: string,
   gender: string,
   presentation: string,
-  pictures: [],
-  tags: []
+  pictures: Array<Pictures>,
+  tags: Array<UserTags>
 ): boolean {
   if (
     city &&
@@ -107,11 +109,16 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - En ligne
     - Infinite scroll
     - Clear filter
     
     Partie back :
+    - Deja liké ?
     - Ne pas delete si y a encore la photo sur la db !
+    - Un utilisateur incomplet ne doit pas apparaitre
+    - Un utilisateur bloqué ne doit plus apparaître ,
+    
     */
     return (
       <div>
@@ -144,6 +151,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/search"
                 component={SearchMatch}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={false}
+                path="/profile/:id"
+                component={OtherProfile}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

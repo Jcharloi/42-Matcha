@@ -9,22 +9,7 @@ import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 
 import { Button, Icon, Header, Input } from "semantic-ui-react";
 import "../../styles/stylesUserTags.css";
-
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: any;
-  tags: any;
-}
+import { User } from "../../models/models";
 
 interface TState {
   tagsList: [{ id: string; name: string }];
@@ -33,8 +18,8 @@ interface TState {
   messageTags?: string | null;
 }
 
-class Tags extends React.Component<Props, TState> {
-  constructor(props: Props) {
+class Tags extends React.Component<User, TState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       displayCustom: false,
@@ -327,7 +312,7 @@ class Tags extends React.Component<Props, TState> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): User => {
   return state.user;
 };
 

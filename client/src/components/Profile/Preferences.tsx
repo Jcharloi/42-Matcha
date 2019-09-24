@@ -9,22 +9,7 @@ import { State } from "../../redux/types/types";
 import { store } from "../../redux/store";
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 import { deleteUser, isProfileCompleted } from "../../App";
-
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: any;
-  tags: any;
-}
+import { User } from "../../models/models";
 
 interface PState {
   gender: string;
@@ -33,8 +18,8 @@ interface PState {
   messagePreference?: string | null;
 }
 
-class Preferences extends React.Component<Props, PState> {
-  constructor(props: Props) {
+class Preferences extends React.Component<User, PState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       gender: this.props.gender,
@@ -200,7 +185,7 @@ class Preferences extends React.Component<Props, PState> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): User => {
   return state.user;
 };
 

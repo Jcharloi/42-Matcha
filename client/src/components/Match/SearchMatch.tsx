@@ -1,7 +1,7 @@
 import * as React from "react";
 import Axios from "axios";
 import { State } from "../../redux/types/types";
-import { UserMatchInfos } from "../../models/models";
+import { UserMatchInfos, User } from "../../models/models";
 import { deleteUser } from "../../App";
 
 import TopMenu from "../TopMenu";
@@ -13,22 +13,6 @@ import ModalFilter from "./ModalFilter";
 import "../../styles/stylesUserHome.css";
 import { connect } from "react-redux";
 import { Divider } from "semantic-ui-react";
-
-interface Props {
-  user_id: string;
-  mail: string;
-  user_name: string;
-  last_name: string;
-  first_name: string;
-  birthday: string;
-  gender: string;
-  orientation: string;
-  presentation: string;
-  score: string;
-  city: string;
-  pictures: any;
-  tags: any;
-}
 
 interface HState {
   startAge: number;
@@ -46,8 +30,8 @@ interface HState {
   messageHome?: string;
 }
 
-class SearchMatch extends React.Component<Props, HState> {
-  constructor(props: Props) {
+class SearchMatch extends React.Component<User, HState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       startAge: 18,
@@ -191,7 +175,7 @@ class SearchMatch extends React.Component<Props, HState> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): User => {
   return state.user;
 };
 
