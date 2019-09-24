@@ -10,6 +10,7 @@ export interface User {
   last_name: string;
   first_name: string;
   birthday: string;
+  age: string;
   gender: string;
   orientation: string;
   presentation: string;
@@ -17,18 +18,7 @@ export interface User {
   city: string;
   pictures: Pictures[];
   tags: UserTags[];
-}
-
-export interface UserMatchInfos {
-  id: string;
-  name: string;
-  city: string;
-  age: string;
   connection: string;
-  gender: string;
-  popularityScore: string;
-  pictures: Array<Pictures>;
-  tags: Array<UserTags>;
   liked: boolean;
 }
 

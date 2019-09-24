@@ -2,11 +2,10 @@ import {
   InsertProfileAction,
   INSERT_USER_PROFILE,
   UPDATE_USER_AUTH,
-  INSERT_OTHER_PROFILE,
   UpdateAuthAction,
-  InsertOtherProfileAction
+  INSERT_OTHER_PROFILE
 } from "../types/types";
-import { VerifiedUser, UserMatchInfos } from "../../models/models";
+import { VerifiedUser, User } from "../../models/models";
 
 let initialState = {
   user_id: "",
@@ -15,19 +14,22 @@ let initialState = {
   last_name: "",
   first_name: "",
   birthday: "",
+  age: "",
   gender: "",
   orientation: "",
   presentation: "",
   score: "",
   city: "",
   pictures: [{ path: "", date: "", main: false }],
-  tags: [{ tag_id: "", name: "", custom: false }]
+  tags: [{ tag_id: "", name: "", custom: false }],
+  connection: "",
+  liked: false
 };
 
 export const userProfileReducer = (
   state = initialState,
   action: InsertProfileAction
-) => {
+): User => {
   switch (action.type) {
     case INSERT_USER_PROFILE: {
       return Object.assign({}, state, action.payload);
@@ -37,23 +39,10 @@ export const userProfileReducer = (
   }
 };
 
-let initialStateOther = {
-  id: "",
-  name: "",
-  city: "",
-  age: "",
-  connection: "",
-  gender: "",
-  popularityScore: "",
-  pictures: [{ path: "", date: "", main: false }],
-  tags: [{ tag_id: "", name: "", custom: false }],
-  liked: false
-};
-
 export const otherProfileReducer = (
-  state = initialStateOther,
-  action: InsertOtherProfileAction
-): UserMatchInfos => {
+  state = initialState,
+  action: InsertProfileAction
+): User => {
   if (action.type === INSERT_OTHER_PROFILE) {
     return Object.assign({}, state, action.payload);
   } else {
