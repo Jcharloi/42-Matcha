@@ -6,10 +6,10 @@ import { UserMatchInfos } from "../models/models";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
-import UserCard from "../components/UserCard";
-import SortIndex from "../components/SortIndex";
-import FilterInterval from "../components/FilterInterval";
-import ModalFilter from "../components/ModalFilter";
+import UserCard from "../components/Match/UserCard";
+import SortIndex from "../components/Match/SortIndex";
+import FilterInterval from "../components/Match/FilterInterval";
+import ModalFilter from "../components/Match/ModalFilter";
 
 import { Divider } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";

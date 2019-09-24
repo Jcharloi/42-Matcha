@@ -2,14 +2,14 @@ import * as React from "react";
 import Axios from "axios";
 
 import { Image, Icon } from "semantic-ui-react";
-import "../styles/stylesUserPictures.css";
+import "../../styles/stylesUserPictures.css";
 
 import { connect } from "react-redux";
-import { State } from "../redux/types/types";
-import { store } from "../redux/store";
+import { State } from "../../redux/types/types";
+import { store } from "../../redux/store";
 
-import { insertUserProfile, updateUserAuth } from "../redux/actions/actions";
-import { deleteUser, isProfileCompleted } from "../App";
+import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
+import { deleteUser, isProfileCompleted } from "../../App";
 
 interface PicturesState {
   displayPictures: boolean;

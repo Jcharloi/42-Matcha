@@ -1,7 +1,7 @@
 import * as React from "react";
-import "../styles/stylesUserProgressBar.css";
+import "../../styles/stylesUserProgressBar.css";
 
-import { State } from "../redux/types/types";
+import { State } from "../../redux/types/types";
 import { connect } from "react-redux";
 
 interface Props {

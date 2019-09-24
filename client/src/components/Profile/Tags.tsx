@@ -1,14 +1,14 @@
 import * as React from "react";
 import Axios from "axios";
-import { deleteUser, isProfileCompleted } from "../App";
+import { deleteUser, isProfileCompleted } from "../../App";
 
 import { connect } from "react-redux";
-import { State } from "../redux/types/types";
-import { store } from "../redux/store";
-import { insertUserProfile, updateUserAuth } from "../redux/actions/actions";
+import { State } from "../../redux/types/types";
+import { store } from "../../redux/store";
+import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 
 import { Button, Icon, Header, Input } from "semantic-ui-react";
-import "../styles/stylesUserTags.css";
+import "../../styles/stylesUserTags.css";
 
 interface Props {
   user_id: string;
