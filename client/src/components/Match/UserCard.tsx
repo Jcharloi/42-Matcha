@@ -1,13 +1,13 @@
 import * as React from "react";
 import history from "../../helpers/history";
-import { UserMatchInfos } from "../../models/models";
 import { store } from "../../redux/store";
 import { insertOtherProfile } from "../../redux/actions/actions";
+import { User } from "../../models/models";
 
 import "../../styles/stylesUserHome.css";
 
 interface Props {
-  userInfo: UserMatchInfos;
+  userInfo: User;
 }
 
 interface CState {
@@ -62,7 +62,7 @@ class UserCard extends React.Component<Props, CState> {
 
   selectProfile = () => {
     store.dispatch(insertOtherProfile(this.props.userInfo));
-    history.push(`/profile/` + this.props.userInfo.name);
+    history.push(`/profile/` + this.props.userInfo.user_name);
   };
 
   public render() {
@@ -77,15 +77,15 @@ class UserCard extends React.Component<Props, CState> {
         </div>
         <div className="content">
           <div className="header">
-            {this.props.userInfo.name}
+            {this.props.userInfo.user_name}
             <span className="right floated popscore ">
               <div
                 style={{
-                  color: this.hsl_col_perc(this.props.userInfo.popularityScore)
+                  color: this.hsl_col_perc(this.props.userInfo.score)
                 }}
                 className="ui large label"
               >
-                {this.props.userInfo.popularityScore}%
+                {this.props.userInfo.score}%
               </div>
             </span>
           </div>

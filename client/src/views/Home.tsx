@@ -2,7 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
-import { UserMatchInfos, User } from "../models/models";
+import { User } from "../models/models";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
@@ -24,8 +24,8 @@ interface HState {
   tagsName: Array<string>;
   isLoading: boolean;
   clearList: boolean;
-  userMatchInfo: Array<UserMatchInfos>;
-  copyUserMatch: Array<UserMatchInfos>;
+  userMatchInfo: Array<User>;
+  copyUserMatch: Array<User>;
   messageHome?: string;
 }
 
@@ -167,7 +167,7 @@ class Home extends React.Component<User, HState> {
         </div>
         {!this.state.isLoading &&
           this.state.userMatchInfo.map(user => (
-            <UserCard key={user.id} userInfo={user} />
+            <UserCard key={user.user_id} userInfo={user} />
           ))}
         {this.state.messageHome && (
           <div className="toast-message ui blue floating message">
