@@ -1,6 +1,7 @@
 import * as React from "react";
+import history from "../../helpers/history";
 
-import "../styles/stylesUserHome.css";
+import "../../styles/stylesUserHome.css";
 
 interface Props {
   userInfo: {
@@ -78,6 +79,11 @@ class UserCard extends React.Component<Props, CState> {
     return "Just Now";
   }
 
+  selectProfile = () => {
+    console.log("redirect");
+    history.push(`/profile/` + this.props.userInfo.id);
+  };
+
   public render() {
     return (
       <div className="ui card user">
@@ -86,6 +92,7 @@ class UserCard extends React.Component<Props, CState> {
             alt="profile-pic"
             className="profile-pic-card"
             src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
+            onClick={this.selectProfile}
           />
         </div>
         <div className="content">

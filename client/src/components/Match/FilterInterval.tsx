@@ -1,11 +1,11 @@
 import * as React from "react";
 import Axios from "axios";
 import { Range } from "rc-slider";
-import { Tags } from "../models/models";
+import { Tags } from "../../models/models";
 import { debounce } from "throttle-debounce";
 
 import "rc-slider/assets/index.css";
-import "../styles/stylesUserHome.css";
+import "../../styles/stylesUserHome.css";
 
 interface Props {
   isSearch: boolean;

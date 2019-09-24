@@ -1,5 +1,5 @@
 import * as React from "react";
-import "../styles/stylesUserConnection.css";
+import "../../styles/stylesUserConnection.css";
 
 class Connection extends React.Component<{}, {}> {
   public render() {

@@ -1,16 +1,16 @@
 import * as React from "react";
 import Axios from "axios";
-import { State } from "../redux/types/types";
-import { UserMatchInfos } from "../models/models";
-import { deleteUser } from "../App";
+import { State } from "../../redux/types/types";
+import { UserMatchInfos } from "../../models/models";
+import { deleteUser } from "../../App";
 
-import TopMenu from "../components/TopMenu";
-import UserCard from "../components/UserCard";
-import SortIndex from "../components/SortIndex";
-import FilterInterval from "../components/FilterInterval";
-import ModalFilter from "../components/ModalFilter";
+import TopMenu from "../TopMenu";
+import UserCard from "./UserCard";
+import SortIndex from "./SortIndex";
+import FilterInterval from "./FilterInterval";
+import ModalFilter from "./ModalFilter";
 
-import "../styles/stylesUserHome.css";
+import "../../styles/stylesUserHome.css";
 import { connect } from "react-redux";
 import { Divider } from "semantic-ui-react";
 
