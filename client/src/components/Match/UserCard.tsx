@@ -1,32 +1,13 @@
 import * as React from "react";
 import history from "../../helpers/history";
+import { store } from "../../redux/store";
+import { insertOtherProfile } from "../../redux/actions/actions";
+import { User } from "../../models/models";
 
 import "../../styles/stylesUserHome.css";
 
 interface Props {
-  userInfo: {
-    id: string;
-    name: string;
-    city: string;
-    age: string;
-    connection: string;
-    gender: string;
-    popularityScore: string;
-    pictures: [
-      {
-        path: string;
-        date: string;
-        main: boolean;
-      }
-    ];
-    tags: [
-      {
-        tag_id: string;
-        name: string;
-        custom: boolean;
-      }
-    ];
-  };
+  userInfo: User;
 }
 
 interface CState {
@@ -80,32 +61,31 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   selectProfile = () => {
-    console.log("redirect");
-    history.push(`/profile/` + this.props.userInfo.id);
+    store.dispatch(insertOtherProfile(this.props.userInfo));
+    history.push(`/profile/` + this.props.userInfo.user_name);
   };
 
   public render() {
     return (
-      <div className="ui card user">
+      <div className="ui card user" onClick={this.selectProfile}>
         <div className="image">
           <img
             alt="profile-pic"
             className="profile-pic-card"
             src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
-            onClick={this.selectProfile}
           />
         </div>
         <div className="content">
           <div className="header">
-            {this.props.userInfo.name}
+            {this.props.userInfo.user_name}
             <span className="right floated popscore ">
               <div
                 style={{
-                  color: this.hsl_col_perc(this.props.userInfo.popularityScore)
+                  color: this.hsl_col_perc(this.props.userInfo.score)
                 }}
                 className="ui large label"
               >
-                {this.props.userInfo.popularityScore}%
+                {this.props.userInfo.score}%
               </div>
             </span>
           </div>

@@ -44,17 +44,23 @@ const getUsersBySearch = async (req, res) => {
           userMatchInfo.push({
             scoreDistance: 0,
             scoreTags: 0,
-            id: rows[i].user_id,
-            name: rows[i].user_name,
+            user_id: rows[i].user_id,
+            user_name: rows[i].user_name,
+            first_name: rows[i].first_name,
+            last_name: rows[i].last_name,
             gender: rows[i].gender,
+            orientation: rows[i].orientation,
             city: rows[i].city,
+            presentation: rows[i].presentation,
             latitude: rows[i].latitude,
             longitude: rows[i].longitude,
+            birthday: rows[i].birthday,
             age: calculateAge(rows[i].birthday),
             connection: new Date(rows[i].last_connection * 1000),
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
-            popularityScore: rows[i].score
+            score: rows[i].score,
+            liked: true
           });
         }
         userMatchInfo = userMatchInfo.filter(user => {
@@ -83,6 +89,10 @@ const getUsersBySearch = async (req, res) => {
         if (indexYourself != -1) {
           userMatchInfo.splice(indexYourself, 1);
         }
+        userMatchInfo.forEach(user => {
+          delete user["longitude"];
+          delete user["latitude"];
+        });
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
