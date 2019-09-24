@@ -28,7 +28,7 @@ const filterByInterval = (req, res) => {
       return user.distance >= startLoc && user.distance <= endLoc;
     });
     userMatchInfo = userMatchInfo.filter(user => {
-      return user.popularityScore >= startPop && user.popularityScore <= endPop;
+      return user.score >= startPop && user.score <= endPop;
     });
     if (req.body.tagsName.length > 0) {
       userMatchInfo = userMatchInfo.filter(user => {

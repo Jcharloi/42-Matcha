@@ -14,7 +14,7 @@ const sortByDistance = userMatchInfo => {
 
 const sortByPopularity = userMatchInfo => {
   return userMatchInfo.sort((userA, userB) => {
-    return userB.popularityScore - userA.popularityScore;
+    return userB.score - userA.score;
   });
 };
 
