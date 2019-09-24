@@ -5,7 +5,12 @@ import history from "./helpers/history";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
-import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
+import {
+  updateUserAuth,
+  insertUserProfile,
+  insertOtherProfile
+} from "./redux/actions/actions";
+import { Pictures, UserTags } from "./models/models";
 
 import PublicRoutes from "./components/Routes/PublicRoutes";
 import PrivateRoutes from "./components/Routes/PrivateRoutes";
@@ -15,6 +20,7 @@ import SearchMatch from "./components/Match/SearchMatch";
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
+import OtherProfile from "./components/OtherProfile/OtherProfile";
 
 interface AppState {
   isLoading: boolean;
@@ -36,8 +42,8 @@ export function isProfileCompleted(
   city: string,
   gender: string,
   presentation: string,
-  pictures: [],
-  tags: []
+  pictures: Array<Pictures>,
+  tags: Array<UserTags>
 ): boolean {
   if (
     city &&
@@ -93,6 +99,25 @@ class App extends React.Component<Props, AppState> {
               .catch(error => {
                 console.log("Error : ", error.message);
               });
+            const url = window.location.pathname;
+            if (url && url.search("/profile/") !== -1) {
+              const urlArray = url.split("/");
+              if (urlArray[2]) {
+                await Axios.get(
+                  `http://localhost:5000/get-user-infos?userName=${urlArray[2]}`
+                )
+                  .then(({ data: { validated, userInfos } }) => {
+                    if (validated) {
+                      store.dispatch(insertOtherProfile(userInfos));
+                    } else {
+                      history.push("/");
+                    }
+                  })
+                  .catch(error => {
+                    console.log("Error : ", error.message);
+                  });
+              }
+            }
           } else {
             localStorage.clear();
           }
@@ -107,11 +132,15 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - En ligne
     - Infinite scroll
-    - Clear filter
     
     Partie back :
+    - Deja liké ?
     - Ne pas delete si y a encore la photo sur la db !
+    - Un utilisateur incomplet ne doit pas apparaitre
+    - Un utilisateur bloqué ne doit plus apparaître ,
+    
     */
     return (
       <div>
@@ -144,6 +173,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/search"
                 component={SearchMatch}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={false}
+                path="/profile/:id"
+                component={OtherProfile}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
