@@ -6,12 +6,12 @@ import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
 import { updateUserAuth, insertUserProfile } from "./redux/actions/actions";
+import { Pictures, UserTags } from "./models/models";
 
 import PublicRoutes from "./components/Routes/PublicRoutes";
 import PrivateRoutes from "./components/Routes/PrivateRoutes";
 import CompletedRoutes from "./components/Routes/CompletedRoutes";
 import SearchMatch from "./components/Match/SearchMatch";
-import { Pictures, UserTags } from "./models/models";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
@@ -111,7 +111,6 @@ class App extends React.Component<Props, AppState> {
     Partie front :
     - En ligne
     - Infinite scroll
-    - Clear filter
     
     Partie back :
     - Deja liké ?

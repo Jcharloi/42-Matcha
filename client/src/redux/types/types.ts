@@ -1,4 +1,4 @@
-import { User, VerifiedUser } from "../../models/models";
+import { User, VerifiedUser, UserMatchInfos } from "../../models/models";
 
 export const INSERT_USER_PROFILE = "INSERT_USER_PROFILE";
 export const INSERT_OTHER_PROFILE = "INSERT_OTHER_PROFILE";
@@ -11,7 +11,7 @@ export interface InsertProfileAction {
 
 export interface InsertOtherProfileAction {
   type: typeof INSERT_OTHER_PROFILE;
-  payload: User;
+  payload: UserMatchInfos;
 }
 
 export interface UpdateAuthAction {
@@ -22,4 +22,5 @@ export interface UpdateAuthAction {
 export interface State {
   verified: VerifiedUser;
   user: User;
+  otherUser: UserMatchInfos;
 }
