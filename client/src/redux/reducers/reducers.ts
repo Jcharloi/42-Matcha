@@ -1,10 +1,11 @@
 import {
   InsertProfileAction,
   INSERT_USER_PROFILE,
+  UPDATE_USER_AUTH,
   UpdateAuthAction,
-  UPDATE_USER_AUTH
+  INSERT_OTHER_PROFILE
 } from "../types/types";
-import { User, VerifiedUser } from "../../models/models";
+import { VerifiedUser, User } from "../../models/models";
 
 let initialState = {
   user_id: "",
@@ -13,13 +14,16 @@ let initialState = {
   last_name: "",
   first_name: "",
   birthday: "",
+  age: "",
   gender: "",
   orientation: "",
   presentation: "",
   score: "",
   city: "",
   pictures: [{ path: "", date: "", main: false }],
-  tags: [{ tag_id: "", name: "", custom: false }]
+  tags: [{ tag_id: "", name: "", custom: false }],
+  connection: "",
+  liked: false
 };
 
 export const userProfileReducer = (
@@ -32,6 +36,17 @@ export const userProfileReducer = (
     }
     default:
       return state;
+  }
+};
+
+export const otherProfileReducer = (
+  state = initialState,
+  action: InsertProfileAction
+): User => {
+  if (action.type === INSERT_OTHER_PROFILE) {
+    return Object.assign({}, state, action.payload);
+  } else {
+    return state;
   }
 };
 
