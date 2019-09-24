@@ -232,7 +232,7 @@ class Personal extends React.Component<User, PState> {
                 this.getMonthFromString(this.state.month),
                 this.state.year
               )}
-              years old
+              &nbsp;years old
             </span>
           </div>
           <div className="ui divider" />
