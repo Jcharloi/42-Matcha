@@ -3,10 +3,9 @@ import {
   UPDATE_USER_AUTH,
   INSERT_OTHER_PROFILE,
   InsertProfileAction,
-  UpdateAuthAction,
-  InsertOtherProfileAction
+  UpdateAuthAction
 } from "../types/types";
-import { User, VerifiedUser, UserMatchInfos } from "../../models/models";
+import { User, VerifiedUser } from "../../models/models";
 
 export function insertUserProfile(data: User): InsertProfileAction {
   return {
@@ -15,9 +14,7 @@ export function insertUserProfile(data: User): InsertProfileAction {
   };
 }
 
-export function insertOtherProfile(
-  data: UserMatchInfos
-): InsertOtherProfileAction {
+export function insertOtherProfile(data: User): InsertProfileAction {
   return {
     type: INSERT_OTHER_PROFILE,
     payload: data
