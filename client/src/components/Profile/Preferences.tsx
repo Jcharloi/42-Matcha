@@ -60,7 +60,9 @@ class Preferences extends React.Component<Props, PState> {
       );
     }
     return (
-      <div className="media-container-preferences">
+      <div
+        className={this.props.isOther ? "mcp-o" : "media-container-preferences"}
+      >
         <div className="title-container-preferences">
           <Header as="h1" dividing>
             What I want you to know
@@ -108,7 +110,9 @@ class Preferences extends React.Component<Props, PState> {
             </div>
           </div>
           {this.props.isOther ? (
-            <div className="bio-other">{this.props.user.presentation}</div>
+            <div className="bio-other">
+              <span>{this.props.user.presentation}</span>
+            </div>
           ) : (
             <Form className="form-textarea">
               <TextArea

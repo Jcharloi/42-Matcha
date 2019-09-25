@@ -11,6 +11,10 @@
   justify-content: center;
 }
 
+.ic-o {
+  margin-top: -3rem;
+}
+
 .image {
   top: -4rem;
   cursor: pointer;

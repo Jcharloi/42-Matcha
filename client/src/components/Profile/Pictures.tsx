@@ -243,7 +243,7 @@ class Pictures extends React.Component<Props, PicturesState> {
       <div>
         <div className="body-container">
           <span
-            className="image-container"
+            className={`image-container ${this.props.isOther ? "ic-o" : ""}`}
             key={this.props.user.pictures[this.state.pictureIndex].date}
           >
             <Image

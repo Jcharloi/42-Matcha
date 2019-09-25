@@ -239,7 +239,7 @@ class Tags extends React.Component<Props, TState> {
       }, 4000);
     }
     return (
-      <div className="media-container">
+      <div className={this.props.isOther ? "mct-o" : "media-container"}>
         <div className="title-container-tag">
           <Header as="h3" dividing className="title">
             Some tags that represents me

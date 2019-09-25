@@ -1,3 +1,7 @@
+.mct-o {
+  margin-left: 36rem;
+}
+
 .title-container-tag {
   margin-top: 4rem;
   width: 110%;
@@ -42,6 +46,11 @@
 }
 
 @media screen and (max-width: 1300px) {
+  .mct-o {
+    width: 50%;
+    margin-left: 30%;
+  }
+
   .title-container-tag {
     width: unset;
   }

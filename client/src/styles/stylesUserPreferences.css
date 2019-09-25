@@ -9,11 +9,14 @@
   position: relative;
   left: 20px;
 }
+
+.mcp-o {
+  width: 45%;
+}
+
 .container-preferences {
   width: 100%;
   margin-top: 0.5rem;
-  /* position: relative;
-  left: 400px; */
 }
 
 .preferences {
@@ -45,14 +48,13 @@ select {
 }
 
 .bio-other {
-  width: 70%;
-  margin-top: 4rem;
+  margin-top: 2rem;
+  width: 115%;
 }
 
 .button-edit-preferences {
   width: 50%;
   margin: 2rem 0 0 30% !important;
-  /* border: 2px red; */
 }
 
 .edit-text {
@@ -67,6 +69,10 @@ select {
     width: unset !important;
     left: 0px;
     font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  }
+
+  .mcp-o {
+    margin: 1rem 0 0 30%;
   }
 
   .container-preferences {
