@@ -33,7 +33,7 @@ class Profile extends React.Component<User> {
         </div>
         <div className="block-container">
           <div className="middle-container">
-            <Personal />
+            <Personal isOther={false} user={this.props} />
             <Preferences isOther={false} user={this.props} />
           </div>
         </div>

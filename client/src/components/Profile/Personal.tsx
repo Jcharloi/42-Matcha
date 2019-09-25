@@ -4,12 +4,15 @@ import Axios from "axios";
 import "../../styles/stylesUserPersonal.css";
 import { Button, Icon, Header } from "semantic-ui-react";
 
-import { connect } from "react-redux";
-import { State } from "../../redux/types/types";
 import { store } from "../../redux/store";
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 import { deleteUser, isProfileCompleted } from "../../App";
 import { User } from "../../models/models";
+
+interface Props {
+  isOther: boolean;
+  user: User;
+}
 
 interface PState {
   latitude: number;
@@ -25,45 +28,45 @@ interface PState {
   messagePersonal?: string | null;
 }
 
-class Personal extends React.Component<User, PState> {
-  constructor(props: User) {
+class Personal extends React.Component<Props, PState> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       latitude: 0,
       longitude: 0,
       ip: "",
-      city: this.props.city,
-      lastName: this.props.last_name,
-      firstName: this.props.first_name,
-      mail: this.props.mail,
-      day: this.props.birthday.split("/")[1],
+      city: this.props.user.city,
+      lastName: this.props.user.last_name,
+      firstName: this.props.user.first_name,
+      mail: this.props.user.mail,
+      day: this.props.user.birthday.split("/")[1],
       month:
-        this.props.birthday.split("/")[0] === "Jan"
+        this.props.user.birthday.split("/")[0] === "Jan"
           ? "January"
-          : this.props.birthday.split("/")[0] === "Feb"
+          : this.props.user.birthday.split("/")[0] === "Feb"
           ? "February"
-          : this.props.birthday.split("/")[0] === "Mar"
+          : this.props.user.birthday.split("/")[0] === "Mar"
           ? "March"
-          : this.props.birthday.split("/")[0] === "Apr"
+          : this.props.user.birthday.split("/")[0] === "Apr"
           ? "April"
-          : this.props.birthday.split("/")[0] === "May"
+          : this.props.user.birthday.split("/")[0] === "May"
           ? "May"
-          : this.props.birthday.split("/")[0] === "Jun"
+          : this.props.user.birthday.split("/")[0] === "Jun"
           ? "June"
-          : this.props.birthday.split("/")[0] === "Jul"
+          : this.props.user.birthday.split("/")[0] === "Jul"
           ? "July"
-          : this.props.birthday.split("/")[0] === "Aug"
+          : this.props.user.birthday.split("/")[0] === "Aug"
           ? "August"
-          : this.props.birthday.split("/")[0] === "Sep"
+          : this.props.user.birthday.split("/")[0] === "Sep"
           ? "September"
-          : this.props.birthday.split("/")[0] === "Oct"
+          : this.props.user.birthday.split("/")[0] === "Oct"
           ? "October"
-          : this.props.birthday.split("/")[0] === "Nov"
+          : this.props.user.birthday.split("/")[0] === "Nov"
           ? "November"
-          : this.props.birthday.split("/")[0] === "Dec"
+          : this.props.user.birthday.split("/")[0] === "Dec"
           ? "December"
-          : this.props.birthday.split("/")[0],
-      year: this.props.birthday.split("/")[2]
+          : this.props.user.birthday.split("/")[0],
+      year: this.props.user.birthday.split("/")[2]
     };
   }
   timer!: NodeJS.Timeout;
@@ -103,7 +106,7 @@ class Personal extends React.Component<User, PState> {
               city: userInfos.city
             });
             const newData = {
-              ...this.props,
+              ...this.props.user,
               city: this.state.city
             };
             store.dispatch(insertUserProfile(newData));
@@ -199,33 +202,46 @@ class Personal extends React.Component<User, PState> {
         <div className="personal-container">
           <div className="block">
             <Icon name="address card" size="large" color="violet" />
-            <input
-              className="input-value"
-              value={this.state.lastName}
-              onChange={({ target: { value } }) => this.setLastName(value)}
-            />
+            {this.props.isOther ? (
+              <div>&nbsp;{this.props.user.last_name}</div>
+            ) : (
+              <input
+                className="input-value"
+                value={this.state.lastName}
+                onChange={({ target: { value } }) => this.setLastName(value)}
+              />
+            )}
           </div>
           <div className="ui divider" />
           <div className="block">
             <Icon name="address card" size="large" color="violet" />
-            <input
-              className="input-value"
-              value={this.state.firstName}
-              onChange={({ target: { value } }) => this.setFirstName(value)}
-            />
+            {this.props.isOther ? (
+              <div>&nbsp;{this.props.user.first_name}</div>
+            ) : (
+              <input
+                className="input-value"
+                value={this.state.firstName}
+                onChange={({ target: { value } }) => this.setFirstName(value)}
+              />
+            )}
           </div>
           <div className="ui divider" />
           <div className="block">
             <Icon name="map marker alternate" size="large" color="blue" />
-            <input
-              className="input-value"
-              defaultValue={this.state.city}
-              onChange={({ target: { value } }) => this.setCity(value)}
-            />
+            {this.props.isOther ? (
+              <div>&nbsp;{this.props.user.city}</div>
+            ) : (
+              <input
+                className="input-value"
+                defaultValue={this.state.city}
+                onChange={({ target: { value } }) => this.setCity(value)}
+              />
+            )}
           </div>
           <div className="ui divider" />
           <div className="block">
             <Icon name="birthday" size="large" color="orange" />
+
             <span className="input-value">
               {this.calculateAge(
                 this.state.day,
@@ -238,125 +254,143 @@ class Personal extends React.Component<User, PState> {
           <div className="ui divider" />
           <div className="block">
             <Icon name="calendar alternate" size="large" color="orange" />
-            <select
-              required
-              placeholder="Month"
-              value={this.state.month}
-              onChange={({ target: { value } }) => {
-                this.setMonth(value);
-              }}
-            >
-              <option value="" disabled>
-                Month
-              </option>
-              {months.map(month => (
-                <option key={month} value={month}>
-                  {month}
+            {this.props.isOther ? (
+              <div>&nbsp;{this.state.month},</div>
+            ) : (
+              <select
+                required
+                placeholder="Month"
+                value={this.state.month}
+                onChange={({ target: { value } }) => {
+                  this.setMonth(value);
+                }}
+              >
+                <option value="" disabled>
+                  Month
                 </option>
-              ))}
-            </select>
-            <select
-              required
-              placeholder="Day"
-              value={this.state.day}
-              onChange={({ target: { value } }) => {
-                this.setDay(value);
-              }}
-            >
-              <option value="" disabled>
-                Day
-              </option>
-              {days.map(day => (
-                <option key={day} value={day}>
-                  {day}
+                {months.map(month => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+            )}
+            {this.props.isOther ? (
+              <div>&nbsp;{this.state.day},</div>
+            ) : (
+              <select
+                required
+                placeholder="Day"
+                value={this.state.day}
+                onChange={({ target: { value } }) => {
+                  this.setDay(value);
+                }}
+              >
+                <option value="" disabled>
+                  Day
                 </option>
-              ))}
-            </select>
-            <select
-              required
-              placeholder="Year"
-              value={this.state.year}
-              onChange={({ target: { value } }) => {
-                this.setYear(value);
-              }}
-            >
-              <option value="" disabled>
-                Year
-              </option>
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
+                {days.map(day => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </select>
+            )}
+            {this.props.isOther ? (
+              <div>&nbsp;{this.state.year}</div>
+            ) : (
+              <select
+                required
+                placeholder="Year"
+                value={this.state.year}
+                onChange={({ target: { value } }) => {
+                  this.setYear(value);
+                }}
+              >
+                <option value="" disabled>
+                  Year
                 </option>
-              ))}
-            </select>
+                {years.map(year => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-          <div className="ui divider" />
-          <div className="block">
-            <Icon name="mail" size="large" color="red" />
-            <input
-              className="input-value"
-              value={this.state.mail}
-              onChange={({ target: { value } }) => this.setMail(value)}
-            />
-          </div>
-          <Button
-            className="ui primary button button-valid-edit"
-            onClick={async () => {
-              const valid = validPersonalInfos(this.state);
-              if (!valid.valid) {
-                this.setState({ messagePersonal: valid.message });
-              } else {
-                await Axios.put(
-                  "http://localhost:5000/profile/change-personal-infos",
-                  {
-                    city: this.state.city,
-                    lastName: this.state.lastName,
-                    firstName: this.state.firstName,
-                    mail: this.state.mail,
-                    month: this.state.month.substring(0, 3),
-                    day: this.state.day,
-                    year: this.state.year,
-                    userName: localStorage.getItem("user_name"),
-                    token: localStorage.getItem("token")
-                  }
-                )
-                  .then(({ data: { validToken, message } }) => {
-                    if (validToken === false) {
-                      deleteUser();
-                    } else {
-                      const newData = {
-                        ...this.props,
-                        last_name: this.state.lastName,
-                        first_name: this.state.firstName,
-                        mail: this.state.mail,
-                        birthday:
-                          this.state.month.substring(0, 3) +
-                          "/" +
-                          this.state.day +
-                          "/" +
-                          this.state.year
-                      };
-                      store.dispatch(insertUserProfile(newData));
-                      let isCompleted = isProfileCompleted(
-                        this.props.city,
-                        this.props.gender,
-                        this.props.presentation,
-                        this.props.pictures,
-                        this.props.tags
-                      );
-                      store.dispatch(
-                        updateUserAuth({ isAuth: true, isCompleted })
-                      );
-                      if (this.timer) clearTimeout(this.timer);
-                      this.setState({ messagePersonal: message });
+          {!this.props.isOther && (
+            <div>
+              <div className="ui divider" />
+              <div className="block">
+                <Icon name="mail" size="large" color="red" />
+                <input
+                  className="input-value"
+                  value={this.state.mail}
+                  onChange={({ target: { value } }) => this.setMail(value)}
+                />
+              </div>
+            </div>
+          )}
+          {!this.props.isOther && (
+            <Button
+              className="ui primary button button-valid-edit"
+              onClick={async () => {
+                const valid = validPersonalInfos(this.state);
+                if (!valid.valid) {
+                  this.setState({ messagePersonal: valid.message });
+                } else {
+                  await Axios.put(
+                    "http://localhost:5000/profile/change-personal-infos",
+                    {
+                      city: this.state.city,
+                      lastName: this.state.lastName,
+                      firstName: this.state.firstName,
+                      mail: this.state.mail,
+                      month: this.state.month.substring(0, 3),
+                      day: this.state.day,
+                      year: this.state.year,
+                      userName: localStorage.getItem("user_name"),
+                      token: localStorage.getItem("token")
                     }
-                  })
-                  .catch(error => console.error(error));
-              }
-            }}
-          >
-            Change my informations
-          </Button>
+                  )
+                    .then(({ data: { validToken, message } }) => {
+                      if (validToken === false) {
+                        deleteUser();
+                      } else {
+                        const newData = {
+                          ...this.props.user,
+                          last_name: this.state.lastName,
+                          first_name: this.state.firstName,
+                          mail: this.state.mail,
+                          birthday:
+                            this.state.month.substring(0, 3) +
+                            "/" +
+                            this.state.day +
+                            "/" +
+                            this.state.year
+                        };
+                        store.dispatch(insertUserProfile(newData));
+                        let isCompleted = isProfileCompleted(
+                          this.props.user.city,
+                          this.props.user.gender,
+                          this.props.user.presentation,
+                          this.props.user.pictures,
+                          this.props.user.tags
+                        );
+                        store.dispatch(
+                          updateUserAuth({ isAuth: true, isCompleted })
+                        );
+                        if (this.timer) clearTimeout(this.timer);
+                        this.setState({ messagePersonal: message });
+                      }
+                    })
+                    .catch(error => console.error(error));
+                }
+              }}
+            >
+              Change my informations
+            </Button>
+          )}
           {this.state.messagePersonal && (
             <div className="toast-message ui blue floating message">
               <p>{this.state.messagePersonal}</p>
@@ -405,8 +439,4 @@ class Personal extends React.Component<User, PState> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
-};
-
-export default connect(mapStateToProps)(Personal);
+export default Personal;
