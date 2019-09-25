@@ -30,10 +30,6 @@ const toggleLike = async (req, res) => {
               });
             });
         } else {
-          // res.send({
-          //   validated: false,
-          //   message: "This user was already liked"
-          // });
           let text = `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
           let values = [liking_user_id, liked_user_id];
           await client
