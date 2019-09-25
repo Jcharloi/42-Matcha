@@ -25,7 +25,7 @@ class OtherProfile extends React.Component<User> {
         <div className="top-container">
           <Pictures />
           <div className="left-container">
-            <div className="user-name">{localStorage.getItem("user_name")}</div>
+            <div className="user-name">{this.props.user_name}</div>
             <Connection connection={this.props.connection} />
             <ProgressBar progressBarPercent={this.props.score} />
           </div>
@@ -33,7 +33,7 @@ class OtherProfile extends React.Component<User> {
         <div className="block-container">
           <div className="middle-container">
             <Personal />
-            <Preferences />
+            <Preferences isOther={true} user={this.props} />
           </div>
         </div>
         <div className="block-container">

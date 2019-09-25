@@ -44,6 +44,11 @@ select {
   margin-top: 4rem !important;
 }
 
+.bio-other {
+  width: 70%;
+  margin-top: 4rem;
+}
+
 .button-edit-preferences {
   width: 50%;
   margin: 2rem 0 0 30% !important;
