@@ -11,6 +11,7 @@ import {
   getUserId,
   compareTag
 } from "../../common.mjs";
+import { calculateCommonTags } from "./match.mjs";
 
 const getUsersBySearch = async (req, res) => {
   const startAge = parseInt(req.body.startAge);
@@ -32,7 +33,7 @@ const getUsersBySearch = async (req, res) => {
     validOrientation(req.body.preference)
   ) {
     let text =
-      `SELECT user_id, user_name, score, city, latitude, longitude, birthday, gender, last_connection FROM users ` +
+      `SELECT * FROM users ` +
       selectGender(req.body.preference) +
       ` score >= $1 AND score <= $2`;
     let values = [startPop, endPop];
@@ -68,7 +69,9 @@ const getUsersBySearch = async (req, res) => {
         });
         const userId = await getUserId(req.body.userName);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
+        const myTags = await getUserTags(userId);
         userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
+        userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
         userMatchInfo = userMatchInfo.filter(user => {
           return user.distance >= startLoc && user.distance <= endLoc;
         });
@@ -84,7 +87,7 @@ const getUsersBySearch = async (req, res) => {
           });
         }
         const indexYourself = userMatchInfo.findIndex(user => {
-          return user.id === userId;
+          return user.user_id === userId;
         });
         if (indexYourself != -1) {
           userMatchInfo.splice(indexYourself, 1);

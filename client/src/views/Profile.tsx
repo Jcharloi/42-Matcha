@@ -7,10 +7,13 @@ import Personal from "../components/Profile/Personal";
 import Preferences from "../components/Profile/Preferences";
 import Password from "../components/Profile/Password";
 import Tags from "../components/Profile/Tags";
+import { User } from "../models/models";
 
+import { State } from "../redux/types/types";
+import { connect } from "react-redux";
 import "../styles/stylesUserProfile.css";
 
-class Profile extends React.Component {
+class Profile extends React.Component<User> {
   public render() {
     return (
       <div>
@@ -24,14 +27,14 @@ class Profile extends React.Component {
           <Pictures />
           <div className="left-container">
             <div className="user-name">{localStorage.getItem("user_name")}</div>
-            <Connection />
-            <ProgressBar />
+            <Connection connection="Online now !" />
+            <ProgressBar progressBarPercent={this.props.score} />
           </div>
         </div>
         <div className="block-container">
           <div className="middle-container">
-            <Personal />
-            <Preferences />
+            <Personal isOther={false} user={this.props} />
+            <Preferences isOther={false} user={this.props} />
           </div>
         </div>
         <div className="block-container">
@@ -45,4 +48,8 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = (state: State): User => {
+  return state.user;
+};
+
+export default connect(mapStateToProps)(Profile);
