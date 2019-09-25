@@ -24,7 +24,7 @@ class Profile extends React.Component<User> {
           alt="Profile background"
         />
         <div className="top-container">
-          <Pictures />
+          <Pictures isOther={false} user={this.props} />
           <div className="left-container">
             <div className="user-name">{localStorage.getItem("user_name")}</div>
             <Connection connection="Online now !" />

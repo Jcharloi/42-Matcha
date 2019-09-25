@@ -23,7 +23,7 @@ class OtherProfile extends React.Component<User> {
           alt="Profile background"
         />
         <div className="top-container">
-          <Pictures />
+          <Pictures isOther={true} user={this.props} />
           <div className="left-container">
             <div className="user-name">{this.props.user_name}</div>
             <Connection connection={this.props.connection} />
