@@ -131,11 +131,8 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - En ligne - Obtenir le last_connection au rechargemt
-    de la page
     - Click sur la carte, declenche une visite
     - Infinite scroll
-    - Ajouter top menu pour my profile
     
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !

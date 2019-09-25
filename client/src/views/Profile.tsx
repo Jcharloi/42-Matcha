@@ -35,10 +35,17 @@ class Profile extends React.Component<Props, PState> {
           : this.props.user
     };
   }
+
   public render() {
     return (
       <div>
-        <TopMenu current="profile" />
+        <span
+          onClick={() => {
+            this.setState({ usedUser: this.props.user, isOther: false });
+          }}
+        >
+          <TopMenu current={this.state.isOther ? "" : "profile"} />
+        </span>
         <img
           className="profile-background"
           src="http://localhost:5000/public/profile-pictures/background-profile.jpg"

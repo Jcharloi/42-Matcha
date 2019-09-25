@@ -325,7 +325,7 @@ class Personal extends React.Component<Props, PState> {
                 <Icon name="mail" size="large" color="red" />
                 <input
                   className="input-value"
-                  value={this.state.mail}
+                  value={this.props.user.mail}
                   onChange={({ target: { value } }) => this.setMail(value)}
                 />
               </div>

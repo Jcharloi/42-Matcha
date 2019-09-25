@@ -1,7 +1,7 @@
 import * as React from "react";
 import history from "../helpers/history";
 import { store } from "../redux/store";
-import { updateUserAuth } from "../redux/actions/actions";
+import { updateUserAuth, insertOtherProfile } from "../redux/actions/actions";
 
 import "../styles/stylesTopMenu.css";
 
@@ -33,6 +33,26 @@ class TopMenu extends React.Component<Props> {
             <div
               className="item item-page"
               onClick={() => {
+                store.dispatch(
+                  insertOtherProfile({
+                    user_id: "",
+                    mail: "",
+                    user_name: "",
+                    last_name: "",
+                    first_name: "",
+                    birthday: "",
+                    age: "",
+                    gender: "",
+                    orientation: "",
+                    presentation: "",
+                    score: "",
+                    city: "",
+                    pictures: [],
+                    tags: [],
+                    connection: "",
+                    liked: false
+                  })
+                );
                 history.push("/profile");
               }}
             >
