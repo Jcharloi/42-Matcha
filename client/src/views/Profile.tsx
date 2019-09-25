@@ -40,7 +40,7 @@ class Profile extends React.Component<User> {
         <div className="block-container">
           <div className="end-container">
             <Password />
-            <Tags />
+            <Tags isOther={false} user={this.props} />
           </div>
         </div>
       </div>

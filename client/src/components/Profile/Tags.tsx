@@ -2,14 +2,17 @@ import * as React from "react";
 import Axios from "axios";
 import { deleteUser, isProfileCompleted } from "../../App";
 
-import { connect } from "react-redux";
-import { State } from "../../redux/types/types";
 import { store } from "../../redux/store";
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
+import { User } from "../../models/models";
 
 import { Button, Icon, Header, Input } from "semantic-ui-react";
 import "../../styles/stylesUserTags.css";
-import { User } from "../../models/models";
+
+interface Props {
+  isOther: boolean;
+  user: User;
+}
 
 interface TState {
   tagsList: [{ id: string; name: string }];
@@ -18,8 +21,8 @@ interface TState {
   messageTags?: string | null;
 }
 
-class Tags extends React.Component<User, TState> {
-  constructor(props: User) {
+class Tags extends React.Component<Props, TState> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       displayCustom: false,
@@ -49,7 +52,7 @@ class Tags extends React.Component<User, TState> {
   }
 
   deleteTags = async (name: string, custom: boolean) => {
-    if (this.props.tags.length > 1) {
+    if (this.props.user.tags.length > 1) {
       await Axios.put("http://localhost:5000/profile/delete-tags", {
         tagName: name,
         userName: localStorage.getItem("user_name"),
@@ -60,10 +63,10 @@ class Tags extends React.Component<User, TState> {
             deleteUser();
           } else {
             if (validated) {
-              const tagIndex = this.props.tags.findIndex((tag: any) => {
+              const tagIndex = this.props.user.tags.findIndex((tag: any) => {
                 return tag.tag_id === tagId;
               });
-              this.props.tags.splice(tagIndex, 1);
+              this.props.user.tags.splice(tagIndex, 1);
               if (!custom) {
                 this.state.tagsList.push({
                   id: tagId,
@@ -74,8 +77,8 @@ class Tags extends React.Component<User, TState> {
                 });
               }
               const newData = {
-                ...this.props,
-                tags: this.props.tags
+                ...this.props.user,
+                tags: this.props.user.tags
               };
               store.dispatch(insertUserProfile(newData));
               this.setState({
@@ -117,9 +120,9 @@ class Tags extends React.Component<User, TState> {
         } else {
           if (validated) {
             const newData = {
-              ...this.props,
+              ...this.props.user,
               tags: [
-                ...this.props.tags,
+                ...this.props.user.tags,
                 {
                   tag_id: id,
                   name,
@@ -134,11 +137,11 @@ class Tags extends React.Component<User, TState> {
             });
             store.dispatch(insertUserProfile(newData));
             let isCompleted = isProfileCompleted(
-              this.props.city,
-              this.props.gender,
-              this.props.presentation,
-              this.props.pictures,
-              this.props.tags
+              this.props.user.city,
+              this.props.user.gender,
+              this.props.user.presentation,
+              this.props.user.pictures,
+              this.props.user.tags
             );
             store.dispatch(
               updateUserAuth({
@@ -176,9 +179,9 @@ class Tags extends React.Component<User, TState> {
           } else {
             if (validated) {
               const newData = {
-                ...this.props,
+                ...this.props.user,
                 tags: [
-                  ...this.props.tags,
+                  ...this.props.user.tags,
                   {
                     tag_id: randomId,
                     name: this.state.customTag,
@@ -188,11 +191,11 @@ class Tags extends React.Component<User, TState> {
               };
               store.dispatch(insertUserProfile(newData));
               let isCompleted = isProfileCompleted(
-                this.props.city,
-                this.props.gender,
-                this.props.presentation,
-                this.props.pictures,
-                this.props.tags
+                this.props.user.city,
+                this.props.user.gender,
+                this.props.user.presentation,
+                this.props.user.pictures,
+                this.props.user.tags
               );
               store.dispatch(
                 updateUserAuth({
@@ -243,27 +246,31 @@ class Tags extends React.Component<User, TState> {
           </Header>
         </div>
         <div className="tag-container">
-          {this.props.tags &&
-            this.props.tags.map((tag: any) => (
+          {this.props.user.tags &&
+            this.props.user.tags.map((tag: any) => (
               <div key={tag.tag_id} className="tag-value ui tag label large ">
                 <span>{tag.name}</span>
-                <Icon
-                  name="close"
-                  onClick={() => {
-                    this.deleteTags(tag.name, tag.custom);
-                  }}
-                />
+                {!this.props.isOther && (
+                  <Icon
+                    name="close"
+                    onClick={() => {
+                      this.deleteTags(tag.name, tag.custom);
+                    }}
+                  />
+                )}
               </div>
             ))}
-          <button className="circular ui icon blue button">
-            <i
-              className="icon plus"
-              onClick={() => {
-                this.setDisplayCustom();
-              }}
-            />
-          </button>
-          {this.state.displayCustom && (
+          {!this.props.isOther && (
+            <button className="circular ui icon blue button">
+              <i
+                className="icon plus"
+                onClick={() => {
+                  this.setDisplayCustom();
+                }}
+              />
+            </button>
+          )}
+          {this.state.displayCustom && !this.props.isOther && (
             <div className="custom-tag-container">
               <h1 className="title">Wanna add more ?</h1>
               {this.state.tagsList &&
@@ -312,8 +319,4 @@ class Tags extends React.Component<User, TState> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
-};
-
-export default connect(mapStateToProps)(Tags);
+export default Tags;

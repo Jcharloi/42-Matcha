@@ -38,7 +38,7 @@ class OtherProfile extends React.Component<User> {
         </div>
         <div className="block-container">
           <div className="end-container">
-            <Tags />
+            <Tags isOther={true} user={this.props} />
           </div>
         </div>
       </div>
