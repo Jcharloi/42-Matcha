@@ -140,7 +140,7 @@ class App extends React.Component<Props, AppState> {
     - Ne pas delete si y a encore la photo sur la db !
     - Un utilisateur incomplet ne doit pas apparaitre
     - Un utilisateur bloqué ne doit plus apparaître ,
-    - scoreTags pour la recherche gwr
+    - scoreTags pour la recherche
     */
     return (
       <div>
