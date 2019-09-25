@@ -27,7 +27,7 @@ class OtherProfile extends React.Component<User> {
           <div className="left-container">
             <div className="user-name">{localStorage.getItem("user_name")}</div>
             <Connection connection={this.props.connection} />
-            <ProgressBar />
+            <ProgressBar progressBarPercent={this.props.score} />
           </div>
         </div>
         <div className="block-container">

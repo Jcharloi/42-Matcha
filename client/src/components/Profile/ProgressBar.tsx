@@ -1,11 +1,9 @@
 import * as React from "react";
+
 import "../../styles/stylesUserProgressBar.css";
 
-import { State } from "../../redux/types/types";
-import { connect } from "react-redux";
-
 interface Props {
-  progressBarPercent?: string;
+  progressBarPercent: string;
 }
 
 class ProgressBar extends React.Component<Props, {}> {
@@ -30,10 +28,4 @@ class ProgressBar extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state: State) => {
-  return {
-    progressBarPercent: state.user.score
-  };
-};
-
-export default connect(mapStateToProps)(ProgressBar);
+export default ProgressBar;
