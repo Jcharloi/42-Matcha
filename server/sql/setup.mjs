@@ -101,7 +101,7 @@ pgtools
               .catch(e => {
                 console.error(e.stack);
               });
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
