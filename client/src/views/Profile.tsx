@@ -1,4 +1,8 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { State } from "../redux/types/types";
+import { User } from "../models/models";
+
 import TopMenu from "../components/TopMenu";
 import Pictures from "../components/Profile/Pictures";
 import Connection from "../components/Profile/Connection";
@@ -7,13 +11,30 @@ import Personal from "../components/Profile/Personal";
 import Preferences from "../components/Profile/Preferences";
 import Password from "../components/Profile/Password";
 import Tags from "../components/Profile/Tags";
-import { User } from "../models/models";
 
-import { State } from "../redux/types/types";
-import { connect } from "react-redux";
 import "../styles/stylesUserProfile.css";
 
-class Profile extends React.Component<User> {
+interface Props {
+  user: User;
+  otherUser: User;
+}
+
+interface PState {
+  isOther: boolean;
+  usedUser: User;
+}
+
+class Profile extends React.Component<Props, PState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      isOther: this.props.otherUser.user_id !== "" ? true : false,
+      usedUser:
+        this.props.otherUser.user_id !== ""
+          ? this.props.otherUser
+          : this.props.user
+    };
+  }
   public render() {
     return (
       <div>
@@ -24,23 +45,36 @@ class Profile extends React.Component<User> {
           alt="Profile background"
         />
         <div className="top-container">
-          <Pictures isOther={false} user={this.props} />
+          <Pictures isOther={this.state.isOther} user={this.state.usedUser} />
           <div className="left-container">
-            <div className="user-name">{localStorage.getItem("user_name")}</div>
-            <Connection connection="Online now !" />
-            <ProgressBar progressBarPercent={this.props.score} />
+            <div className="user-name">
+              {this.state.isOther
+                ? this.props.otherUser.user_name
+                : this.props.user.user_name}
+            </div>
+            <Connection
+              connection={
+                this.state.isOther
+                  ? this.props.otherUser.connection
+                  : "Online now !"
+              }
+            />
+            <ProgressBar progressBarPercent={this.state.usedUser.score} />
           </div>
         </div>
         <div className="block-container">
           <div className="middle-container">
-            <Personal isOther={false} user={this.props} />
-            <Preferences isOther={false} user={this.props} />
+            <Personal isOther={this.state.isOther} user={this.state.usedUser} />
+            <Preferences
+              isOther={this.state.isOther}
+              user={this.state.usedUser}
+            />
           </div>
         </div>
         <div className="block-container">
           <div className="end-container">
-            <Password />
-            <Tags isOther={false} user={this.props} />
+            {this.state.isOther ? null : <Password />}
+            <Tags isOther={this.state.isOther} user={this.state.usedUser} />
           </div>
         </div>
       </div>
@@ -48,8 +82,8 @@ class Profile extends React.Component<User> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
+const mapStateToProps = (state: State): Props => {
+  return { user: state.user, otherUser: state.otherUser };
 };
 
 export default connect(mapStateToProps)(Profile);

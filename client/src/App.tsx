@@ -20,7 +20,6 @@ import SearchMatch from "./components/Match/SearchMatch";
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
-import OtherProfile from "./components/OtherProfile/OtherProfile";
 
 interface AppState {
   isLoading: boolean;
@@ -132,15 +131,16 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - En ligne
+    - En ligne - Obtenir le last_connection au rechargemt
+    de la page
+    - Click sur la carte, declenche une visite
     - Infinite scroll
+    - Ajouter top menu pour my profile
     
     Partie back :
-    - Deja liké ?
     - Ne pas delete si y a encore la photo sur la db !
     - Un utilisateur incomplet ne doit pas apparaitre
     - Un utilisateur bloqué ne doit plus apparaître ,
-    - scoreTags pour la recherche
     */
     return (
       <div>
@@ -157,7 +157,7 @@ class App extends React.Component<Props, AppState> {
                 isAuth={this.props.isAuth}
               />
               <PrivateRoutes
-                exact={true}
+                exact={false}
                 path="/profile"
                 component={Profile}
                 isAuth={this.props.isAuth}
@@ -173,13 +173,6 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/search"
                 component={SearchMatch}
-                isAuth={this.props.isAuth}
-                isCompleted={this.props.isCompleted}
-              />
-              <CompletedRoutes
-                exact={false}
-                path="/profile/:id"
-                component={OtherProfile}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
