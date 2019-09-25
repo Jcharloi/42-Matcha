@@ -24,7 +24,7 @@ class Profile extends React.Component {
           <Pictures />
           <div className="left-container">
             <div className="user-name">{localStorage.getItem("user_name")}</div>
-            <Connection />
+            <Connection connection="Online now !" />
             <ProgressBar />
           </div>
         </div>
