@@ -39,7 +39,7 @@ const compareTag = (myTags, tagUser) => {
   );
 };
 
-const calculateCommonTags = (myTags, userMatchInfo) => {
+export const calculateCommonTags = (myTags, userMatchInfo) => {
   userMatchInfo.map(user => {
     user.tags.map(userTag => {
       if (compareTag(myTags, userTag.name)) {
