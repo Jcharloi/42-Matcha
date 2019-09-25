@@ -38,7 +38,11 @@ CREATE TABLE user_like
     liking_user_id varchar(250) NOT NULL,
     liked_user_id varchar(250) NOT NULL
 );
-
+CREATE TABLE visits
+(
+    visiting_user_id varchar(250) NOT NULL,
+    visited_user_id varchar(250) NOT NULL
+);
 CREATE TABLE profile_picture
 (
     user_id varchar(250) NOT NULL,
