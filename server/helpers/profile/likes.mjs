@@ -1,59 +1,63 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 
-const toggleLike = async (req, res) => {
-  const liking_user_id = await getUserId(req.body.userName);
-  const liked_user_id = await getUserId(req.body.liked_user);
+const toggleLike = async body => {
+  const liking_user_id = await getUserId(body.userName);
+  const liked_user_id = await getUserId(body.targetUser);
   if (!liking_user_id || !liked_user_id) {
-    res.send({ validated: false });
+    return { validated: false };
   } else {
     let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
     let values = [liking_user_id, liked_user_id];
-    await client
+    return await client
       .query(text, values)
       .then(async ({ rowCount }) => {
         if (rowCount === 0) {
           let text = `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`;
           let values = [liking_user_id, liked_user_id];
-          await client
+          return await client
             .query(text, values)
             .then(() => {
-              res.send({
+              console.log("jambon1");
+              return {
+                validated: true,
                 message: "User liked successfully !"
-              });
+              };
             })
             .catch(e => {
               console.error(e);
-              res.send({
-                validated: false,
-                message: "We got a problem with our database, please try again"
-              });
+              console.log("jambon");
+              return {
+                validated: false
+              };
             });
         } else {
           let text = `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
           let values = [liking_user_id, liked_user_id];
-          await client
+          return await client
             .query(text, values)
             .then(() => {
-              res.send({
+              console.log("jambon2");
+              return {
+                validated: true,
                 message: "User unliked successfully !"
-              });
+              };
             })
             .catch(e => {
               console.error(e);
-              res.send({
-                validated: false,
-                message: "We got a problem with our database, please try again"
-              });
+              console.log("jambon");
+              return {
+                validated: false
+              };
             });
         }
       })
       .catch(e => {
         console.error(e);
-        res.send({
-          validated: false,
-          message: "We got a problem with our database, please try again"
-        });
+        console.log("jambon");
+        return {
+          validated: false
+        };
       });
   }
 };
@@ -67,6 +71,8 @@ const checkMatch = async (req, res) => {
   if (!self_user_id || !target_user_id) {
     res.send({ validated: false });
   } else {
+    let ret = await toggleLike(req.body);
+    if (ret.validated == false) return "Error";
     let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
     let values = [self_user_id, target_user_id];
     await client
