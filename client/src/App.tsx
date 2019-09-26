@@ -132,13 +132,12 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Popularity score, visite/likes
-    - Implantation des likes
+    - Implantation des likes - Need to ajouter les routes pour tester les likes
     - Report/bloque
-    - Matchage
-    - Click sur la carte, declenche une visite
     - Infinite scroll
     
     Partie back :
+    - Creer des faux likes dans le setup mjs avec l'admin user id
     - Ne pas delete si y a encore la photo sur la db !
     - Un utilisateur incomplet ne doit pas apparaitre
     - Un utilisateur bloqué ne doit plus apparaître

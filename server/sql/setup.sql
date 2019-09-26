@@ -42,7 +42,8 @@ CREATE TABLE user_like
 CREATE TABLE visits
 (
     visiting_user_id varchar(250) NOT NULL,
-    visited_user_id varchar(250) NOT NULL
+    visited_user_id varchar(250) NOT NULL,
+    date varchar(250) NOT NULL
 );
 
 CREATE TABLE profile_picture

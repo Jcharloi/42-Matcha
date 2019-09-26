@@ -3,7 +3,7 @@ import client from "../../sql/sql.mjs";
 
 const logVisit = async (req, res) => {
   const visiting_user_id = await getUserId(req.body.userName);
-  const visited_user_id = await getUserId(req.body.visited_user);
+  const visited_user_id = await getUserId(req.body.visitedUser);
   if (!visiting_user_id || !visited_user_id) {
     res.send({ validated: false });
   } else {
@@ -12,18 +12,15 @@ const logVisit = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rowCount }) => {
-        var date = new Date();
-        var date_tab = date.toDateString().split(" ");
-        var date_str = date_tab[1] + "/" + date_tab[2] + "/" + date_tab[3];
-
-        console.log(date_str);
+        var connectionDate = Math.floor(Date.now() / 1000);
         if (rowCount === 0) {
-          let text = `INSERT INTO visits (visiting_user_id, visited_user_id, date) VALUES ($1, $2, '${date_str}')`;
+          let text = `INSERT INTO visits (visiting_user_id, visited_user_id, date) VALUES ($1, $2, '${connectionDate}')`;
           let values = [visiting_user_id, visited_user_id];
           await client
             .query(text, values)
             .then(() => {
               res.send({
+                validated: true,
                 message: "Visit logged sucessfully !"
               });
             })
@@ -35,12 +32,13 @@ const logVisit = async (req, res) => {
               });
             });
         } else {
-          let text = `UPDATE visits SET date = '${date}' WHERE visiting_user_id = $1 AND visited_user_id = $2`;
-          let values = [visiting_user_id, visiting_user_id];
+          let text = `UPDATE visits SET date = '${connectionDate}' WHERE visiting_user_id = $1 AND visited_user_id = $2`;
+          let values = [visiting_user_id, visited_user_id];
           await client
             .query(text, values)
             .then(() => {
               res.send({
+                validated: true,
                 message: "Visit updated successfully !"
               });
             })

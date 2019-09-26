@@ -11,7 +11,7 @@ class ProgressBar extends React.Component<Props, {}> {
     return (
       <div className="bar-progress">
         <div
-          className="ui indicating progress progressing test"
+          className="ui indicating progress progressing p-o"
           data-percent={this.props.progressBarPercent}
         >
           <div

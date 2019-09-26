@@ -67,7 +67,7 @@ router.put("/profile/delete-tags", deleteTags);
 router.post("/profile/add-custom-tags", addCustomTags);
 router.put("/profile/like", toggleLike);
 router.put("/profile/check-match", checkMatch);
-router.put("/profile/visit", logVisit);
+router.post("/profile/visit", logVisit);
 
 router.put("/profile/change-password", changePassword);
 
