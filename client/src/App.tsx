@@ -131,13 +131,17 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Popularity score, visite/likes
+    - Implantation des likes
+    - Report/bloque
+    - Matchage
     - Click sur la carte, declenche une visite
     - Infinite scroll
     
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
     - Un utilisateur incomplet ne doit pas apparaitre
-    - Un utilisateur bloqué ne doit plus apparaître ,
+    - Un utilisateur bloqué ne doit plus apparaître
     */
     return (
       <div>

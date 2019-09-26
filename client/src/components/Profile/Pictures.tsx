@@ -241,6 +241,7 @@ class Pictures extends React.Component<Props, PicturesState> {
     }
     return (
       <div>
+        {this.props.user}
         <div className="body-container">
           <span
             className={`image-container ${this.props.isOther ? "ic-o" : ""}`}

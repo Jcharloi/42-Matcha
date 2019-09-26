@@ -1,0 +1,17 @@
+.container-match {
+  margin: 7rem 2rem;
+}
+
+.text-container {
+  margin-bottom: 1rem !important;
+  width: 12rem;
+}
+
+.text-match {
+  font-size: 1.2rem;
+}
+
+.liked-button {
+  width: max-content !important;
+  padding-left: 2.5rem !important;
+}
