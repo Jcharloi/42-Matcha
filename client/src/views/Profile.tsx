@@ -7,6 +7,7 @@ import TopMenu from "../components/TopMenu";
 import Pictures from "../components/Profile/Pictures";
 import Connection from "../components/Profile/Connection";
 import ProgressBar from "../components/Profile/ProgressBar";
+import Like from "../components/Profile/Like";
 import Personal from "../components/Profile/Personal";
 import Preferences from "../components/Profile/Preferences";
 import Password from "../components/Profile/Password";
@@ -67,6 +68,9 @@ class Profile extends React.Component<Props, PState> {
               }
             />
             <ProgressBar progressBarPercent={this.state.usedUser.score} />
+            {this.state.isOther ? (
+              <Like otherUser={this.props.otherUser} />
+            ) : null}
           </div>
         </div>
         <div className="block-container">
