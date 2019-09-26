@@ -38,7 +38,6 @@ class Profile extends React.Component<Props, PState> {
   }
 
   public render() {
-    console.log(this.props.user.gender);
     return (
       <div>
         <span

@@ -1,5 +1,7 @@
 import * as React from "react";
 import { User } from "../../models/models";
+import Axios from "axios";
+import { deleteUser } from "../../App";
 
 import { Icon, Button } from "semantic-ui-react";
 import "../../styles/stylesLike.css";
@@ -25,21 +27,41 @@ class Like extends React.Component<Props, State> {
   }
 
   componentDidMount = async () => {
-    // await Axios.put("http://localhost:5000/profile/check-match", {
-    //   token: localStorage.getItem("token"),
-    //   userName: localStorage.getItem("user_name"),
-    //   targetUser: this.props.otherUser.user_id
-    // })
-    //   .then(({ data: { selfLikedTarget, targetLikedSelf, matched, validToken } }) => {
-    //     if (!validToken) {
-    //       deleteUser();
-    //     } else {
-    //       this.setState({ isAlreadyLiked: selfLikedTarget, isLiked: targetLikedSelf, isMatched: matched });
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.log("Error : ", error.message);
-    //   });
+    await Axios.put("http://localhost:5000/profile/check-match", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetUser: this.props.otherUser.user_name
+    })
+      .then(
+        ({
+          data: { selfLikedTarget, targetLikedSelf, matched, validToken }
+        }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            this.setState({
+              alreadyLiked: selfLikedTarget,
+              isLiked: targetLikedSelf,
+              isMatched: matched
+            });
+          }
+        }
+      )
+      .catch(error => {
+        console.log("Error : ", error.message);
+      });
+  };
+
+  handleLike = async () => {
+    await Axios.put("http://localhost:5000/profile/like", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      liked_user: this.props.otherUser.user_name
+    })
+      .then(() => {})
+      .catch(error => {
+        console.log("Error : ", error.message);
+      });
   };
 
   public render() {
@@ -59,6 +81,7 @@ class Like extends React.Component<Props, State> {
               <Button
                 className="red"
                 onClick={() => {
+                  this.handleLike();
                   this.setState({ isMatched: false, isLiked: true });
                   //bdd
                 }}
@@ -87,17 +110,19 @@ class Like extends React.Component<Props, State> {
                 </span>
               </Button>
             ) : this.state.alreadyLiked ? (
-              <span>
-                You loved {this.props.otherUser.user_name} !
-                <Icon name="clock" />
-              </span>
+              <div className="waiting-for-love">
+                <span>
+                  You love {this.props.otherUser.user_name} !&nbsp;
+                  <Icon name="clock" color="violet" />
+                </span>
+              </div>
             ) : (
               <Button
                 className="red liked-button"
                 size="large"
                 circular
                 onClick={() => {
-                  //ask if she likes you
+                  this.handleLike();
                   this.setState({ isMatched: true });
                 }}
               >

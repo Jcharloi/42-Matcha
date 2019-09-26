@@ -15,3 +15,8 @@
   width: max-content !important;
   padding-left: 2.5rem !important;
 }
+
+.waiting-for-love {
+  width: max-content;
+  font-size: 1.5rem;
+}
