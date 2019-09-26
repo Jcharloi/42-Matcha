@@ -60,7 +60,7 @@ const toggleLike = async (req, res) => {
 
 const checkMatch = async (req, res) => {
   const self_user_id = await getUserId(req.body.userName);
-  const target_user_id = await getUserId(req.body.target_user);
+  const target_user_id = await getUserId(req.body.targetUser);
   if (!self_user_id || !target_user_id) {
     res.send({ validated: false });
   } else {
