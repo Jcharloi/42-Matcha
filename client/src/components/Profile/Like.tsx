@@ -74,7 +74,7 @@ class Like extends React.Component<Props, State> {
               <span className="text-match">This is a match !</span>
             </div>
             <Button.Group>
-              <Button className="orange">
+              <Button className="purple">
                 <Icon name="comments" /> Talk
               </Button>
               <Button.Or />

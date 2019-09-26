@@ -51,7 +51,9 @@ class Profile extends React.Component<Props, PState> {
           className="profile-background"
           src={
             "http://localhost:5000/public/profile-pictures/background-" +
-            this.props.user.gender +
+            (!this.state.isOther
+              ? this.props.user.gender
+              : this.props.otherUser.gender) +
             ".jpg"
           }
           alt="Profile background"
