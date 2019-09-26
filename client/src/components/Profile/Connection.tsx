@@ -23,7 +23,7 @@ class Connection extends React.Component<Props, {}> {
     if (days) return days.toString() + " day" + plural + " ago";
     if (hours) return hours.toString() + " hour" + plural + " ago";
     if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "Just now";
+    return "just now";
   }
 
   public render() {
@@ -31,13 +31,13 @@ class Connection extends React.Component<Props, {}> {
       <div className="connection-container">
         <div
           className={
-            this.find_last_since(this.props.connection) !== "Just now"
+            this.find_last_since(this.props.connection) !== "just now"
               ? "ring ring-color-offline"
               : "ring ring-color-online"
           }
         />
         <div className="text">
-          {this.find_last_since(this.props.connection)}
+          Online {this.find_last_since(this.props.connection)}
         </div>
       </div>
     );

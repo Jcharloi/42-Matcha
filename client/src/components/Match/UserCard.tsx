@@ -57,7 +57,7 @@ class UserCard extends React.Component<Props, CState> {
     if (days) return days.toString() + " day" + plural + " ago";
     if (hours) return hours.toString() + " hour" + plural + " ago";
     if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "Just Now";
+    return "just now";
   }
 
   selectProfile = () => {
