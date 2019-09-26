@@ -37,6 +37,7 @@ class Profile extends React.Component<Props, PState> {
   }
 
   public render() {
+    console.log(this.props.user.gender);
     return (
       <div>
         <span
@@ -48,7 +49,11 @@ class Profile extends React.Component<Props, PState> {
         </span>
         <img
           className="profile-background"
-          src="http://localhost:5000/public/profile-pictures/background-profile.jpg"
+          src={
+            "http://localhost:5000/public/profile-pictures/background-" +
+            this.props.user.gender +
+            ".jpg"
+          }
           alt="Profile background"
         />
         <div className="top-container">
