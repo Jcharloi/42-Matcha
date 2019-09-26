@@ -94,7 +94,16 @@ class Profile extends React.Component<Props, PState> {
 }
 
 const mapStateToProps = (state: State): Props => {
-  return { user: state.user, otherUser: state.otherUser };
+  return {
+    user: {
+      ...state.user,
+      pictures:
+        state.user.pictures && state.user.pictures.length > 0
+          ? state.user.pictures
+          : [{ date: "1", path: "unknown.png", main: false }]
+    },
+    otherUser: state.otherUser
+  };
 };
 
 export default connect(mapStateToProps)(Profile);
