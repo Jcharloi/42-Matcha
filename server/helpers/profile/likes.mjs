@@ -18,7 +18,6 @@ const toggleLike = async body => {
           return await client
             .query(text, values)
             .then(() => {
-              console.log("jambon1");
               return {
                 validated: true,
                 message: "User liked successfully !"
@@ -26,7 +25,6 @@ const toggleLike = async body => {
             })
             .catch(e => {
               console.error(e);
-              console.log("jambon");
               return {
                 validated: false
               };
@@ -37,7 +35,6 @@ const toggleLike = async body => {
           return await client
             .query(text, values)
             .then(() => {
-              console.log("jambon2");
               return {
                 validated: true,
                 message: "User unliked successfully !"
@@ -45,7 +42,6 @@ const toggleLike = async body => {
             })
             .catch(e => {
               console.error(e);
-              console.log("jambon");
               return {
                 validated: false
               };
@@ -54,7 +50,6 @@ const toggleLike = async body => {
       })
       .catch(e => {
         console.error(e);
-        console.log("jambon");
         return {
           validated: false
         };
@@ -62,57 +57,61 @@ const toggleLike = async body => {
   }
 };
 
-const checkMatch = async (req, res) => {
-  const self_user_id = await getUserId(req.body.userName);
-  const target_user_id = await getUserId(req.body.targetUser);
-  var selfLikedTarget = false;
-  var targetLikedSelf = false;
-  var matched = false;
-  if (!self_user_id || !target_user_id) {
-    res.send({ validated: false });
+const checkLiked = async (liking, liked) => {
+  let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
+  let values = [liking, liked];
+  return await client
+    .query(text, values)
+    .then(async ({ rowCount }) => {
+      if (rowCount !== 0) {
+        return true;
+      }
+      return false;
+    })
+    .catch(e => {
+      console.error(e);
+      return {
+        validated: false,
+        message: "We got a problem with our database, please try again"
+      };
+    });
+};
+
+const checkMatch = async (self, target) => {
+  const selfLikedTarget = await checkLiked(self, target);
+  const targetLikedSelf = await checkLiked(target, self);
+  let matched = false;
+  if (selfLikedTarget.validated || targetLikedSelf.validated) {
+    return false;
   } else {
-    let ret = await toggleLike(req.body);
-    if (ret.validated == false) return "Error";
-    let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
-    let values = [self_user_id, target_user_id];
-    await client
-      .query(text, values)
-      .then(async ({ rowCount }) => {
-        if (rowCount !== 0) {
-          selfLikedTarget = true;
-        }
-      })
-      .catch(e => {
-        console.error(e);
-        res.send({
-          validated: false,
-          message: "We got a problem with our database, please try again"
-        });
-      });
-    text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
-    values = [target_user_id, self_user_id];
-    await client
-      .query(text, values)
-      .then(async ({ rowCount }) => {
-        if (rowCount !== 0) {
-          targetLikedSelf = true;
-        }
-      })
-      .catch(e => {
-        console.error(e);
-        res.send({
-          validated: false,
-          message: "We got a problem with our database, please try again"
-        });
-      });
     if (targetLikedSelf == true && selfLikedTarget == true) {
       matched = true;
     }
-    res.send({
-      selfLikedTarget,
-      targetLikedSelf,
-      matched
-    });
+    return { selfLikedTarget, targetLikedSelf, matched };
   }
 };
-export { toggleLike, checkMatch };
+
+const checkLikeAndMatch = async (req, res) => {
+  const self_user_id = await getUserId(req.body.userName);
+  const target_user_id = await getUserId(req.body.targetUser);
+  if (!self_user_id || !target_user_id) {
+    res.send({ validated: false });
+  } else {
+    let error = false;
+    if (req.body.toggle) {
+      let { validated } = await toggleLike(req.body);
+      if (validated == false) {
+        error = true;
+        res.send({
+          validated: false,
+          message: "We got a problem with our liking function, please try again"
+        });
+      } else {
+        res.send(await checkMatch(self_user_id, target_user_id));
+      }
+    } else if (error === false) {
+      res.send(await checkMatch(self_user_id, target_user_id));
+    }
+  }
+};
+export { toggleLike, checkLikeAndMatch };
