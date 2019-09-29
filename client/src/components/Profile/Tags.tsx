@@ -225,6 +225,17 @@ class Tags extends React.Component<Props, TState> {
     }
   };
 
+  createRandomId = (length: number) => {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+
   componentWillUnmount = () => {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -248,7 +259,10 @@ class Tags extends React.Component<Props, TState> {
         <div className="tag-container">
           {this.props.user.tags &&
             this.props.user.tags.map((tag: any) => (
-              <div key={tag.tag_id} className="tag-value ui tag label large ">
+              <div
+                key={tag.tag_id + this.createRandomId(2)}
+                className="tag-value ui tag label large "
+              >
                 <span>{tag.name}</span>
                 {!this.props.isOther && (
                   <Icon
