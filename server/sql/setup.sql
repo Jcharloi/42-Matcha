@@ -9,7 +9,6 @@ CREATE TABLE users
     password_hash varchar(250) NOT NULL,
     gender varchar(250),
     orientation varchar(250),
-    situation varchar(250) NULL,
     presentation text,
     score integer,
     city varchar(250),

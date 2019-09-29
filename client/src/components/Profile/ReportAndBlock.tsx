@@ -37,20 +37,21 @@ class ReportAndBlock extends React.Component<Props, State> {
     this.setState({ visible });
   };
 
-  handleBlock = async () => {
-    await Axios.post("http://localhost:5000/profile/block", {
+  handleAction = async (action: string) => {
+    await Axios.post("http://localhost:5000/profile/sanctioning-user", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
-      blockedUserId: this.props.id
+      action,
+      targetUserId: this.props.id
     })
       .then(({ data: { validToken, validated, message } }) => {
         if (validToken === false) {
           deleteUser();
         } else {
-          if (validated) {
+          if (validated && action !== "Report") {
             history.push("/home");
           } else {
-            this.setState({ messageReport: message });
+            this.setState({ visible: false, messageReport: message });
           }
         }
       })
@@ -93,10 +94,10 @@ class ReportAndBlock extends React.Component<Props, State> {
               <br />
               You can simply ignore this person, but if this person is seriously
               bothering you
-              <br />- Block {this.state.chosenGender} : Means you won't see{" "}
+              <br />- Block {this.state.chosenGender} : Means you won't see
               {this.props.name}'s profile anymore.
-              <br />- Report {this.state.chosenGender} : Anything special to say
-              about {this.state.chosenGender} ?
+              <br />- Report {this.state.chosenGender} : Is {this.props.name} a
+              fake account ?
               <br />
               <br />
               Remember that both actions are permanent, so please chose
@@ -112,10 +113,20 @@ class ReportAndBlock extends React.Component<Props, State> {
             >
               <Icon name="remove" /> Cancel
             </Button>
-            <Button basic color="red" inverted>
+            <Button
+              basic
+              color="red"
+              inverted
+              onClick={() => this.handleAction("Report")}
+            >
               <Icon name="bullhorn" /> Report
             </Button>
-            <Button basic color="red" inverted onClick={this.handleBlock}>
+            <Button
+              basic
+              color="red"
+              inverted
+              onClick={() => this.handleAction("Block")}
+            >
               <Icon name="ban" /> Block
             </Button>
           </Modal.Actions>

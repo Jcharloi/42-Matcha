@@ -10,7 +10,7 @@ import {
   calculateAge,
   getUserId,
   compareTag,
-  filterByBlocked
+  filterByBlockedUser
 } from "../../common.mjs";
 import { calculateCommonTags } from "./match.mjs";
 
@@ -69,7 +69,7 @@ const getUsersBySearch = async (req, res) => {
           return user.age >= startAge && user.age <= endAge;
         });
         const userId = await getUserId(req.body.userName);
-        userMatchInfo = await filterByBlocked(userMatchInfo, userId);
+        userMatchInfo = await filterByBlockedUser(userMatchInfo, userId);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
         userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
