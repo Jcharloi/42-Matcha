@@ -36,6 +36,7 @@ import {
 } from "./helpers/profile/tags.mjs";
 import { toggleLike, checkLikeAndMatch } from "./helpers/profile/likes.mjs";
 import { logVisit } from "./helpers/profile/visits.mjs";
+import { blockUser } from "./helpers/profile/block.mjs";
 import { getUsersByPreference } from "./helpers/home/match.mjs";
 import { sortByIndex } from "./helpers/home/sort.mjs";
 import { filterByInterval } from "./helpers/home/filter.mjs";
@@ -68,6 +69,7 @@ router.post("/profile/add-custom-tags", addCustomTags);
 router.put("/profile/like", toggleLike);
 router.put("/profile/check-like-and-match", checkLikeAndMatch);
 router.post("/profile/visit", logVisit);
+router.post("/profile/block", blockUser);
 
 router.put("/profile/change-password", changePassword);
 

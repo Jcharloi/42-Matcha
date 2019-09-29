@@ -8,6 +8,7 @@ import {
 import { validGender, validOrientation } from "../validInfos.mjs";
 import { sortByDistance } from "./sortBy.mjs";
 import { getUserId, calculateAge, calculateDistance } from "../../common.mjs";
+import { filterByBlocked } from "../../common.mjs";
 
 //Orientation = Man, Woman, Other, Both
 /*
@@ -106,6 +107,7 @@ const getUsersByPreference = async (req, res) => {
           });
         }
         const userId = await getUserId(req.body.userName);
+        userMatchInfo = await filterByBlocked(userMatchInfo, userId);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
         userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);

@@ -12,6 +12,7 @@ import Personal from "../components/Profile/Personal";
 import Preferences from "../components/Profile/Preferences";
 import Password from "../components/Profile/Password";
 import Tags from "../components/Profile/Tags";
+import ReportAndBlock from "../components/Profile/ReportAndBlock";
 
 import "../styles/stylesUserProfile.css";
 
@@ -90,7 +91,15 @@ class Profile extends React.Component<Props, PState> {
         </div>
         <div className="block-container">
           <div className="end-container">
-            {this.state.isOther ? null : <Password />}
+            {this.state.isOther ? (
+              <ReportAndBlock
+                name={this.state.usedUser.user_name}
+                gender={this.state.usedUser.gender}
+                id={this.props.otherUser.user_id}
+              />
+            ) : (
+              <Password />
+            )}
             <Tags isOther={this.state.isOther} user={this.state.usedUser} />
           </div>
         </div>

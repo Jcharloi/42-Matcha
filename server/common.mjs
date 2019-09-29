@@ -144,6 +144,21 @@ const calculateDistance = (myCoordinates, userMatchInfo) => {
   return userMatchInfo;
 };
 
+const filterByBlocked = async (userMatchInfo, blockingUserId) => {
+  userMatchInfo.forEach(async ({ user_id }, index) => {
+    let text = `SELECT count(*) FROM user_block WHERE blocking_user_id = '${blockingUserId}' AND blocked_user_id = '${user_id}'`;
+    await client
+      .query(text)
+      .then(({ rows: [{ count }] }) => {
+        if (count === "1") userMatchInfo.splice(index, 1);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  });
+  return userMatchInfo;
+};
+
 export {
   getUserCoordinatesByCity,
   getUserCityByCoordinates,
@@ -152,5 +167,6 @@ export {
   createRandomId,
   calculateAge,
   compareTag,
-  calculateDistance
+  calculateDistance,
+  filterByBlocked
 };

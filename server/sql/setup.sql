@@ -54,15 +54,15 @@ CREATE TABLE profile_picture
     main bool NOT NULL
 );
 
-CREATE TABLE blocked
+CREATE TABLE user_block
 (
-    blocker_id varchar(250) NOT NULL,
+    blocking_user_id varchar(250) NOT NULL,
     blocked_user_id varchar(250) NOT NULL
 );
 
-CREATE TABLE reported
+CREATE TABLE user_report
 (
-    reporter_id varchar(250) NOT NULL,
+    reporting_user_id varchar(250) NOT NULL,
     reported_user_id varchar(250) NOT NULL
 );
 
@@ -107,9 +107,3 @@ VALUES  ('0', 'Make-up', false),
 ('21', 'Vegan', false),
 ('22', 'Yoga', false),
 ('23', 'Jewellery', false)
-
-/*
- select users.username, tags.name from users join user_tags on (user_tags.id_user = users.id) <- chopper toutes les infos dans user_tags a partir du moment ou id_user = users.id
- join tags on (user_tags.id_tag = tags.id) <- choper toutes les infos dans la table tags a partir du moment ou le tags.id  = users_tags.id_tag
- where tags.id = 2;
-*/

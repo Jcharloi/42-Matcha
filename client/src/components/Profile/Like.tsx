@@ -117,8 +117,9 @@ class Like extends React.Component<Props, State> {
                   }}
                 >
                   <span>
-                    You love {this.props.otherUser.user_name} !&nbsp; Dislike
-                    <Icon name="clock" />
+                    You love {this.props.otherUser.user_name} !&nbsp;
+                    Dislove&nbsp;
+                    <Icon name="hourglass half" />
                   </span>
                 </Button>
               </div>
