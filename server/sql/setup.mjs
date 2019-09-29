@@ -74,6 +74,20 @@ const getUserCoordinatesByCity = async city => {
     });
 };
 
+const createAdminAccount = async () => {
+  const userId = faker.random.uuid();
+  const { lat, lon } = await getUserCoordinatesByCity("Paris");
+  const query = `
+    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'jennifer.charlois@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', '01/03/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 50, 'Paris', '${lat}', '${lon}', '${Math.floor(
+    Date.now() / 1000
+  )}', TRUE);
+    INSERT INTO profile_picture (user_id, path, date, main) VALUES ('${userId}', 'tchoupi.jpg', '1563832800', TRUE), ('${userId}', 'joyjoy.png', '1563832800', FALSE);
+    INSERT INTO user_tag (tag_id, user_id) VALUES ('8', '${userId}'), ('14', '${userId}');
+  `;
+  await pool.query(query);
+  return userId;
+};
+
 pgtools
   .dropdb({ user, host: "localhost", password, port: 5432 }, "matcha")
   .then(() => {
@@ -101,7 +115,8 @@ pgtools
               .catch(e => {
                 console.error(e.stack);
               });
-            for (let i = 0; i < 100; i++) {
+            const adminUserId = await createAdminAccount();
+            for (let i = 0; i < 10; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
@@ -124,7 +139,7 @@ pgtools
               const { lat, lon } = await getUserCoordinatesByCity(
                 cities[indexCity].city
               );
-              const query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
+              let query = `INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', '${faker.internet.email()}', '${userName}', '${lastName}', '${firstName}', '${birthdayDate[1] +
                 "/" +
                 birthdayDate[2] +
                 "/" +
@@ -148,6 +163,12 @@ pgtools
               ).getTime() / 1000}', TRUE);
               INSERT INTO profile_picture (user_id, path, date, main) VALUES ('${userId}', '${picturePath}', '1563832800', TRUE), ('${userId}', '${picturePath2}', '1563832800', FALSE);
               INSERT INTO user_tag (tag_id, user_id) VALUES ('${indexTag}','${userId}'), ('${indexTag2}', '${userId}');`;
+              if (i % 2 === 0) {
+                query =
+                  query +
+                  `
+              INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ('${userId}', '${adminUserId}')`;
+              }
               await pool.query(query);
             }
           })
