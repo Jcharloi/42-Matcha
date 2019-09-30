@@ -3,8 +3,6 @@ import history from "../../helpers/history";
 import { store } from "../../redux/store";
 import { insertOtherProfile } from "../../redux/actions/actions";
 import { User } from "../../models/models";
-import Axios from "axios";
-import { deleteUser } from "../../App";
 
 import "../../styles/stylesUserHome.css";
 
@@ -63,22 +61,8 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   selectProfile = async () => {
-    await Axios.post("http://localhost:5000/profile/visit", {
-      token: localStorage.getItem("token"),
-      userName: localStorage.getItem("user_name"),
-      visitedUser: this.props.userInfo.user_name
-    })
-      .then(({ data: { validToken } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          store.dispatch(insertOtherProfile(this.props.userInfo));
-          history.push(`/profile/` + this.props.userInfo.user_name);
-        }
-      })
-      .catch(error => {
-        console.log("Error : ", error.message);
-      });
+    store.dispatch(insertOtherProfile(this.props.userInfo));
+    history.push(`/profile/` + this.props.userInfo.user_name);
   };
 
   public render() {

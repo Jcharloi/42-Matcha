@@ -2,6 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
+import Axios from "axios";
 
 import TopMenu from "../components/TopMenu";
 import Pictures from "../components/Profile/Pictures";
@@ -37,6 +38,20 @@ class Profile extends React.Component<Props, PState> {
           : this.props.user
     };
   }
+
+  componentDidMount = async () => {
+    if (this.state.isOther) {
+      await Axios.post("http://localhost:5000/profile/visit", {
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name"),
+        visitedUser: this.props.otherUser.user_name
+      })
+        .then(() => {})
+        .catch(error => {
+          console.log("Error : ", error.message);
+        });
+    }
+  };
 
   public render() {
     return (

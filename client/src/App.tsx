@@ -132,14 +132,11 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Dispatch action pour popularity score dans profile
-    - Appeler visits route à chaque reload
-    - Popularity score, visite/likes
     - CSS de merde
     - Infinite scroll
     
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Proteger like route
     */
     return (
       <div>

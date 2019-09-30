@@ -1,41 +1,7 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
-
-const updatePopularityScore = async likedUserId => {
-  let text = `SELECT count(*) FROM user_visit WHERE visited_user_id = $1`;
-  let values = [likedUserId];
-  await client
-    .query(text, values)
-    .then(async ({ rows: [{ count }] }) => {
-      const nbOfVisits = parseInt(count);
-      text = `SELECT count(*) FROM user_like WHERE liked_user_id = $1`;
-      values = [likedUserId];
-      await client
-        .query(text, values)
-        .then(async ({ rows: [{ count }] }) => {
-          const nbOfLikes = parseInt(count);
-          console.log(
-            "visite :",
-            nbOfVisits,
-            "like :",
-            nbOfLikes,
-            "total :",
-            (nbOfLikes / nbOfVisits) * 100
-          );
-          text = `UPDATE users SET score=${(nbOfLikes / nbOfVisits) *
-            100} WHERE user_id='${likedUserId}'`;
-          await client.query(text).catch(e => {
-            console.error(e.stack);
-          });
-        })
-        .catch(e => {
-          console.error(e.stack);
-        });
-    })
-    .catch(e => {
-      console.error(e.stack);
-    });
-};
+import updatePopularityScore from "./popularityScore.mjs";
+import { logVisit } from "./visits.mjs";
 
 const toggleLike = async body => {
   const liking_user_id = await getUserId(body.userName);
@@ -56,7 +22,10 @@ const toggleLike = async body => {
         return await client
           .query(text, values)
           .then(async () => {
-            if (count === "0") await updatePopularityScore(liked_user_id);
+            if (count === "0") {
+              await logVisit(body.userName, body.targetUser);
+              await updatePopularityScore(liked_user_id);
+            }
             return count === "0"
               ? { validated: true, message: "User loved successfully !" }
               : { validated: true, message: "User disloved successfully !" };
