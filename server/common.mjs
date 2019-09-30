@@ -162,6 +162,23 @@ const filterByBlockedUser = async (userMatchInfo, blockingUserId) => {
     });
 };
 
+const filterByIncompletedUser = userMatchInfo => {
+  return userMatchInfo.filter(
+    ({ city, gender, presentation, pictures, tags }) => {
+      if (
+        city &&
+        gender &&
+        presentation &&
+        pictures.length > 0 &&
+        tags.length > 0
+      ) {
+        return true;
+      }
+      return false;
+    }
+  );
+};
+
 export {
   getUserCoordinatesByCity,
   getUserCityByCoordinates,
@@ -171,5 +188,6 @@ export {
   calculateAge,
   compareTag,
   calculateDistance,
-  filterByBlockedUser
+  filterByBlockedUser,
+  filterByIncompletedUser
 };
