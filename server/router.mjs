@@ -35,7 +35,7 @@ import {
   addCustomTags
 } from "./helpers/profile/tags.mjs";
 import { toggleLike, checkLikeAndMatch } from "./helpers/profile/likes.mjs";
-import { logVisit } from "./helpers/profile/visits.mjs";
+import { logVisit, getUserVisits } from "./helpers/profile/visits.mjs";
 import { sanctioningUser } from "./helpers/profile/sanctioning.mjs";
 import { getUsersByPreference } from "./helpers/home/match.mjs";
 import { sortByIndex } from "./helpers/home/sort.mjs";
@@ -69,6 +69,7 @@ router.post("/profile/add-custom-tags", addCustomTags);
 router.put("/profile/like", toggleLike);
 router.put("/profile/check-like-and-match", checkLikeAndMatch);
 router.post("/profile/visit", logVisit);
+router.post("/profile/get-user-visits", getUserVisits);
 router.post("/profile/sanctioning-user", sanctioningUser);
 
 router.put("/profile/change-password", changePassword);

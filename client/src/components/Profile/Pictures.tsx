@@ -247,7 +247,7 @@ class Pictures extends React.Component<Props, PicturesState> {
             key={this.props.user.pictures[this.state.pictureIndex].date}
           >
             <Image
-              className="image"
+              className="photo"
               circular
               src={`http://localhost:5000/public/${
                 this.props.isOther ? "fake-pictures" : "profile-pictures"

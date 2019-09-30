@@ -59,6 +59,21 @@ const getUserInfos = async userId => {
     });
 };
 
+const getUserName = async userId => {
+  return await client
+    .query(`SELECT * FROM users WHERE user_id = '${userId}'`)
+    .then(({ rows }) => {
+      const userName = rows[0].user_name;
+      return userName;
+    })
+    .catch(e => {
+      console.error(e);
+      return {
+        message: "We got a problem with our database, please try again"
+      };
+    });
+};
+
 const getUserPictures = async userId => {
   return await client
     .query(
@@ -247,6 +262,7 @@ const getTags = async (req, res) => {
 export {
   getUserAll,
   getUserInfos,
+  getUserName,
   getUserPictures,
   getUserTags,
   getUserLatitudeAndLongitude,

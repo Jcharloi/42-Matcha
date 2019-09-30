@@ -69,7 +69,14 @@ class TopMenu extends React.Component<Props> {
               Search
             </div>
           ) : null}
-          <div className="item item-page">Visits</div>
+          <div
+            className="item item-page "
+            onClick={() => {
+              history.push("/visits");
+            }}
+          >
+            Visits
+          </div>
           <div className="item item-page">Likes</div>
           <div className="right menu">
             <div className="item">

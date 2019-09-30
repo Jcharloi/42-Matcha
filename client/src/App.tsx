@@ -20,6 +20,7 @@ import SearchMatch from "./components/Match/SearchMatch";
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
+import Visits from "./views/Visits";
 
 interface AppState {
   isLoading: boolean;
@@ -171,6 +172,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/search"
                 component={SearchMatch}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/visits"
+                component={Visits}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
