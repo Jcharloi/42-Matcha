@@ -38,7 +38,7 @@ CREATE TABLE user_like
     liked_user_id varchar(250) NOT NULL
 );
 
-CREATE TABLE visits
+CREATE TABLE user_visit
 (
     visiting_user_id varchar(250) NOT NULL,
     visited_user_id varchar(250) NOT NULL,

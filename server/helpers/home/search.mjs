@@ -39,6 +39,7 @@ const getUsersBySearch = async (req, res) => {
       selectGender(req.body.preference) +
       ` score >= $1 AND score <= $2`;
     let values = [startPop, endPop];
+
     await client
       .query(text, values)
       .then(async ({ rows, rowCount }) => {

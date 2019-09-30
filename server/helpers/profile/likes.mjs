@@ -1,55 +1,73 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 
+const updatePopularityScore = async likedUserId => {
+  let text = `SELECT count(*) FROM user_visit WHERE visited_user_id = $1`;
+  let values = [likedUserId];
+  await client
+    .query(text, values)
+    .then(async ({ rows: [{ count }] }) => {
+      const nbOfVisits = parseInt(count);
+      text = `SELECT count(*) FROM user_like WHERE liked_user_id = $1`;
+      values = [likedUserId];
+      await client
+        .query(text, values)
+        .then(async ({ rows: [{ count }] }) => {
+          const nbOfLikes = parseInt(count);
+          console.log(
+            "visite :",
+            nbOfVisits,
+            "like :",
+            nbOfLikes,
+            "total :",
+            (nbOfLikes / nbOfVisits) * 100
+          );
+          text = `UPDATE users SET score=${(nbOfLikes / nbOfVisits) *
+            100} WHERE user_id='${likedUserId}'`;
+          await client.query(text).catch(e => {
+            console.error(e.stack);
+          });
+        })
+        .catch(e => {
+          console.error(e.stack);
+        });
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
+};
+
 const toggleLike = async body => {
   const liking_user_id = await getUserId(body.userName);
   const liked_user_id = await getUserId(body.targetUser);
   if (!liking_user_id || !liked_user_id) {
     return { validated: false };
   } else {
-    let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
+    let text = `SELECT count(*) FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
     let values = [liking_user_id, liked_user_id];
     return await client
       .query(text, values)
-      .then(async ({ rowCount }) => {
-        if (rowCount === 0) {
-          let text = `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`;
-          let values = [liking_user_id, liked_user_id];
-          return await client
-            .query(text, values)
-            .then(() => {
-              return {
-                validated: true,
-                message: "User liked successfully !"
-              };
-            })
-            .catch(e => {
-              console.error(e);
-              return {
-                validated: false
-              };
-            });
-        } else {
-          let text = `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
-          let values = [liking_user_id, liked_user_id];
-          return await client
-            .query(text, values)
-            .then(() => {
-              return {
-                validated: true,
-                message: "User unliked successfully !"
-              };
-            })
-            .catch(e => {
-              console.error(e);
-              return {
-                validated: false
-              };
-            });
-        }
+      .then(async ({ rows: [{ count }] }) => {
+        text =
+          count === "0"
+            ? `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`
+            : `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
+        let values = [liking_user_id, liked_user_id];
+        return await client
+          .query(text, values)
+          .then(async () => {
+            if (count === "0") await updatePopularityScore(liked_user_id);
+            return count === "0"
+              ? { validated: true, message: "User loved successfully !" }
+              : { validated: true, message: "User disloved successfully !" };
+          })
+          .catch(e => {
+            console.error(e);
+            return false;
+          });
       })
       .catch(e => {
-        console.error(e);
+        console.error(e.stack);
         return {
           validated: false
         };
@@ -104,7 +122,7 @@ const checkLikeAndMatch = async (req, res) => {
         error = true;
         res.send({
           validated: false,
-          message: "We got a problem with our liking function, please try again"
+          message: "We got a problem with our loving function, please try again"
         });
       } else {
         res.send(await checkMatch(self_user_id, target_user_id));
