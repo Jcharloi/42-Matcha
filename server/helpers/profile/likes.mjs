@@ -1,5 +1,7 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
+import updatePopularityScore from "./popularityScore.mjs";
+import { logVisit } from "./visits.mjs";
 
 const toggleLike = async body => {
   const liking_user_id = await getUserId(body.userName);
@@ -7,49 +9,34 @@ const toggleLike = async body => {
   if (!liking_user_id || !liked_user_id) {
     return { validated: false };
   } else {
-    let text = `SELECT * FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
+    let text = `SELECT count(*) FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
     let values = [liking_user_id, liked_user_id];
     return await client
       .query(text, values)
-      .then(async ({ rowCount }) => {
-        if (rowCount === 0) {
-          let text = `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`;
-          let values = [liking_user_id, liked_user_id];
-          return await client
-            .query(text, values)
-            .then(() => {
-              return {
-                validated: true,
-                message: "User liked successfully !"
-              };
-            })
-            .catch(e => {
-              console.error(e);
-              return {
-                validated: false
-              };
-            });
-        } else {
-          let text = `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
-          let values = [liking_user_id, liked_user_id];
-          return await client
-            .query(text, values)
-            .then(() => {
-              return {
-                validated: true,
-                message: "User unliked successfully !"
-              };
-            })
-            .catch(e => {
-              console.error(e);
-              return {
-                validated: false
-              };
-            });
-        }
+      .then(async ({ rows: [{ count }] }) => {
+        text =
+          count === "0"
+            ? `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`
+            : `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
+        let values = [liking_user_id, liked_user_id];
+        return await client
+          .query(text, values)
+          .then(async () => {
+            if (count === "0") {
+              await logVisit(body.userName, body.targetUser);
+              await updatePopularityScore(liked_user_id);
+            }
+            return count === "0"
+              ? { validated: true, message: "User loved successfully !" }
+              : { validated: true, message: "User disloved successfully !" };
+          })
+          .catch(e => {
+            console.error(e);
+            return false;
+          });
       })
       .catch(e => {
-        console.error(e);
+        console.error(e.stack);
         return {
           validated: false
         };
@@ -104,7 +91,7 @@ const checkLikeAndMatch = async (req, res) => {
         error = true;
         res.send({
           validated: false,
-          message: "We got a problem with our liking function, please try again"
+          message: "We got a problem with our loving function, please try again"
         });
       } else {
         res.send(await checkMatch(self_user_id, target_user_id));

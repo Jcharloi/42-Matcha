@@ -132,14 +132,12 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - Popularity score, visite/likes
+    - Dispatch action pour popularity score dans profile
     - CSS de merde
     - Infinite scroll
     
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Un utilisateur incomplet ne doit pas apparaitre
-    - Pas deux fois report/block
     */
     return (
       <div>

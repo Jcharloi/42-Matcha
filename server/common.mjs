@@ -145,15 +145,38 @@ const calculateDistance = (myCoordinates, userMatchInfo) => {
 };
 
 const filterByBlockedUser = async (userMatchInfo, blockingUserId) => {
-  const userMatchInfoQueries = userMatchInfo.map(({ user_id }) => {
-    return client.query(
-      `SELECT count(*) FROM user_block WHERE blocking_user_id = '${blockingUserId}' AND blocked_user_id = '${user_id}'`
-    );
-  });
-  const resQueries = await Promise.all(userMatchInfoQueries);
-  return userMatchInfo.filter(({}, index) => {
-    return resQueries[index].rows[0].count === "0";
-  });
+  const text = `SELECT blocked_user_id FROM user_block WHERE blocking_user_id='${blockingUserId}'`;
+  return await client
+    .query(text)
+    .then(({ rows, rowCount }) => {
+      return userMatchInfo.filter(user => {
+        for (let i = 0; i < rowCount; i++) {
+          if (rows[i].blocked_user_id === user.user_id) return false;
+        }
+        return true;
+      });
+    })
+    .catch(e => {
+      console.error(e.stack);
+      return false;
+    });
+};
+
+const filterByIncompletedUser = userMatchInfo => {
+  return userMatchInfo.filter(
+    ({ city, gender, presentation, pictures, tags }) => {
+      if (
+        city &&
+        gender &&
+        presentation &&
+        pictures.length > 0 &&
+        tags.length > 0
+      ) {
+        return true;
+      }
+      return false;
+    }
+  );
 };
 
 export {
@@ -165,5 +188,6 @@ export {
   calculateAge,
   compareTag,
   calculateDistance,
-  filterByBlockedUser
+  filterByBlockedUser,
+  filterByIncompletedUser
 };

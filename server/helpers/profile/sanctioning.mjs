@@ -3,7 +3,6 @@ import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 
 const sanctioningUser = async (req, res) => {
-  //check already reported/blocked
   const userId = await getUserId(req.body.userName);
   if (
     !userId ||
@@ -18,15 +17,19 @@ const sanctioningUser = async (req, res) => {
     if (req.body.action === "Report") {
       text = `INSERT INTO user_report (reporting_user_id, reported_user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`;
     } else {
-      text = `INSERT INTO user_block (blocking_user_id, blocked_user_id) VALUES ($1, $2)`;
+      text = `INSERT INTO user_block (blocking_user_id, blocked_user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`;
     }
     let values = [userId, req.body.targetUserId];
     await client
       .query(text, values)
-      .then(() => {
+      .then(({ rowCount }) => {
+        let message =
+          rowCount === 1
+            ? "User reported succesfully !"
+            : "This user is already reported !";
         res.send({
           validated: true,
-          message: "User reported successfully !"
+          message
         });
       })
       .catch(e => {

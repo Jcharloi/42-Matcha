@@ -38,7 +38,7 @@ CREATE TABLE user_like
     liked_user_id varchar(250) NOT NULL
 );
 
-CREATE TABLE visits
+CREATE TABLE user_visit
 (
     visiting_user_id varchar(250) NOT NULL,
     visited_user_id varchar(250) NOT NULL,
@@ -55,14 +55,14 @@ CREATE TABLE profile_picture
 
 CREATE TABLE user_block
 (
-    blocking_user_id varchar(250) NOT NULL,
-    blocked_user_id varchar(250) NOT NULL
+    blocking_user_id varchar(250) NOT NULL UNIQUE,
+    blocked_user_id varchar(250) NOT NULL UNIQUE
 );
 
 CREATE TABLE user_report
 (
-    reporting_user_id varchar(250) NOT NULL,
-    reported_user_id varchar(250) NOT NULL
+    reporting_user_id varchar(250) NOT NULL UNIQUE,
+    reported_user_id varchar(250) NOT NULL UNIQUE
 );
 
 CREATE TABLE chat

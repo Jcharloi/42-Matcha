@@ -94,7 +94,8 @@ class ReportAndBlock extends React.Component<Props, State> {
               <br />
               You can simply ignore this person, but if this person is seriously
               bothering you
-              <br />- Block {this.state.chosenGender} : Means you won't see
+              <br />- Block {this.state.chosenGender} : Means you won't
+              see&nbsp;
               {this.props.name}'s profile anymore.
               <br />- Report {this.state.chosenGender} : Is {this.props.name} a
               fake account ?

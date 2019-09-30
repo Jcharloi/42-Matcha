@@ -10,7 +10,8 @@ import {
   calculateAge,
   getUserId,
   compareTag,
-  filterByBlockedUser
+  filterByBlockedUser,
+  filterByIncompletedUser
 } from "../../common.mjs";
 import { calculateCommonTags } from "./match.mjs";
 
@@ -38,6 +39,7 @@ const getUsersBySearch = async (req, res) => {
       selectGender(req.body.preference) +
       ` score >= $1 AND score <= $2`;
     let values = [startPop, endPop];
+
     await client
       .query(text, values)
       .then(async ({ rows, rowCount }) => {
@@ -70,6 +72,7 @@ const getUsersBySearch = async (req, res) => {
         });
         const userId = await getUserId(req.body.userName);
         userMatchInfo = await filterByBlockedUser(userMatchInfo, userId);
+        userMatchInfo = await filterByIncompletedUser(userMatchInfo);
         const myCoordinates = await getUserLatitudeAndLongitude(userId);
         const myTags = await getUserTags(userId);
         userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
