@@ -138,7 +138,6 @@ class App extends React.Component<Props, AppState> {
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
     - Un utilisateur incomplet ne doit pas apparaitre
-    - Pas deux fois report/block
     */
     return (
       <div>
