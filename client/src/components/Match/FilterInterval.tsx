@@ -254,7 +254,7 @@ class FilterInterval extends React.Component<Props, State> {
           </div>
           <br />
           {this.state.messageTags && (
-            <div className="toast-message ui blue floating message">
+            <div className="toast-message ui floating message">
               {this.state.messageTags}
             </div>
           )}

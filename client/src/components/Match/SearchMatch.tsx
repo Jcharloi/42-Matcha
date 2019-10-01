@@ -166,7 +166,7 @@ class SearchMatch extends React.Component<User, HState> {
             <UserCard key={user.user_id} userInfo={user} />
           ))}
         {this.state.messageHome && (
-          <div className="toast-message ui blue floating message">
+          <div className="toast-message ui floating message">
             <p>{this.state.messageHome}</p>
           </div>
         )}

@@ -103,7 +103,7 @@ class Password extends React.Component<{}, State> {
             Change my password
           </Button>
           {this.state.messagePassword && (
-            <div className="toast-message ui blue floating message">
+            <div className="toast-message ui floating message">
               <p>{this.state.messagePassword}</p>
             </div>
           )}

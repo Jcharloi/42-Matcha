@@ -29,7 +29,7 @@ const inscription = async (req, res) => {
             "/" +
             req.body.year;
           const text =
-            "INSERT INTO users(user_id, mail, user_name, last_name, first_name, birthday, password_hash, orientation, score, validated_account, unique_link_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
+            "INSERT INTO users(user_id, mail, user_name, last_name, first_name, birthday, password_hash, orientation, score, validated_account, last_connection, unique_link_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
           const values = [
             cuid(),
             req.body.mail,
@@ -41,6 +41,7 @@ const inscription = async (req, res) => {
             "Both",
             "0",
             false,
+            Math.floor(Date.now() / 1000),
             uniqueLinkId
           ];
           await client

@@ -133,7 +133,7 @@ class ReportAndBlock extends React.Component<Props, State> {
           </Modal.Actions>
         </Modal>
         {this.state.messageReport && (
-          <div className="toast-message ui blue floating message">
+          <div className="toast-message ui floating message">
             <p>{this.state.messageReport}</p>
           </div>
         )}

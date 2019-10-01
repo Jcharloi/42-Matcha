@@ -392,7 +392,7 @@ class Personal extends React.Component<Props, PState> {
             </Button>
           )}
           {this.state.messagePersonal && (
-            <div className="toast-message ui blue floating message">
+            <div className="toast-message ui floating message">
               <p>{this.state.messagePersonal}</p>
             </div>
           )}
