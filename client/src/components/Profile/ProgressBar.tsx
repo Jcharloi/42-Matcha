@@ -8,6 +8,7 @@ import "../../styles/stylesUserProgressBar.css";
 interface Props {
   isOther: boolean;
   user: User;
+  other: User;
 }
 
 class ProgressBar extends React.Component<Props, {}> {
@@ -17,21 +18,28 @@ class ProgressBar extends React.Component<Props, {}> {
         <div
           className="ui indicating progress progressing p-o"
           data-percent={
-            this.props.isOther === true ? this.props.user.score : "100"
+            this.props.isOther === false
+              ? this.props.user.score
+              : this.props.other.score
           }
         >
           <div
             className="bar"
             style={{
               width: `${
-                this.props.isOther === true ? this.props.user.score : "100"
+                this.props.isOther === false
+                  ? this.props.user.score
+                  : this.props.other.score
               }%`
             }}
             color="violet"
           />
           <div className="label">
             Popularity score :{" "}
-            {this.props.isOther === true ? this.props.user.score : "100"}%
+            {this.props.isOther === false
+              ? this.props.user.score
+              : this.props.other.score}
+            %
           </div>
         </div>
       </div>
@@ -40,7 +48,7 @@ class ProgressBar extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = (state: State) => {
-  return { user: state.otherUser };
+  return { user: state.user, other: state.otherUser };
 };
 
 export default connect(mapStateToProps)(ProgressBar);
