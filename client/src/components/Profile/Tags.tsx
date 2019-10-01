@@ -4,7 +4,7 @@ import { deleteUser, isProfileCompleted } from "../../App";
 
 import { store } from "../../redux/store";
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
-import { User } from "../../models/models";
+import { User, UserTags } from "../../models/models";
 
 import { Button, Icon, Header, Input } from "semantic-ui-react";
 import "../../styles/stylesUserTags.css";
@@ -15,7 +15,11 @@ interface Props {
 }
 
 interface TState {
-  tagsList: [{ id: string; name: string }];
+  tagsUser: Array<UserTags>;
+  tagsList: Array<{
+    id: string;
+    name: string;
+  }>;
   displayCustom: boolean;
   customTag: string;
   messageTags?: string | null;
@@ -25,8 +29,9 @@ class Tags extends React.Component<Props, TState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      tagsUser: this.props.user.tags,
       displayCustom: false,
-      tagsList: [{ id: "", name: "" }],
+      tagsList: [],
       customTag: ""
     };
   }
@@ -52,7 +57,7 @@ class Tags extends React.Component<Props, TState> {
   }
 
   deleteTags = async (name: string, custom: boolean) => {
-    if (this.props.user.tags.length > 1) {
+    if (this.state.tagsUser.length > 1) {
       await Axios.put("http://localhost:5000/profile/delete-tags", {
         tagName: name,
         userName: localStorage.getItem("user_name"),
@@ -63,10 +68,10 @@ class Tags extends React.Component<Props, TState> {
             deleteUser();
           } else {
             if (validated) {
-              const tagIndex = this.props.user.tags.findIndex((tag: any) => {
+              const tagIndex = this.state.tagsUser.findIndex((tag: any) => {
                 return tag.tag_id === tagId;
               });
-              this.props.user.tags.splice(tagIndex, 1);
+              this.state.tagsUser.splice(tagIndex, 1);
               if (!custom) {
                 this.state.tagsList.push({
                   id: tagId,
@@ -78,11 +83,12 @@ class Tags extends React.Component<Props, TState> {
               }
               const newData = {
                 ...this.props.user,
-                tags: this.props.user.tags
+                tags: this.state.tagsUser
               };
               store.dispatch(insertUserProfile(newData));
               this.setState({
-                tagsList: this.state.tagsList
+                tagsList: this.state.tagsList,
+                tagsUser: newData.tags
               });
             }
             if (this.timer) {
@@ -122,7 +128,7 @@ class Tags extends React.Component<Props, TState> {
             const newData = {
               ...this.props.user,
               tags: [
-                ...this.props.user.tags,
+                ...this.state.tagsUser,
                 {
                   tag_id: id,
                   name,
@@ -130,18 +136,19 @@ class Tags extends React.Component<Props, TState> {
                 }
               ]
             };
+            store.dispatch(insertUserProfile(newData));
             const tags = this.state.tagsList;
             tags.splice(index, 1);
             this.setState({
-              tagsList: tags
+              tagsList: tags,
+              tagsUser: newData.tags
             });
-            store.dispatch(insertUserProfile(newData));
             let isCompleted = isProfileCompleted(
               this.props.user.city,
               this.props.user.gender,
               this.props.user.presentation,
               this.props.user.pictures,
-              this.props.user.tags
+              this.state.tagsUser
             );
             store.dispatch(
               updateUserAuth({
@@ -203,6 +210,7 @@ class Tags extends React.Component<Props, TState> {
                   isCompleted
                 })
               );
+              this.setState({ tagsUser: newData.tags });
             }
             if (this.timer) {
               clearTimeout(this.timer);
@@ -257,11 +265,11 @@ class Tags extends React.Component<Props, TState> {
           </Header>
         </div>
         <div className="tag-container">
-          {this.props.user.tags &&
-            this.props.user.tags.map((tag: any) => (
+          {this.state.tagsUser &&
+            this.state.tagsUser.map((tag: UserTags) => (
               <div
                 key={tag.tag_id + this.createRandomId(2)}
-                className="tag-value ui tag label large "
+                className="tag-value ui tag label large"
               >
                 <span>{tag.name}</span>
                 {!this.props.isOther && (
@@ -323,7 +331,7 @@ class Tags extends React.Component<Props, TState> {
             </div>
           )}
           {this.state.messageTags && (
-            <div className="toast-message ui blue floating message">
+            <div className="toast-message ui floating message">
               <p>{this.state.messageTags}</p>
             </div>
           )}

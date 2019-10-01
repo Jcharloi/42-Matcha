@@ -132,7 +132,9 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - Fix tag select
+    - Fix pictures
+    - Connection le met a toujours en ligne :thinking:
+    - Disconnect button met a jour le last_connection
     - Fix background image profile
     - CSS de merde
     - Infinite scroll

@@ -170,7 +170,7 @@ class Home extends React.Component<User, HState> {
             <UserCard key={user.user_id} userInfo={user} />
           ))}
         {this.state.messageHome && (
-          <div className="toast-message ui violet floating message">
+          <div className="toast-message ui floating message">
             <p>{this.state.messageHome}</p>
           </div>
         )}
