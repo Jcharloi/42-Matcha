@@ -22,11 +22,10 @@ const toggleLike = async body => {
         return await client
           .query(text, values)
           .then(async () => {
-            let score = 0;
             if (count === "0") {
               await logVisit(body.userName, body.targetUser);
-              score = await updatePopularityScore(liked_user_id);
             }
+            const score = await updatePopularityScore(liked_user_id);
             return count === "0"
               ? { validated: true, message: "User loved successfully !", score }
               : {
@@ -101,7 +100,7 @@ const checkLikeAndMatch = async (req, res) => {
       } else {
         res.send({
           infos: await checkMatch(self_user_id, target_user_id),
-          score: score ? score : 0
+          score
         });
       }
     } else if (error === false) {

@@ -50,7 +50,7 @@ class Like extends React.Component<Props, State> {
           if (validToken === false) {
             deleteUser();
           } else {
-            if (score && score !== 0) {
+            if (score >= 0 && score <= 100) {
               store.dispatch(
                 insertOtherProfile({ ...this.props.otherUser, score: score })
               );

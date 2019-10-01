@@ -31,13 +31,16 @@ class Connection extends React.Component<Props, {}> {
       <div className="connection-container">
         <div
           className={
-            this.find_last_since(this.props.connection) !== "just now"
-              ? "ring ring-color-offline"
-              : "ring ring-color-online"
+            this.find_last_since(this.props.connection) !== "just now" ||
+            !this.props.connection
+              ? "ring ring-color-online"
+              : "ring ring-color-offline"
           }
         />
         <div className="text">
-          Online {this.find_last_since(this.props.connection)}
+          {!this.props.connection
+            ? `Online now`
+            : `Last seen ${this.find_last_since(this.props.connection)}`}
         </div>
       </div>
     );
