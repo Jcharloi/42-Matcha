@@ -16,6 +16,11 @@ interface Props {
 }
 
 interface PicturesState {
+  pictures: Array<{
+    path: string;
+    date: string;
+    main: boolean;
+  }>;
   displayPictures: boolean;
   picturesNb: number;
   pictureIndex: number;
@@ -26,6 +31,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      pictures: this.props.user.pictures,
       picturesNb: this.props.user.pictures.length,
       pictureIndex: 0,
       displayPictures: false
@@ -41,14 +47,14 @@ class Pictures extends React.Component<Props, PicturesState> {
         this.setState({ messagePictures: valid.message });
       } else {
         const isUnknownPicture =
-          this.props.user.pictures[0].date === "1" ? true : false;
+          this.state.pictures[0].date === "1" ? true : false;
         const data = new FormData();
         data.append("file", target.files[0]);
         data.append("userName", String(localStorage.getItem("user_name")));
         data.append("token", String(localStorage.getItem("token")));
         data.append(
           "main",
-          this.props.user.pictures[0].date === "1" ? "true" : "false"
+          this.state.pictures[0].date === "1" ? "true" : "false"
         );
         await Axios.post("http://localhost:5000/profile/upload-pictures/", data)
           .then(async ({ data: { validToken, fileName, date, message } }) => {
@@ -58,7 +64,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               let newPictures = [{ date: "", path: "", main: false }];
               if (!isUnknownPicture) {
                 newPictures = [
-                  ...this.props.user.pictures,
+                  ...this.state.pictures,
                   {
                     path: fileName,
                     date,
@@ -81,7 +87,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                 this.props.user.city,
                 this.props.user.gender,
                 this.props.user.presentation,
-                this.props.user.pictures,
+                this.state.pictures,
                 this.props.user.tags
               );
               store.dispatch(updateUserAuth({ isAuth: true, isCompleted }));
@@ -90,6 +96,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                 this.timer = null;
               }
               this.setState({
+                pictures: newData.pictures,
                 picturesNb: isUnknownPicture
                   ? this.state.picturesNb
                   : this.state.picturesNb + 1,
@@ -105,7 +112,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   setMainPicture = async (event: Event) => {
     event.stopPropagation();
     await Axios.put("http://localhost:5000/profile/set-main-pictures", {
-      path: this.props.user.pictures[this.state.pictureIndex].path,
+      path: this.state.pictures[this.state.pictureIndex].path,
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name")
     })
@@ -114,14 +121,14 @@ class Pictures extends React.Component<Props, PicturesState> {
           deleteUser();
         } else {
           if (validated) {
-            let newPictures = this.props.user.pictures;
+            let newPictures = this.state.pictures;
             newPictures.map((picture: any) => {
               if (picture.main) {
                 picture.main = false;
               }
               if (
                 picture.path ===
-                this.props.user.pictures[this.state.pictureIndex].path
+                this.state.pictures[this.state.pictureIndex].path
               ) {
                 picture.main = true;
               }
@@ -132,6 +139,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               pictures: newPictures
             };
             store.dispatch(insertUserProfile(newData));
+            this.setState({ pictures: newData.pictures });
           }
           if (this.timer) {
             clearTimeout(this.timer);
@@ -149,8 +157,8 @@ class Pictures extends React.Component<Props, PicturesState> {
     event.stopPropagation();
     if (this.state.picturesNb > 1) {
       await Axios.put("http://localhost:5000/profile/delete-pictures", {
-        path: this.props.user.pictures[this.state.pictureIndex].path,
-        main: this.props.user.pictures[this.state.pictureIndex].main
+        path: this.state.pictures[this.state.pictureIndex].path,
+        main: this.state.pictures[this.state.pictureIndex].main
           ? "true"
           : "false",
         token: localStorage.getItem("token"),
@@ -161,8 +169,8 @@ class Pictures extends React.Component<Props, PicturesState> {
             deleteUser();
           } else {
             if (validated) {
-              let newPictures = this.props.user.pictures;
-              if (this.props.user.pictures[this.state.pictureIndex].main) {
+              let newPictures = this.state.pictures;
+              if (this.state.pictures[this.state.pictureIndex].main) {
                 newPictures[1].main = true;
               }
               newPictures.splice(this.state.pictureIndex, 1);
@@ -171,6 +179,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                 pictures: newPictures
               };
               this.setState({
+                pictures: newData.pictures,
                 pictureIndex: 0,
                 picturesNb: this.state.picturesNb - 1
               });
@@ -196,7 +205,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   };
 
   setDisplayPictures = () => {
-    if (this.props.user.pictures[0].date !== "1") {
+    if (this.state.pictures[0].date !== "1") {
       this.setState({ displayPictures: true });
     }
   };
@@ -209,7 +218,7 @@ class Pictures extends React.Component<Props, PicturesState> {
     event.stopPropagation();
     const pictureIndex =
       this.state.pictureIndex === 0
-        ? this.props.user.pictures.length - 1
+        ? this.state.pictures.length - 1
         : this.state.pictureIndex - 1;
     this.setState({
       pictureIndex
@@ -219,7 +228,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   showRightPicture = (event: Event) => {
     event.stopPropagation();
     const pictureIndex =
-      this.state.pictureIndex === this.props.user.pictures.length - 1
+      this.state.pictureIndex === this.state.pictures.length - 1
         ? 0
         : this.state.pictureIndex + 1;
     this.setState({
@@ -244,14 +253,12 @@ class Pictures extends React.Component<Props, PicturesState> {
         <div className="body-container">
           <span
             className={`image-container ${this.props.isOther ? "ic-o" : ""}`}
-            key={this.props.user.pictures[this.state.pictureIndex].date}
+            key={this.state.pictures[this.state.pictureIndex].date}
           >
             <Image
               className="photo"
               circular
-              src={`http://localhost:5000/public/${
-                this.props.isOther ? "fake-pictures" : "profile-pictures"
-              }/${this.props.user.pictures[0].path}`}
+              src={`http://localhost:5000/public/profile-pictures/${this.state.pictures[0].path}`}
               onClick={() => {
                 this.setDisplayPictures();
               }}
@@ -299,7 +306,7 @@ class Pictures extends React.Component<Props, PicturesState> {
                   {!this.props.isOther && (
                     <Icon
                       name={
-                        this.props.user.pictures[this.state.pictureIndex].main
+                        this.state.pictures[this.state.pictureIndex].main
                           ? "star"
                           : "star outline"
                       }
@@ -309,14 +316,10 @@ class Pictures extends React.Component<Props, PicturesState> {
                     />
                   )}
                   <Image
-                    key={this.props.user.pictures[this.state.pictureIndex].date}
+                    key={this.state.pictures[this.state.pictureIndex].date}
                     className="image-inside"
                     size="big"
-                    src={`http://localhost:5000/public/${
-                      this.props.isOther ? "fake-pictures" : "profile-pictures"
-                    }/${
-                      this.props.user.pictures[this.state.pictureIndex].path
-                    }`}
+                    src={`http://localhost:5000/public/profile-pictures/${this.state.pictures[this.state.pictureIndex].path}`}
                   />
                   {!this.props.isOther && (
                     <Icon
