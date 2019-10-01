@@ -22,17 +22,22 @@ const toggleLike = async body => {
         return await client
           .query(text, values)
           .then(async () => {
+            let score = 0;
             if (count === "0") {
               await logVisit(body.userName, body.targetUser);
-              await updatePopularityScore(liked_user_id);
+              score = await updatePopularityScore(liked_user_id);
             }
             return count === "0"
-              ? { validated: true, message: "User loved successfully !" }
-              : { validated: true, message: "User disloved successfully !" };
+              ? { validated: true, message: "User loved successfully !", score }
+              : {
+                  validated: true,
+                  message: "User disloved successfully !",
+                  score
+                };
           })
           .catch(e => {
-            console.error(e);
-            return false;
+            console.error(e.stack);
+            return { validated: false };
           });
       })
       .catch(e => {
@@ -86,7 +91,7 @@ const checkLikeAndMatch = async (req, res) => {
   } else {
     let error = false;
     if (req.body.toggle) {
-      let { validated } = await toggleLike(req.body);
+      let { validated, score } = await toggleLike(req.body);
       if (validated == false) {
         error = true;
         res.send({
@@ -94,10 +99,13 @@ const checkLikeAndMatch = async (req, res) => {
           message: "We got a problem with our loving function, please try again"
         });
       } else {
-        res.send(await checkMatch(self_user_id, target_user_id));
+        res.send({
+          infos: await checkMatch(self_user_id, target_user_id),
+          score: score ? score : 0
+        });
       }
     } else if (error === false) {
-      res.send(await checkMatch(self_user_id, target_user_id));
+      res.send({ infos: await checkMatch(self_user_id, target_user_id) });
     }
   }
 };

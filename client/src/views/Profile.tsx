@@ -89,7 +89,7 @@ class Profile extends React.Component<Props, PState> {
                   : "Online now !"
               }
             />
-            <ProgressBar progressBarPercent={this.state.usedUser.score} />
+            <ProgressBar isOther={this.state.isOther} />
             {this.state.isOther ? (
               <Like otherUser={this.props.otherUser} />
             ) : null}

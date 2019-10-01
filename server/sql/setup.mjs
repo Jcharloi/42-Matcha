@@ -78,7 +78,7 @@ const createAdminAccount = async () => {
   const userId = faker.random.uuid();
   const { lat, lon } = await getUserCoordinatesByCity("Paris");
   const query = `
-    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', '01/03/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 50, 'Paris', '${lat}', '${lon}', '${Math.floor(
+    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', '01/03/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 100, 'Paris', '${lat}', '${lon}', '${Math.floor(
     Date.now() / 1000
   )}', TRUE);
     INSERT INTO profile_picture (user_id, path, date, main) VALUES ('${userId}', 'tchoupi.jpg', '1563832800', TRUE), ('${userId}', 'joyjoy.png', '1563832800', FALSE);

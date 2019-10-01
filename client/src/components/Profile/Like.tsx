@@ -2,6 +2,8 @@ import * as React from "react";
 import { User } from "../../models/models";
 import Axios from "axios";
 import { deleteUser } from "../../App";
+import { store } from "../../redux/store";
+import { insertOtherProfile } from "../../redux/actions/actions";
 
 import { Icon, Button } from "semantic-ui-react";
 import "../../styles/stylesLike.css";
@@ -40,23 +42,24 @@ class Like extends React.Component<Props, State> {
       .then(
         ({
           data: {
-            validated,
-            selfLikedTarget,
-            targetLikedSelf,
-            matched,
+            infos: { selfLikedTarget, targetLikedSelf, matched },
+            score,
             validToken
           }
         }) => {
           if (validToken === false) {
             deleteUser();
           } else {
-            if (validated !== false) {
-              this.setState({
-                alreadyLiked: selfLikedTarget,
-                isLiked: targetLikedSelf,
-                isMatched: matched
-              });
+            if (score && score !== 0) {
+              store.dispatch(
+                insertOtherProfile({ ...this.props.otherUser, score: score })
+              );
             }
+            this.setState({
+              alreadyLiked: selfLikedTarget,
+              isLiked: targetLikedSelf,
+              isMatched: matched
+            });
           }
         }
       )

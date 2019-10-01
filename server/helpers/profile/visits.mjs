@@ -1,6 +1,5 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
-import { getUserName } from "../profile/getUserInfos.mjs";
 
 const logVisit = async (userName, visitedUser) => {
   const visiting_user_id = await getUserId(userName);
@@ -53,7 +52,6 @@ const getUserVisits = async (req, res) => {
   if (!visited_user_id) {
     res.send({ validated: false });
   } else {
-    // let text = `SELECT * FROM visits WHERE visited_user_id = $1`;
     let text = `SELECT * FROM users JOIN visits ON users.user_id = visits.visiting_user_id WHERE visited_user_id = $1`;
     let values = [visited_user_id];
     await client
@@ -74,6 +72,7 @@ const getUserVisits = async (req, res) => {
       });
   }
 };
+
 const visitedUser = async (req, res) => {
   res.send(await logVisit(req.body.userName, req.body.visitedUser));
 };

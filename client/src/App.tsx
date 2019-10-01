@@ -132,7 +132,8 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - Dispatch action pour popularity score dans profile
+    - Fix tag select
+    - Fix background image profile
     - CSS de merde
     - Infinite scroll
     
