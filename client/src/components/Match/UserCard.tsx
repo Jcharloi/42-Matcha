@@ -72,7 +72,7 @@ class UserCard extends React.Component<Props, CState> {
           <img
             alt="profile-pic"
             className="profile-pic-card"
-            src={`http://localhost:5000/public/fake-pictures/${this.props.userInfo.pictures[0].path}`}
+            src={`http://localhost:5000/public/profile-pictures/${this.props.userInfo.pictures[0].path}`}
           />
         </div>
         <div className="content">
