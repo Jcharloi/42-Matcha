@@ -8,7 +8,8 @@ import {
   getUserAll,
   getAllTags,
   getUserCity,
-  getTags
+  getTags,
+  getUserPictures
 } from "./helpers/profile/getUserInfos.mjs";
 
 import { connection } from "./helpers/auth/signIn.mjs";
@@ -56,6 +57,7 @@ router.put("/new-password", newPassword);
 router.post("/connection", connection);
 
 router.put("/profile/get-user-city", getUserCity);
+router.put("/profile/get-user-pictures", getUserPictures);
 router.put("/profile/get-all-tags", getAllTags);
 router.post("/profile/get-tags", getTags);
 router.post("/profile/upload-pictures", uploadPictures);

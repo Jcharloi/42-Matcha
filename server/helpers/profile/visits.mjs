@@ -1,5 +1,6 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
+import { getUserPictures } from "./getUserInfos.mjs";
 
 const logVisit = async (userName, visitedUser) => {
   const visiting_user_id = await getUserId(userName);
@@ -52,12 +53,20 @@ const getUserVisits = async (req, res) => {
   if (!visited_user_id) {
     res.send({ validated: false });
   } else {
-    let text = `SELECT * FROM users JOIN visits ON users.user_id = visits.visiting_user_id WHERE visited_user_id = $1`;
+    // let text = `SELECT user_id,user_name,visiting_user_id,visited_user_id,date FROM users JOIN visits ON users.user_id = visits.visiting_user_id WHERE visited_user_id = $1`;
+    let text = `SELECT users.user_id,user_name,visiting_user_id,visited_user_id,visits.date,path,main FROM users JOIN visits ON users.user_id = visits.visiting_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE visits.visited_user_id
+    = $1 AND profile_picture.main = TRUE`;
+
     let values = [visited_user_id];
     await client
       .query(text, values)
       .then(async ({ rowCount, rows }) => {
-        console.log(rows[0]);
+        var rowArray = [];
+        rows.map(async (row, index) => {
+          rowArray.push(await getUserPictures(row.user_id));
+          console.log(rowArray);
+        });
+
         res.send({
           validated: true,
           rows
