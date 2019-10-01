@@ -283,13 +283,13 @@ class Tags extends React.Component<Props, TState> {
               </div>
             ))}
           {!this.props.isOther && (
-            <button className="circular ui icon blue button">
-              <i
-                className="icon plus"
-                onClick={() => {
-                  this.setDisplayCustom();
-                }}
-              />
+            <button
+              className="circular ui icon blue button"
+              onClick={() => {
+                this.setDisplayCustom();
+              }}
+            >
+              <i className="icon plus" />
             </button>
           )}
           {this.state.displayCustom && !this.props.isOther && (

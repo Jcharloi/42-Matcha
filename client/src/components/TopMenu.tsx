@@ -1,7 +1,9 @@
 import * as React from "react";
 import history from "../helpers/history";
 import { store } from "../redux/store";
-import { updateUserAuth, insertOtherProfile } from "../redux/actions/actions";
+import { insertOtherProfile } from "../redux/actions/actions";
+import Axios from "axios";
+import { deleteUser } from "../App";
 
 import "../styles/stylesTopMenu.css";
 
@@ -10,6 +12,18 @@ interface Props {
 }
 
 class TopMenu extends React.Component<Props> {
+  handleDisconnect = async () => {
+    await Axios.put("http://localhost:5000/disconnect", {
+      userName: localStorage.getItem("user_name")
+    })
+      .then(({ data: { validated } }) => {
+        if (validated) deleteUser();
+      })
+      .catch(e => {
+        console.error(e.stack);
+      });
+  };
+
   public render() {
     return (
       <div>
@@ -85,12 +99,7 @@ class TopMenu extends React.Component<Props> {
               <div
                 className="ui red button"
                 onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("user_name");
-                  store.dispatch(
-                    updateUserAuth({ isAuth: false, isCompleted: false })
-                  );
-                  history.push("/");
+                  this.handleDisconnect();
                 }}
               >
                 Disconnect

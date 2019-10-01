@@ -13,7 +13,7 @@ import {
 
 const connection = async (req, res) => {
   if (req.body.userName && validPassword(req.body.password)) {
-    const text = `SELECT user_id, validated_account, password_hash FROM users WHERE user_name = $1`;
+    let text = `SELECT user_id, validated_account, password_hash FROM users WHERE user_name = $1`;
     const values = [req.body.userName];
     await client
       .query(text, values)
@@ -33,11 +33,22 @@ const connection = async (req, res) => {
                 userInfos = await getUserInfos(userId);
                 userInfos.pictures = await getUserPictures(userId);
                 userInfos.tags = await getUserTags(userId);
-                res.json({
-                  userInfos,
-                  message: "Connected",
-                  token: token
-                });
+                text = `UPDATE users SET last_connection='Just now' WHERE user_id='${userInfos.user_id}'`;
+                await client
+                  .query(text)
+                  .then(() => {
+                    res.json({
+                      userInfos,
+                      message: "Connected",
+                      token
+                    });
+                  })
+                  .catch(e => {
+                    console.error(e.stack);
+                    res.send({
+                      message: "There was a problem with our database"
+                    });
+                  });
               } else {
                 res.send({ message: "Wrong password" });
               }

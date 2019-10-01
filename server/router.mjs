@@ -18,6 +18,7 @@ import {
   newPassword,
   resetPasswordId
 } from "./helpers/auth/resetPassword.mjs";
+import { disconnect } from "./helpers/auth/disconnect.mjs";
 
 import {
   changePersonalInfos,
@@ -54,6 +55,7 @@ router.put("/reset-password", resetPassword);
 router.get("/reset-password/:id", resetPasswordId);
 router.put("/new-password", newPassword);
 router.post("/connection", connection);
+router.put("/disconnect", disconnect);
 
 router.put("/profile/get-user-city", getUserCity);
 router.put("/profile/get-all-tags", getAllTags);

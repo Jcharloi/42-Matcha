@@ -20,7 +20,7 @@ const pool = new pg.Pool({
 });
 
 const sql = fs.readFileSync("./sql/setup.sql").toString();
-const pictures = fs.readdirSync("./public/fake-pictures/");
+const pictures = fs.readdirSync("./public/profile-pictures/");
 
 const tags = [
   "Make-up",

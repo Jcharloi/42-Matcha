@@ -106,7 +106,11 @@ class UserCard extends React.Component<Props, CState> {
             {this.props.userInfo.age} years old
           </span>
           <span className="right floated">
-            Last seen {this.find_last_since(this.props.userInfo.connection)}
+            {!this.props.userInfo.connection
+              ? `Online now`
+              : `Last seen ${this.find_last_since(
+                  this.props.userInfo.connection
+                )}`}
           </span>
         </div>
       </div>
