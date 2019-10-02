@@ -1,5 +1,5 @@
 import * as React from "react";
-import history from "../helpers/history";
+import { Link } from "react-router-dom";
 import { store } from "../redux/store";
 import { insertOtherProfile } from "../redux/actions/actions";
 import Axios from "axios";
@@ -24,6 +24,29 @@ class TopMenu extends React.Component<Props> {
       });
   };
 
+  linkToMyProfile = () => {
+    store.dispatch(
+      insertOtherProfile({
+        user_id: "",
+        mail: "",
+        user_name: "",
+        last_name: "",
+        first_name: "",
+        birthday: "",
+        age: "",
+        gender: "",
+        orientation: "",
+        presentation: "",
+        score: "",
+        city: "",
+        pictures: [],
+        tags: [],
+        connection: "",
+        liked: false
+      })
+    );
+  };
+
   public render() {
     return (
       <div>
@@ -34,63 +57,27 @@ class TopMenu extends React.Component<Props> {
             alt="Logo top menu"
           />
           {this.props.current !== "home" ? (
-            <div
-              className="item item-page"
-              onClick={() => {
-                history.push("/home");
-              }}
-            >
+            <Link className="item item-page" to="/home">
               Home
-            </div>
+            </Link>
           ) : null}
           {this.props.current !== "profile" ? (
-            <div
+            <Link
               className="item item-page"
-              onClick={() => {
-                store.dispatch(
-                  insertOtherProfile({
-                    user_id: "",
-                    mail: "",
-                    user_name: "",
-                    last_name: "",
-                    first_name: "",
-                    birthday: "",
-                    age: "",
-                    gender: "",
-                    orientation: "",
-                    presentation: "",
-                    score: "",
-                    city: "",
-                    pictures: [],
-                    tags: [],
-                    connection: "",
-                    liked: false
-                  })
-                );
-                history.push("/profile");
-              }}
+              onClick={this.linkToMyProfile}
+              to="/profile"
             >
               Profile
-            </div>
+            </Link>
           ) : null}
           {this.props.current !== "search" ? (
-            <div
-              className="item item-page"
-              onClick={() => {
-                history.push("/search");
-              }}
-            >
+            <Link className="item item-page" to="/search">
               Search
-            </div>
+            </Link>
           ) : null}
-          <div
-            className="item item-page "
-            onClick={() => {
-              history.push("/visits");
-            }}
-          >
+          <Link className="item item-page" to="/visits">
             Visits
-          </div>
+          </Link>
           <div className="item item-page">Likes</div>
           <div className="right menu">
             <div className="item">

@@ -188,7 +188,7 @@ class Tags extends React.Component<Props, TState> {
               const newData = {
                 ...this.props.user,
                 tags: [
-                  ...this.props.user.tags,
+                  ...this.state.tagsUser,
                   {
                     tag_id: randomId,
                     name: this.state.customTag,
@@ -202,7 +202,7 @@ class Tags extends React.Component<Props, TState> {
                 this.props.user.gender,
                 this.props.user.presentation,
                 this.props.user.pictures,
-                this.props.user.tags
+                this.state.tagsUser
               );
               store.dispatch(
                 updateUserAuth({

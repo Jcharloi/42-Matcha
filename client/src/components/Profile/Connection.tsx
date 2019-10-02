@@ -31,7 +31,7 @@ class Connection extends React.Component<Props, {}> {
       <div className="connection-container">
         <div
           className={
-            this.find_last_since(this.props.connection) !== "just now" ||
+            this.find_last_since(this.props.connection) === "just now" ||
             !this.props.connection
               ? "ring ring-color-online"
               : "ring ring-color-offline"

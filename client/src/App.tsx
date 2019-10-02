@@ -132,6 +132,7 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Disconnect quand le token expire
     - Fix popularity score 600%
     - Fix bug pour le rechargement de son profil
     - Fix background image profile
@@ -140,7 +141,6 @@ class App extends React.Component<Props, AppState> {
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Delete le like si tu bloques
     */
     return (
       <div>
@@ -157,9 +157,15 @@ class App extends React.Component<Props, AppState> {
                 isAuth={this.props.isAuth}
               />
               <PrivateRoutes
-                exact={false}
+                exact={true}
+                path="/profile/:userName"
+                component={() => <Profile />}
+                isAuth={this.props.isAuth}
+              />
+              <PrivateRoutes
+                exact={true}
                 path="/profile"
-                component={Profile}
+                component={() => <Profile />}
                 isAuth={this.props.isAuth}
               />
               <CompletedRoutes

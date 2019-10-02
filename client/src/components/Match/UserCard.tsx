@@ -42,7 +42,6 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   find_last_since(lastseen: string) {
-    console.log(lastseen);
     var dateSeen: any = new Date(lastseen);
     var dateNow: any = new Date();
     var plural: string = "s";
@@ -60,7 +59,7 @@ class UserCard extends React.Component<Props, CState> {
     return "just now";
   }
 
-  selectProfile = async () => {
+  selectProfile = () => {
     store.dispatch(insertOtherProfile(this.props.userInfo));
     history.push(`/profile/` + this.props.userInfo.user_name);
   };

@@ -18,33 +18,17 @@ import ReportAndBlock from "../components/Profile/ReportAndBlock";
 import "../styles/stylesUserProfile.css";
 
 interface Props {
-  user: User;
-  otherUser: User;
-}
-
-interface PState {
   isOther: boolean;
-  usedUser: User;
+  user: User;
 }
 
-class Profile extends React.Component<Props, PState> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isOther: this.props.otherUser.user_id !== "" ? true : false,
-      usedUser:
-        this.props.otherUser.user_id !== ""
-          ? this.props.otherUser
-          : this.props.user
-    };
-  }
-
+class Profile extends React.Component<Props> {
   componentDidMount = async () => {
-    if (this.state.isOther) {
+    if (this.props.isOther) {
       await Axios.post("http://localhost:5000/profile/visit", {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name"),
-        visitedUser: this.props.otherUser.user_name
+        visitedUser: this.props.user.user_name
       })
         .then(() => {})
         .catch(error => {
@@ -56,66 +40,47 @@ class Profile extends React.Component<Props, PState> {
   public render() {
     return (
       <div>
-        <span
-          onClick={() => {
-            this.setState({ usedUser: this.props.user, isOther: false });
-          }}
-        >
-          <TopMenu current={this.state.isOther ? "" : "profile"} />
-        </span>
+        <TopMenu current={this.props.isOther ? "" : "profile"} />
         <img
           className="profile-background"
           src={
             "http://localhost:5000/public/profile-pictures/background-" +
-            (!this.state.isOther
-              ? this.props.user.gender
-              : this.props.otherUser.gender) +
+            this.props.user.gender +
             ".jpg"
           }
           alt="Profile background"
         />
         <div className="top-container">
-          <Pictures isOther={this.state.isOther} user={this.state.usedUser} />
+          <Pictures isOther={this.props.isOther} user={this.props.user} />
           <div className="left-container">
-            <div className="user-name">
-              {this.state.isOther
-                ? this.props.otherUser.user_name
-                : this.props.user.user_name}
-            </div>
+            <div className="user-name">{this.props.user.user_name}</div>
             <Connection
               connection={
-                this.state.isOther
-                  ? this.props.otherUser.connection
-                  : "Online now !"
+                this.props.isOther ? this.props.user.connection : "Online now !"
               }
             />
-            <ProgressBar isOther={this.state.isOther} />
-            {this.state.isOther ? (
-              <Like otherUser={this.props.otherUser} />
-            ) : null}
+            <ProgressBar isOther={this.props.isOther} />
+            {this.props.isOther ? <Like otherUser={this.props.user} /> : null}
           </div>
         </div>
         <div className="block-container">
           <div className="middle-container">
-            <Personal isOther={this.state.isOther} user={this.state.usedUser} />
-            <Preferences
-              isOther={this.state.isOther}
-              user={this.state.usedUser}
-            />
+            <Personal isOther={this.props.isOther} user={this.props.user} />
+            <Preferences isOther={this.props.isOther} user={this.props.user} />
           </div>
         </div>
         <div className="block-container">
           <div className="end-container">
-            {this.state.isOther ? (
+            {this.props.isOther ? (
               <ReportAndBlock
-                name={this.state.usedUser.user_name}
-                gender={this.state.usedUser.gender}
-                id={this.props.otherUser.user_id}
+                name={this.props.user.user_name}
+                gender={this.props.user.gender}
+                id={this.props.user.user_id}
               />
             ) : (
               <Password />
             )}
-            <Tags isOther={this.state.isOther} user={this.state.usedUser} />
+            <Tags isOther={this.props.isOther} user={this.props.user} />
           </div>
         </div>
       </div>
@@ -125,14 +90,17 @@ class Profile extends React.Component<Props, PState> {
 
 const mapStateToProps = (state: State): Props => {
   return {
-    user: {
-      ...state.user,
-      pictures:
-        state.user.pictures && state.user.pictures.length > 0
-          ? state.user.pictures
-          : [{ date: "1", path: "unknown.png", main: false }]
-    },
-    otherUser: state.otherUser
+    isOther: state.otherUser.user_id === "" ? false : true,
+    user:
+      state.otherUser.user_id === ""
+        ? {
+            ...state.user,
+            pictures:
+              state.user.pictures && state.user.pictures.length > 0
+                ? state.user.pictures
+                : [{ date: "1", path: "unknown.png", main: false }]
+          }
+        : { ...state.otherUser }
   };
 };
 

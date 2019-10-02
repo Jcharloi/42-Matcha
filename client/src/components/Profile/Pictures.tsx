@@ -1,14 +1,13 @@
 import * as React from "react";
 import Axios from "axios";
-
-import { Image, Icon } from "semantic-ui-react";
-import "../../styles/stylesUserPictures.css";
-
 import { store } from "../../redux/store";
 
 import { insertUserProfile, updateUserAuth } from "../../redux/actions/actions";
 import { deleteUser, isProfileCompleted } from "../../App";
 import { User } from "../../models/models";
+
+import { Image, Icon } from "semantic-ui-react";
+import "../../styles/stylesUserPictures.css";
 
 interface Props {
   isOther: boolean;
