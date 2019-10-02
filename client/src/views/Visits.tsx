@@ -8,6 +8,7 @@ import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
 
+import { List, Image } from "semantic-ui-react";
 import "../styles/stylesUserVisits.css";
 
 interface VState {
