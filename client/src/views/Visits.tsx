@@ -1,13 +1,14 @@
 import * as React from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
+import history from "../helpers/history";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
 
-import { Divider, List, Image } from "semantic-ui-react";
+import { List, Image } from "semantic-ui-react";
 import "../styles/stylesUserVisits.css";
 
 interface VState {
@@ -19,6 +20,7 @@ interface VState {
     path: string;
   }>;
 }
+
 class Visits extends React.Component<User, VState> {
   constructor(props: User) {
     super(props);
@@ -31,20 +33,15 @@ class Visits extends React.Component<User, VState> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
-      .then(
-        ({
-          data: { validated, message, rows: userVisitsInfo, validToken }
-        }) => {
-          if (validToken === false) {
-            deleteUser();
-          } else {
-            if (validated) {
-              this.setState({ userVisitsInfo });
-              console.log(userVisitsInfo);
-            }
+      .then(({ data: { validated, rows: userVisitsInfo, validToken } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({ userVisitsInfo });
           }
         }
-      )
+      })
       .catch(err => console.error(err));
   };
 
@@ -67,24 +64,29 @@ class Visits extends React.Component<User, VState> {
     return "just now";
   }
   public render() {
-    // console.log(this.state.userVisitsInfo);
     return (
       <div>
-        <TopMenu current="home" />
+        <TopMenu current="visits" />
         <div className="visit-container">
           <List relaxed size="massive">
-            {this.state.userVisitsInfo.map((pencil, index) => (
+            {this.state.userVisitsInfo.map((user, index) => (
               <List.Item key={index}>
                 <Image
                   className="avatar"
                   avatar
-                  src={`http://localhost:5000/public/profile-pictures/${pencil.path}`}
-                  // src={`http://localhost:5000/public/profile-pictures/tchoupi.jpg`}
+                  src={`http://localhost:5000/public/profile-pictures/${user.path}`}
                 />
                 <List.Content>
-                  <List.Header as="a">{pencil.user_name}</List.Header>
+                  <List.Header
+                    as="a"
+                    onClick={() => {
+                      history.push(`/profile/${user.user_name}`);
+                    }}
+                  >
+                    {user.user_name}
+                  </List.Header>
                   <List.Description>
-                    Visited your profile {this.find_last_since(pencil.date)}
+                    visited your profile {this.find_last_since(user.date)}
                   </List.Description>
                 </List.Content>
               </List.Item>

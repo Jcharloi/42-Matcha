@@ -48,10 +48,9 @@ class ReportAndBlock extends React.Component<Props, State> {
         if (validToken === false) {
           deleteUser();
         } else {
-          if (validated && action !== "Report") {
-            history.push("/home");
-          } else {
+          if (validated) {
             this.setState({ visible: false, messageReport: message });
+            history.push("/home");
           }
         }
       })

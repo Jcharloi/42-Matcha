@@ -21,6 +21,7 @@ import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
 import Visits from "./views/Visits";
+import Likes from "./views/Likes";
 
 interface AppState {
   isLoading: boolean;
@@ -134,13 +135,14 @@ class App extends React.Component<Props, AppState> {
     Partie front :
     - Disconnect quand le token expire
     - Fix popularity score 600%
-    - Fix bug pour le rechargement de son profil
     - Fix background image profile
     - CSS de merde
-    - Infinite scroll
+    - Infinite scroll (pls no)
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
+    - Timestamp like
+    - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
     */
     return (
       <div>
@@ -186,6 +188,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/visits"
                 component={Visits}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/likes"
+                component={Likes}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

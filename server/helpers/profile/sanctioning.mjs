@@ -22,18 +22,45 @@ const sanctioningUser = async (req, res) => {
     let values = [userId, req.body.targetUserId];
     await client
       .query(text, values)
-      .then(({ rowCount }) => {
+      .then(async ({ rowCount }) => {
         let message =
           rowCount === 1
             ? "User reported succesfully !"
             : "This user is already reported !";
-        res.send({
-          validated: true,
-          message
-        });
+        text = `DELETE FROM user_like WHERE (liking_user_id = $1 OR liking_user_id = $2) AND (liked_user_id = $1 OR liked_user_id = $2)`;
+        values = [userId, req.body.targetUserId];
+        await client
+          .query(text, values)
+          .then(async () => {
+            text = `DELETE FROM user_visit WHERE (visiting_user_id = $1 OR visiting_user_id = $2) AND (visited_user_id = $1 OR visited_user_id = $2)`;
+            values = [userId, req.body.targetUserId];
+            await client
+              .query(text, values)
+              .then(() => {
+                res.send({
+                  validated: true,
+                  message
+                });
+              })
+              .catch(e => {
+                console.error(e.stack);
+                res.send({
+                  validated: false,
+                  message:
+                    "We got a problem with our database, please try again"
+                });
+              });
+          })
+          .catch(e => {
+            console.error(e.stack);
+            res.send({
+              validated: false,
+              message: "We got a problem with our database, please try again"
+            });
+          });
       })
       .catch(e => {
-        console.error(e);
+        console.error(e.stack);
         res.send({
           validated: false,
           message: "We got a problem with our database, please try again"
