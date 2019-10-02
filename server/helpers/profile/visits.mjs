@@ -60,12 +60,6 @@ const getUserVisits = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rowCount, rows }) => {
-        var rowArray = [];
-        rows.map(async (row, index) => {
-          rowArray.push(await getUserPictures(row.user_id));
-          console.log(rowArray);
-        });
-
         res.send({
           validated: true,
           rows

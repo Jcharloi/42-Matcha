@@ -108,4 +108,33 @@ const checkLikeAndMatch = async (req, res) => {
     }
   }
 };
-export { toggleLike, checkLikeAndMatch };
+
+const getUserLikes = async (req, res) => {
+  console.log("ok");
+  const liked_user_id = await getUserId(req.body.userName);
+  if (!liked_user_id) {
+    res.send({ validated: false });
+  } else {
+    let text = `SELECT users.user_id,user_name,liking_user_id,liked_user_id,path,main FROM users JOIN user_like ON users.user_id = user_like.liking_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE user_like.liked_user_id
+    = $1 AND profile_picture.main = TRUE`;
+
+    let values = [liked_user_id];
+    await client
+      .query(text, values)
+      .then(async ({ rowCount, rows }) => {
+        res.send({
+          validated: true,
+          rows
+        });
+      })
+      .catch(e => {
+        console.error(e);
+        res.send({
+          validated: false,
+          message: "We got a problem with oufffr database, please try agadin"
+        });
+      });
+  }
+};
+
+export { toggleLike, checkLikeAndMatch, getUserLikes };

@@ -91,7 +91,14 @@ class TopMenu extends React.Component<Props> {
           >
             Visits
           </div>
-          <div className="item item-page">Likes</div>
+          <div
+            className="item item-page"
+            onClick={() => {
+              history.push("/likes");
+            }}
+          >
+            Likes
+          </div>
           <div className="right menu">
             <div className="item">
               <div className="item item-page">Notifications</div>

@@ -9,72 +9,50 @@ import { deleteUser } from "../App";
 import TopMenu from "../components/TopMenu";
 
 import { Divider, List, Image } from "semantic-ui-react";
-import "../styles/stylesUserVisits.css";
+import "../styles/stylesUserLikes.css";
 
 interface VState {
-  userVisitsInfo: Array<{
-    visiting_user_id: string;
-    visited_user_id: string;
+  userLikesInfo: Array<{
+    likeing_user_id: string;
+    liked_user_id: string;
     date: string;
     user_name: string;
     path: string;
   }>;
 }
-class Visits extends React.Component<User, VState> {
+class Likes extends React.Component<User, VState> {
   constructor(props: User) {
     super(props);
     this.state = {
-      userVisitsInfo: []
+      userLikesInfo: []
     };
   }
   componentDidMount = () => {
-    Axios.post("http://localhost:5000/profile/get-user-visits", {
+    Axios.post("http://localhost:5000/profile/get-user-likes", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
       .then(
-        ({
-          data: { validated, message, rows: userVisitsInfo, validToken }
-        }) => {
+        ({ data: { validated, message, rows: userLikesInfo, validToken } }) => {
           if (validToken === false) {
             deleteUser();
           } else {
             if (validated) {
-              this.setState({ userVisitsInfo });
-              console.log(userVisitsInfo);
+              this.setState({ userLikesInfo });
+              console.log(userLikesInfo);
             }
           }
         }
       )
       .catch(err => console.error(err));
   };
-
-  find_last_since(lastseen: string) {
-    lastseen = new Date(+lastseen * 1000).toISOString();
-    var dateSeen: any = new Date(lastseen);
-    var dateNow: any = new Date();
-    var plural: string = "s";
-    var seconds = Math.floor((dateNow - dateSeen) / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    var months = Math.floor(days / 31);
-    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
-
-    if (months) return months.toString() + " month" + plural + " ago";
-    if (days) return days.toString() + " day" + plural + " ago";
-    if (hours) return hours.toString() + " hour" + plural + " ago";
-    if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "just now";
-  }
   public render() {
-    // console.log(this.state.userVisitsInfo);
     return (
       <div>
         <TopMenu current="home" />
-        <div className="visit-container">
+        <div className="like-container">
           <List relaxed size="massive">
-            {this.state.userVisitsInfo.map((pencil, index) => (
+            {this.state.userLikesInfo.map((pencil, index) => (
               <List.Item key={index}>
                 <Image
                   className="avatar"
@@ -90,9 +68,7 @@ class Visits extends React.Component<User, VState> {
                   >
                     {pencil.user_name}
                   </List.Header>
-                  <List.Description>
-                    Visited your profile {this.find_last_since(pencil.date)}
-                  </List.Description>
+                  <List.Description>Liked your profile</List.Description>
                 </List.Content>
               </List.Item>
             ))}
@@ -107,4 +83,4 @@ const mapStateToProps = (state: State): User => {
   return state.user;
 };
 
-export default connect(mapStateToProps)(Visits);
+export default connect(mapStateToProps)(Likes);
