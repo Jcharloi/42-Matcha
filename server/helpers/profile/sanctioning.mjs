@@ -39,6 +39,9 @@ const sanctioningUser = async (req, res) => {
           message: "We got a problem with our database, please try again"
         });
       });
+    text = `DELETE FROM user_like WHERE liking_user_id = $1`;
+    values = [userId];
+    await client.query(text, values);
   }
 };
 
