@@ -1,9 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
-import { connect } from "react-redux";
 import history from "../helpers/history";
-import { State } from "../redux/types/types";
-import { User } from "../models/models";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
@@ -12,40 +9,48 @@ import { List, Image } from "semantic-ui-react";
 import "../styles/stylesUserVisits.css";
 
 interface VState {
-  userVisitsInfo: Array<{
-    visiting_user_id: string;
-    visited_user_id: string;
+  userInfos: Array<{
+    usering_user_id: string;
+    usered_user_id: string;
     date: string;
     user_name: string;
     path: string;
   }>;
+  current: string;
 }
 
-class Visits extends React.Component<User, VState> {
-  constructor(props: User) {
+class VisitsAndLikes extends React.Component<{}, VState> {
+  constructor(props: {}) {
     super(props);
     this.state = {
-      userVisitsInfo: []
+      userInfos: [],
+      current:
+        window.location.pathname.search("/likes") !== -1
+          ? "likes"
+          : window.location.pathname.search("/visits") !== -1
+          ? "visits"
+          : ""
     };
   }
+
   componentDidMount = () => {
-    Axios.post("http://localhost:5000/profile/get-user-visits", {
+    Axios.post(`http://localhost:5000/profile/get-user-${this.state.current}`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
-      .then(({ data: { validated, rows: userVisitsInfo, validToken } }) => {
+      .then(({ data: { validated, rows: userInfos, validToken } }) => {
         if (validToken === false) {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ userVisitsInfo });
+            this.setState({ userInfos });
           }
         }
       })
       .catch(err => console.error(err));
   };
 
-  find_last_since(lastseen: string) {
+  find_last_since = (lastseen: string) => {
     lastseen = new Date(+lastseen * 1000).toISOString();
     var dateSeen: any = new Date(lastseen);
     var dateNow: any = new Date();
@@ -62,14 +67,15 @@ class Visits extends React.Component<User, VState> {
     if (hours) return hours.toString() + " hour" + plural + " ago";
     if (minutes) return minutes.toString() + " minute" + plural + " ago";
     return "just now";
-  }
+  };
+
   public render() {
     return (
       <div>
-        <TopMenu current="visits" />
+        <TopMenu current={this.state.current} />
         <div className="visit-container">
           <List relaxed size="massive">
-            {this.state.userVisitsInfo.map((user, index) => (
+            {this.state.userInfos.map((user, index) => (
               <List.Item key={index}>
                 <Image
                   className="avatar"
@@ -86,7 +92,11 @@ class Visits extends React.Component<User, VState> {
                     {user.user_name}
                   </List.Header>
                   <List.Description>
-                    visited your profile {this.find_last_since(user.date)}
+                    {this.state.current === "likes"
+                      ? `liked your profile `
+                      : `visited your profile ${this.find_last_since(
+                          user.date
+                        )}`}
                   </List.Description>
                 </List.Content>
               </List.Item>
@@ -98,8 +108,4 @@ class Visits extends React.Component<User, VState> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
-};
-
-export default connect(mapStateToProps)(Visits);
+export default VisitsAndLikes;

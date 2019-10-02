@@ -20,8 +20,7 @@ import SearchMatch from "./components/Match/SearchMatch";
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
-import Visits from "./views/Visits";
-import Likes from "./views/Likes";
+import VisitsAndLikes from "./views/VisitsAndLikes";
 
 interface AppState {
   isLoading: boolean;
@@ -136,12 +135,15 @@ class App extends React.Component<Props, AppState> {
     - Disconnect quand le token expire
     - Fix popularity score 600%
     - Fix background image profile
+    - Style likes/visits
     - CSS de merde
     - Infinite scroll (pls no)
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
     - Timestamp like
+    - Pas voir les matchs qui t'ont bloqué
+    - Pas aller sur les profils des gens qui nous ont bloqué et inversement via URL
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
     */
     return (
@@ -187,14 +189,14 @@ class App extends React.Component<Props, AppState> {
               <CompletedRoutes
                 exact={true}
                 path="/visits"
-                component={Visits}
+                component={() => <VisitsAndLikes />}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
               <CompletedRoutes
                 exact={true}
                 path="/likes"
-                component={Likes}
+                component={() => <VisitsAndLikes />}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

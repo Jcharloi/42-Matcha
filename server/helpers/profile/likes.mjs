@@ -115,7 +115,7 @@ const getUserLikes = async (req, res) => {
     res.send({ validated: false });
   } else {
     let text = `SELECT users.user_id,user_name,liking_user_id,liked_user_id,path,main FROM users JOIN user_like ON users.user_id = user_like.liking_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE user_like.liked_user_id
-    = $1 AND profile_picture.main = TRUE`;
+    = $1 AND profile_picture.main = TRUE ORDER BY user_like`;
     let values = [liked_user_id];
     await client
       .query(text, values)
@@ -126,10 +126,10 @@ const getUserLikes = async (req, res) => {
         });
       })
       .catch(e => {
-        console.error(e);
+        console.error(e.stack);
         res.send({
           validated: false,
-          message: "We got a problem with oufffr database, please try agadin"
+          message: "We got a problem with our database, please try again"
         });
       });
   }
