@@ -42,10 +42,10 @@ class UserCard extends React.Component<Props, CState> {
   }
 
   find_last_since(lastseen: string) {
+    console.log(lastseen);
     var dateSeen: any = new Date(lastseen);
     var dateNow: any = new Date();
     var plural: string = "s";
-
     var seconds = Math.floor((dateNow - dateSeen) / 1000);
     var minutes = Math.floor(seconds / 60);
     var hours = Math.floor(minutes / 60);

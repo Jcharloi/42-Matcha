@@ -16,6 +16,7 @@ interface VState {
     visited_user_id: string;
     date: string;
     user_name: string;
+    path: string;
   }>;
 }
 class Visits extends React.Component<User, VState> {
@@ -46,44 +47,50 @@ class Visits extends React.Component<User, VState> {
       )
       .catch(err => console.error(err));
   };
+
+  find_last_since(lastseen: string) {
+    lastseen = new Date(+lastseen * 1000).toISOString();
+    var dateSeen: any = new Date(lastseen);
+    var dateNow: any = new Date();
+    var plural: string = "s";
+    var seconds = Math.floor((dateNow - dateSeen) / 1000);
+    var minutes = Math.floor(seconds / 60);
+    var hours = Math.floor(minutes / 60);
+    var days = Math.floor(hours / 24);
+    var months = Math.floor(days / 31);
+    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
+
+    if (months) return months.toString() + " month" + plural + " ago";
+    if (days) return days.toString() + " day" + plural + " ago";
+    if (hours) return hours.toString() + " hour" + plural + " ago";
+    if (minutes) return minutes.toString() + " minute" + plural + " ago";
+    return "just now";
+  }
   public render() {
+    // console.log(this.state.userVisitsInfo);
     return (
       <div>
         <TopMenu current="home" />
-        <List relaxed>
-          {/* <List.Item>
-            <Image
-              className="avatar"
-              avatar
-              src="http://localhost:5000/public/profile-pictures/tchoupi.jpg"
-            />
-            <List.Content>
-              <List.Header as="a">Daniel Louise</List.Header>
-              <List.Description>
-                Last seen watching{" "}
-                <a>
-                  <b>Arrested Development</b>
-                </a>{" "}
-                just now.
-              </List.Description>
-            </List.Content>
-          </List.Item> */}
-          {this.state.userVisitsInfo.map(pencil => (
-            <List.Item>
-              <Image
-                className="avatar"
-                avatar
-                src="http://localhost:5000/public/profile-pictures/tchoupi.jpg"
-              />
-              <List.Content>
-                <List.Header as="a">{pencil.user_name}</List.Header>
-                <List.Description>
-                  Visited your profile {pencil.date}
-                </List.Description>
-              </List.Content>
-            </List.Item>
-          ))}
-        </List>
+        <div className="visit-container">
+          <List relaxed size="massive">
+            {this.state.userVisitsInfo.map((pencil, index) => (
+              <List.Item key={index}>
+                <Image
+                  className="avatar"
+                  avatar
+                  src={`http://localhost:5000/public/profile-pictures/${pencil.path}`}
+                  // src={`http://localhost:5000/public/profile-pictures/tchoupi.jpg`}
+                />
+                <List.Content>
+                  <List.Header as="a">{pencil.user_name}</List.Header>
+                  <List.Description>
+                    Visited your profile {this.find_last_since(pencil.date)}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+            ))}
+          </List>
+        </div>
       </div>
     );
   }
