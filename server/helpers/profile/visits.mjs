@@ -53,8 +53,7 @@ const getUserVisits = async (req, res) => {
   if (!visited_user_id) {
     res.send({ validated: false });
   } else {
-    // let text = `SELECT user_id,user_name,visiting_user_id,visited_user_id,date FROM users JOIN visits ON users.user_id = visits.visiting_user_id WHERE visited_user_id = $1`;
-    let text = `SELECT users.user_id,user_name,visiting_user_id,visited_user_id,visits.date,path,main FROM users JOIN visits ON users.user_id = visits.visiting_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE visits.visited_user_id
+    let text = `SELECT users.user_id,user_name,visiting_user_id,visited_user_id,user_visit.date,path,main FROM users JOIN user_visit ON users.user_id = user_visit.visiting_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE user_visit.visited_user_id
     = $1 AND profile_picture.main = TRUE`;
 
     let values = [visited_user_id];
