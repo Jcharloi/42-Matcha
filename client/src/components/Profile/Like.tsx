@@ -81,7 +81,7 @@ class Like extends React.Component<Props, State> {
               <Button className="purple">
                 <Icon name="comments" /> Talk
               </Button>
-              <Button.Or />
+              <Button.Or className="or-button" />
               <Button
                 className="red"
                 onClick={() => {

@@ -20,3 +20,7 @@
   width: max-content;
   font-size: 1.5rem;
 }
+
+.or-button {
+  z-index: 0 !important;
+}
