@@ -137,11 +137,10 @@ class App extends React.Component<Props, AppState> {
     - Fix bug pour le rechargement de son profil
     - Fix background image profile
     - CSS de merde
-    - Infinite scroll
+    - Infinite scroll (pls no)
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Delete le like si tu bloques
     */
     return (
       <div>
