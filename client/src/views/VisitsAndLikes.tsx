@@ -1,29 +1,34 @@
 import * as React from "react";
 import Axios from "axios";
+import history from "../helpers/history";
 import { Link } from "react-router-dom";
 import { deleteUser } from "../App";
-
+import { connect } from "react-redux";
+import { State } from "../redux/types/types";
+import { store } from "../redux/store";
+import { insertOtherProfile } from "../redux/actions/actions";
+import { User } from "../models/models";
 import TopMenu from "../components/TopMenu";
 
 import { Image, Icon, Feed } from "semantic-ui-react";
 import "../styles/stylesUserVisits.css";
 
 interface VState {
-  userInfos: Array<{
-    usering_user_id: string;
-    usered_user_id: string;
-    date: string;
-    user_name: string;
-    path: string;
-  }>;
+  userInfoAll: Array<User>;
+  visitDate: Array<{ date: string }>;
   current: string;
+}
+
+interface Props {
+  userInfoAll: User;
 }
 
 class VisitsAndLikes extends React.Component<{}, VState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      userInfos: [],
+      userInfoAll: [],
+      visitDate: [],
       current:
         window.location.pathname.search("/likes") !== -1
           ? "likes"
@@ -39,12 +44,16 @@ class VisitsAndLikes extends React.Component<{}, VState> {
       token: localStorage.getItem("token"),
       current: this.state.current
     })
-      .then(({ data: { validated, rows: userInfos, validToken } }) => {
+      .then(({ data: { validated, userInfoAll, visitDate, validToken } }) => {
         if (validToken === false) {
           deleteUser();
         } else {
+          console.log(userInfoAll);
+          console.log(visitDate);
           if (validated) {
-            this.setState({ userInfos });
+            this.setState({ userInfoAll, visitDate });
+            console.log(visitDate);
+            console.log(userInfoAll);
           }
         }
       })
@@ -70,22 +79,30 @@ class VisitsAndLikes extends React.Component<{}, VState> {
     return "just now";
   };
 
+  selectProfile = (otherUser: User) => {
+    store.dispatch(insertOtherProfile(otherUser));
+    history.push(`/profile/` + otherUser.user_name);
+  };
+
   public render() {
     return (
       <div>
         <TopMenu current={this.state.current} />
         <div className="visit-container">
           <Feed>
-            {this.state.userInfos.map(user => (
+            {this.state.userInfoAll.map((user, index) => (
               <Feed.Event key={user.user_name} className="user-container">
                 <Image
                   className="avatar-visit"
                   avatar
                   size="tiny"
-                  src={`http://localhost:5000/public/profile-pictures/${user.path}`}
+                  src={`http://localhost:5000/public/profile-pictures/${user.pictures[0].path}`}
                 />
                 <Feed.Content className="feed-content">
-                  <div className="link-feed">
+                  <div
+                    className="link-feed"
+                    onClick={() => this.selectProfile(user)}
+                  >
                     <Link to={`/profile/` + user.user_name}>
                       {user.user_name}
                     </Link>
@@ -100,7 +117,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
                     />
                   </div>
                   <Feed.Date className="time-feed">
-                    {this.findLastSince(user.date)}
+                    {this.findLastSince(this.state.visitDate[index].date)}
                   </Feed.Date>
                 </Feed.Content>
               </Feed.Event>

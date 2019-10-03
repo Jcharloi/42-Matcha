@@ -1,5 +1,16 @@
-import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
+import {
+  getUserId,
+  calculateAge,
+  calculateDistance,
+  filterByBlockedUser,
+  filterByIncompletedUser
+} from "../../common.mjs";
+import {
+  getUserLatitudeAndLongitude,
+  getUserPictures,
+  getUserTags
+} from "../profile/getUserInfos.mjs";
 
 const logVisit = async (userName, visitedUser) => {
   const visiting_user_id = await getUserId(userName);
@@ -58,15 +69,40 @@ const getUserVisitsAndLikes = async (req, res) => {
     const table = req.body.current === "likes" ? "like" : "visit";
     const tabling = req.body.current === "likes" ? "liking" : "visiting";
     const tabled = req.body.current === "likes" ? "liked" : "visited";
-    let text = `SELECT users.user_id,user_name,${tabling}_user_id,${tabled}_user_id,user_${table}.date,path,main FROM users JOIN user_${table} ON users.user_id = user_${table}.${tabling}_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE user_${table}.${tabled}_user_id
+    let text = `SELECT users.user_id,user_name,first_name,last_name,gender,orientation,city,presentation,latitude,longitude,birthday,last_connection,score,${tabling}_user_id,${tabled}_user_id,user_${table}.date,path,main FROM users JOIN user_${table} ON users.user_id = user_${table}.${tabling}_user_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE user_${table}.${tabled}_user_id
     = $1 AND profile_picture.main = TRUE ORDER BY user_${table}.date DESC`;
     let values = [target_user_id];
     await client
       .query(text, values)
-      .then(({ rows }) => {
+      .then(async ({ rowCount, rows }) => {
+        let userInfoAll = [];
+        let visitDate = [];
+        for (let i = 0; i < rowCount; i++) {
+          userInfoAll.push({
+            user_id: rows[i].user_id,
+            user_name: rows[i].user_name,
+            first_name: rows[i].first_name,
+            last_name: rows[i].last_name,
+            gender: rows[i].gender,
+            orientation: rows[i].orientation,
+            city: rows[i].city,
+            presentation: rows[i].presentation,
+            birthday: rows[i].birthday,
+            age: calculateAge(rows[i].birthday),
+            connection: new Date(rows[i].last_connection * 1000),
+            pictures: await getUserPictures(rows[i].user_id),
+            tags: await getUserTags(rows[i].user_id),
+            score: rows[i].score,
+            liked: true
+          }),
+            visitDate.push({
+              date: rows[i].date
+            });
+        }
         res.send({
           validated: true,
-          rows
+          userInfoAll,
+          visitDate
         });
       })
       .catch(e => {
