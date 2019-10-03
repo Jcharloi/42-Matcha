@@ -51,7 +51,7 @@ router.all("/profile/*", tokenMiddleware);
 router.all("/home/*", tokenMiddleware);
 router.all("/search/*", tokenMiddleware);
 router.put("/verify-token", verifyToken);
-router.get("/get-user-infos?:id", getUserAll);
+router.put("/get-user-infos", getUserAll);
 
 router.post("/inscription", inscription);
 router.get("/validate-account/:id", validateAccount);
@@ -78,7 +78,6 @@ router.put("/profile/check-like-and-match", checkLikeAndMatch);
 router.post("/profile/get-user-:current", getUserVisitsAndLikes);
 router.post("/profile/visit", visitedUser);
 router.post("/profile/sanctioning-user", sanctioningUser);
-
 router.put("/profile/change-password", changePassword);
 
 router.put("/home/get-users-by-preference", getUsersByPreference);
