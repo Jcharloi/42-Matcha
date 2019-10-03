@@ -60,7 +60,9 @@ class Profile extends React.Component<Props> {
               }
             />
             <ProgressBar isOther={this.props.isOther} />
-            {this.props.isOther ? <Like otherUser={this.props.user} /> : null}
+            {this.props.isOther && this.props.user.pictures[0].date !== "1" ? (
+              <Like otherUser={this.props.user} />
+            ) : null}
           </div>
         </div>
         <div className="block-container">

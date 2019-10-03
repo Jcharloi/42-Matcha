@@ -91,7 +91,7 @@ class UserCard extends React.Component<Props, CState> {
           <div className="meta">
             <span className="date">{this.props.userInfo.city}</span>
           </div>
-          <div className="description">
+          <div>
             {this.props.userInfo.tags.slice(0, 2).map((tag, index) => (
               <button key={index} className="tag-home ui tag label">
                 {tag.name}
@@ -99,7 +99,7 @@ class UserCard extends React.Component<Props, CState> {
             ))}
           </div>
         </div>
-        <div className="extra content">
+        <div className="extra content bottom-card">
           <span>
             <i className={this.state.genderIcon}></i>
             {this.props.userInfo.age} years old

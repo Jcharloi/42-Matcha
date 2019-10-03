@@ -6,8 +6,8 @@
 
 .card .profile-pic-card {
   display: block;
-  max-width: 290px;
-  max-height: 255px;
+  min-height: 19rem;
+  max-height: 19rem;
   object-fit: contain;
 }
 
@@ -16,12 +16,7 @@
   position: relative;
   float: left;
   margin-left: 30px;
-  max-height: 415px;
-}
-
-.ui.card.user .content .description {
-  max-height: 35px;
-  display: inline-block;
+  height: 30rem !important;
 }
 
 .popularity {
@@ -29,6 +24,12 @@
   top: -30px;
   background-color: rgba(173, 173, 173, 0.671);
   height: 30px;
+}
+
+.bottom-card {
+  position: absolute !important;
+  margin-top: 27rem !important;
+  width: 100% !important;
 }
 
 .venus.icon {
@@ -44,8 +45,8 @@
 }
 
 .tag-home {
-  margin: 0.5rem !important;
-  max-width: 120px;
+  margin-top: 1rem !important;
+  max-width: 8rem;
 }
 
 /*Sort and filter buttons*/

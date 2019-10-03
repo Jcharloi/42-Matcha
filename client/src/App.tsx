@@ -94,7 +94,15 @@ class App extends React.Component<Props, AppState> {
             store.dispatch(insertUserProfile(userInfos));
             store.dispatch(updateUserAuth({ isAuth, isCompleted }));
           } else {
-            store.dispatch(insertOtherProfile(userInfos));
+            store.dispatch(
+              insertOtherProfile({
+                ...userInfos,
+                pictures:
+                  userInfos.pictures && userInfos.pictures.length > 0
+                    ? userInfos.pictures
+                    : [{ date: "1", path: "unknown.png", main: false }]
+              })
+            );
           }
         }
       })
@@ -141,9 +149,6 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Disconnect quand le token expire
-    - Fix popularity score 600%
-    - Fix background image profile
-    - CSS de merde
     - Infinite scroll (pls no)
 
     Partie back :
