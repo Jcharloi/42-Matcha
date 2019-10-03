@@ -65,6 +65,44 @@ class App extends React.Component<Props, AppState> {
     };
   }
 
+  getUserInfos = async (
+    userName: string | null,
+    ourName: string | null,
+    isOther: boolean,
+    isAuth: boolean
+  ): Promise<void> => {
+    await Axios.put(`http://localhost:5000/get-user-infos`, {
+      userName,
+      ourName,
+      isOther
+    })
+      .then(({ data: { userInfos, validated } }) => {
+        if (
+          validated &&
+          !userInfos.message &&
+          !userInfos.pictures.message &&
+          !userInfos.tags.message
+        ) {
+          if (!isOther) {
+            let isCompleted = isProfileCompleted(
+              userInfos.city,
+              userInfos.gender,
+              userInfos.presentation,
+              userInfos.pictures,
+              userInfos.tags
+            );
+            store.dispatch(insertUserProfile(userInfos));
+            store.dispatch(updateUserAuth({ isAuth, isCompleted }));
+          } else {
+            store.dispatch(insertOtherProfile(userInfos));
+          }
+        }
+      })
+      .catch(error => {
+        console.log("Error : ", error.message);
+      });
+  };
+
   async componentDidMount() {
     if (localStorage.getItem("user_name") && localStorage.getItem("token")) {
       await Axios.put("http://localhost:5000/verify-token", {
@@ -73,50 +111,20 @@ class App extends React.Component<Props, AppState> {
       })
         .then(async ({ data: { authToken } }) => {
           if (authToken) {
-            let userName = localStorage.getItem("user_name");
-            await Axios.get(
-              `http://localhost:5000/get-user-infos?userName=${userName}`
-            )
-              .then(({ data: { userInfos } }) => {
-                if (
-                  !userInfos.message &&
-                  !userInfos.pictures.message &&
-                  !userInfos.tags.message
-                ) {
-                  let isCompleted = isProfileCompleted(
-                    userInfos.city,
-                    userInfos.gender,
-                    userInfos.presentation,
-                    userInfos.pictures,
-                    userInfos.tags
-                  );
-                  store.dispatch(insertUserProfile(userInfos));
-                  store.dispatch(
-                    updateUserAuth({ isAuth: authToken, isCompleted })
-                  );
-                }
-              })
-              .catch(error => {
-                console.log("Error : ", error.message);
-              });
-            const url = window.location.pathname;
-            if (url && url.search("/profile/") !== -1) {
-              const urlArray = url.split("/");
-              if (urlArray[2]) {
-                await Axios.get(
-                  `http://localhost:5000/get-user-infos?userName=${urlArray[2]}`
-                )
-                  .then(({ data: { validated, userInfos } }) => {
-                    if (validated) {
-                      store.dispatch(insertOtherProfile(userInfos));
-                    } else {
-                      history.push("/");
-                    }
-                  })
-                  .catch(error => {
-                    console.log("Error : ", error.message);
-                  });
-              }
+            await this.getUserInfos(
+              localStorage.getItem("user_name"),
+              localStorage.getItem("user_name"),
+              false,
+              authToken
+            );
+            const current = window.location.pathname;
+            if (current && current.search("/profile/") !== -1) {
+              await this.getUserInfos(
+                current.split("/")[2],
+                localStorage.getItem("user_name"),
+                true,
+                authToken
+              );
             }
           } else {
             localStorage.clear();
@@ -140,7 +148,6 @@ class App extends React.Component<Props, AppState> {
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Pas aller sur les profils des gens qui nous ont bloqué et inversement via URL
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
     */
     return (

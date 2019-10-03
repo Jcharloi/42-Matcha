@@ -6,11 +6,12 @@ import { compareTag } from "../validInfos.mjs";
 
 import { getUserCoordinatesByCity } from "../../common.mjs";
 import { getUserCityByCoordinates } from "../../common.mjs";
+import { checkBlockedUser } from "../../common.mjs";
 const { ip_city } = keys;
 
-const getUserAll = async (params, res) => {
+const getUserAll = async (req, res) => {
   let text = `SELECT user_id FROM users WHERE user_name = $1`;
-  let values = [params.query.userName];
+  let values = [req.body.userName];
   await client
     .query(text, values)
     .then(async ({ rowCount, rows }) => {
@@ -20,7 +21,19 @@ const getUserAll = async (params, res) => {
         userInfos = await getUserInfos(userId);
         userInfos.pictures = await getUserPictures(userId);
         userInfos.tags = await getUserTags(userId);
-        res.send({ validated: true, userInfos });
+        if (req.body.isOther) {
+          const validated = await checkBlockedUser(
+            req.body.ourName,
+            req.body.userName
+          );
+          if (validated) {
+            res.send({ validated: true, userInfos });
+          } else {
+            res.send({ validated: false });
+          }
+        } else {
+          res.send({ validated: true, userInfos });
+        }
       } else {
         res.send({ validated: false });
       }
