@@ -56,11 +56,6 @@ class TopMenu extends React.Component<Props> {
             src="http://localhost:5000/public/profile-pictures/logo.png"
             alt="Logo top menu"
           />
-          {this.props.current !== "home" ? (
-            <Link className="item item-page" to="/home">
-              Home
-            </Link>
-          ) : null}
           {this.props.current !== "profile" ? (
             <Link
               className="item item-page"
@@ -69,22 +64,52 @@ class TopMenu extends React.Component<Props> {
             >
               Profile
             </Link>
-          ) : null}
+          ) : (
+            <Link
+              className="item active item-page"
+              onClick={this.linkToMyProfile}
+              to="/profile"
+            >
+              Profile
+            </Link>
+          )}
+
+          {this.props.current !== "home" ? (
+            <Link className="item item-page" to="/home">
+              Home
+            </Link>
+          ) : (
+            <Link className="item active item-page" to="/home">
+              Home
+            </Link>
+          )}
           {this.props.current !== "search" ? (
             <Link className="item item-page" to="/search">
               Search
             </Link>
-          ) : null}
+          ) : (
+            <Link className="item active item-page" to="/search">
+              Search
+            </Link>
+          )}
           {this.props.current !== "visits" ? (
             <Link className="item item-page" to="/visits">
               Visits
             </Link>
-          ) : null}
+          ) : (
+            <Link className="item active item-page" to="/visits">
+              Visits
+            </Link>
+          )}
           {this.props.current !== "likes" ? (
             <Link className="item item-page" to="/likes">
               Likes
             </Link>
-          ) : null}
+          ) : (
+            <Link className="item active item-page" to="/likes">
+              Likes
+            </Link>
+          )}
           <div className="right menu">
             <div className="item">
               <div className="item item-page">Notifications</div>
