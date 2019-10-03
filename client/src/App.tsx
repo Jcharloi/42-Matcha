@@ -212,10 +212,4 @@ const mapStateToProps = (state: State): Props => {
   };
 };
 
-/*
-const thunkAsyncAction = () => async (dispatch: Dispatch): Promise<void> => {
-  // dispatch actions, return Promise, etc.
-}
-*/
-
 export default connect(mapStateToProps)(App);

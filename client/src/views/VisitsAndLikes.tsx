@@ -85,7 +85,6 @@ class VisitsAndLikes extends React.Component<{}, VState> {
                   src={`http://localhost:5000/public/profile-pictures/${user.path}`}
                 />
                 <Feed.Content className="feed-content">
-                  <Feed.Date>{this.findLastSince(user.date)}</Feed.Date>
                   <div className="link-feed">
                     <Link to={`/profile/` + user.user_name}>
                       {user.user_name}
@@ -100,6 +99,9 @@ class VisitsAndLikes extends React.Component<{}, VState> {
                       color={this.state.current === "likes" ? "yellow" : "blue"}
                     />
                   </div>
+                  <Feed.Date className="time-feed">
+                    {this.findLastSince(user.date)}
+                  </Feed.Date>
                 </Feed.Content>
               </Feed.Event>
             ))}

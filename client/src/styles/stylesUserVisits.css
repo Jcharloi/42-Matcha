@@ -19,5 +19,9 @@
 }
 
 .link-feed {
-  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.time-feed {
+  font-size: 1.3rem !important;
 }
