@@ -135,14 +135,11 @@ class App extends React.Component<Props, AppState> {
     - Disconnect quand le token expire
     - Fix popularity score 600%
     - Fix background image profile
-    - Style likes/visits
     - CSS de merde
     - Infinite scroll (pls no)
 
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Timestamp like
-    - Pas voir les matchs qui t'ont bloqué
     - Pas aller sur les profils des gens qui nous ont bloqué et inversement via URL
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
     */

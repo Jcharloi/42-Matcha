@@ -79,6 +79,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
             {this.state.userInfos.map(user => (
               <Feed.Event key={user.user_name} className="user-container">
                 <Image
+                  className="avatar-visit"
                   avatar
                   size="tiny"
                   src={`http://localhost:5000/public/profile-pictures/${user.path}`}

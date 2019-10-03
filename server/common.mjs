@@ -144,17 +144,32 @@ const calculateDistance = (myCoordinates, userMatchInfo) => {
   return userMatchInfo;
 };
 
-const filterByBlockedUser = async (userMatchInfo, blockingUserId) => {
-  const text = `SELECT blocked_user_id FROM user_block WHERE blocking_user_id='${blockingUserId}'`;
+const filterByBlockedUser = async (userMatchInfo, userId) => {
+  let text = `SELECT blocked_user_id FROM user_block WHERE blocking_user_id='${userId}'`;
   return await client
     .query(text)
-    .then(({ rows, rowCount }) => {
-      return userMatchInfo.filter(user => {
+    .then(async ({ rows, rowCount }) => {
+      userMatchInfo = userMatchInfo.filter(user => {
         for (let i = 0; i < rowCount; i++) {
           if (rows[i].blocked_user_id === user.user_id) return false;
         }
         return true;
       });
+      text = `SELECT blocking_user_id FROM user_block WHERE blocked_user_id='${userId}'`;
+      return await client
+        .query(text)
+        .then(({ rows, rowCount }) => {
+          return userMatchInfo.filter(user => {
+            for (let i = 0; i < rowCount; i++) {
+              if (rows[i].blocking_user_id === user.user_id) return false;
+            }
+            return true;
+          });
+        })
+        .catch(e => {
+          console.error(e.stack);
+          return false;
+        });
     })
     .catch(e => {
       console.error(e.stack);

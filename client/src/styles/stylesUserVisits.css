@@ -1,3 +1,7 @@
+.avatar-visit {
+  margin-right: 1rem !important;
+}
+
 .visit-container {
   display: flex;
   justify-content: center;
@@ -9,7 +13,7 @@
 
 .feed-content {
   margin-top: inherit;
-  font-size: 2rem;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
 }

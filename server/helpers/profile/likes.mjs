@@ -16,7 +16,9 @@ const toggleLike = async body => {
       .then(async ({ rows: [{ count }] }) => {
         text =
           count === "0"
-            ? `INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ($1, $2)`
+            ? `INSERT INTO user_like (liking_user_id, liked_user_id, date) VALUES ($1, $2, ${Math.floor(
+                Date.now() / 1000
+              )})`
             : `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
         let values = [liking_user_id, liked_user_id];
         return await client
