@@ -78,7 +78,7 @@ const createAdminAccount = async () => {
   const userId = faker.random.uuid();
   const { lat, lon } = await getUserCoordinatesByCity("Paris");
   const query = `
-    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', '01/03/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 100, 'Paris', '${lat}', '${lon}', '${Math.floor(
+    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', '03/01/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 100, 'Paris', '${lat}', '${lon}', '${Math.floor(
     Date.now() / 1000
   )}', TRUE);
     INSERT INTO profile_picture (user_id, path, date, main) VALUES ('${userId}', 'tchoupi.jpg', '1563832800', TRUE), ('${userId}', 'joyjoy.png', '1563832800', FALSE);
@@ -133,7 +133,7 @@ pgtools
                 .toString()
                 .split(" ");
               const connectionDate = faker.date
-                .between("2019-06-01", "2019-09-05")
+                .between("2019-06-01", "2019-10-01")
                 .toString()
                 .split(" ");
               const { lat, lon } = await getUserCoordinatesByCity(
@@ -166,8 +166,20 @@ pgtools
               if (i % 2 === 0) {
                 query =
                   query +
-                  `
-              INSERT INTO user_like (liking_user_id, liked_user_id) VALUES ('${userId}', '${adminUserId}')`;
+                  `INSERT INTO user_visit (visiting_user_id, visited_user_id, date) VALUES ('${userId}', '${adminUserId}', '${new Date(
+                    connectionDate[3] +
+                      "/" +
+                      connectionDate[1] +
+                      "/" +
+                      connectionDate[2]
+                  ).getTime() / 1000}');
+                    INSERT INTO user_like (liking_user_id, liked_user_id, date) VALUES ('${userId}', '${adminUserId}', '${new Date(
+                    connectionDate[3] +
+                      "/" +
+                      connectionDate[1] +
+                      "/" +
+                      connectionDate[2]
+                  ).getTime() / 1000}')`;
               }
               await pool.query(query);
             }

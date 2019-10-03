@@ -1,8 +1,19 @@
-.avatar {
-  /* border: 2px solid red; */
-
-  max-width: 2px;
-}
 .visit-container {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.user-container {
+  margin-top: 1.5rem !important;
+}
+
+.feed-content {
+  margin-top: inherit;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.link-feed {
+  margin-top: 1rem !important;
 }

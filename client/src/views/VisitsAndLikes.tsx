@@ -1,11 +1,11 @@
 import * as React from "react";
 import Axios from "axios";
-import history from "../helpers/history";
+import { Link } from "react-router-dom";
 import { deleteUser } from "../App";
 
 import TopMenu from "../components/TopMenu";
 
-import { List, Image } from "semantic-ui-react";
+import { Image, Icon, Feed } from "semantic-ui-react";
 import "../styles/stylesUserVisits.css";
 
 interface VState {
@@ -36,7 +36,8 @@ class VisitsAndLikes extends React.Component<{}, VState> {
   componentDidMount = () => {
     Axios.post(`http://localhost:5000/profile/get-user-${this.state.current}`, {
       userName: localStorage.getItem("user_name"),
-      token: localStorage.getItem("token")
+      token: localStorage.getItem("token"),
+      current: this.state.current
     })
       .then(({ data: { validated, rows: userInfos, validToken } }) => {
         if (validToken === false) {
@@ -50,7 +51,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
       .catch(err => console.error(err));
   };
 
-  find_last_since = (lastseen: string) => {
+  findLastSince = (lastseen: string) => {
     lastseen = new Date(+lastseen * 1000).toISOString();
     var dateSeen: any = new Date(lastseen);
     var dateNow: any = new Date();
@@ -74,34 +75,34 @@ class VisitsAndLikes extends React.Component<{}, VState> {
       <div>
         <TopMenu current={this.state.current} />
         <div className="visit-container">
-          <List relaxed size="massive">
-            {this.state.userInfos.map((user, index) => (
-              <List.Item key={index}>
+          <Feed>
+            {this.state.userInfos.map(user => (
+              <Feed.Event key={user.user_name} className="user-container">
                 <Image
-                  className="avatar"
                   avatar
+                  size="tiny"
                   src={`http://localhost:5000/public/profile-pictures/${user.path}`}
                 />
-                <List.Content>
-                  <List.Header
-                    as="a"
-                    onClick={() => {
-                      history.push(`/profile/${user.user_name}`);
-                    }}
-                  >
-                    {user.user_name}
-                  </List.Header>
-                  <List.Description>
+                <Feed.Content className="feed-content">
+                  <Feed.Date>{this.findLastSince(user.date)}</Feed.Date>
+                  <div className="link-feed">
+                    <Link to={`/profile/` + user.user_name}>
+                      {user.user_name}
+                    </Link>
+                    &nbsp;
                     {this.state.current === "likes"
-                      ? `liked your profile `
-                      : `visited your profile ${this.find_last_since(
-                          user.date
-                        )}`}
-                  </List.Description>
-                </List.Content>
-              </List.Item>
+                      ? `liked your profile`
+                      : `visited your profile`}
+                    &nbsp;
+                    <Icon
+                      name={this.state.current === "likes" ? "star" : "eye"}
+                      color={this.state.current === "likes" ? "yellow" : "blue"}
+                    />
+                  </div>
+                </Feed.Content>
+              </Feed.Event>
             ))}
-          </List>
+          </Feed>
         </div>
       </div>
     );

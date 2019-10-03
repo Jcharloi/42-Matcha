@@ -35,7 +35,8 @@ CREATE TABLE user_tag
 CREATE TABLE user_like
 (
     liking_user_id varchar(250) NOT NULL,
-    liked_user_id varchar(250) NOT NULL
+    liked_user_id varchar(250) NOT NULL,
+    date varchar(250) NOT NULL
 );
 
 CREATE TABLE user_visit
