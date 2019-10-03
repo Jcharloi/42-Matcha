@@ -3,8 +3,6 @@ import Axios from "axios";
 import history from "../helpers/history";
 import { Link } from "react-router-dom";
 import { deleteUser } from "../App";
-import { connect } from "react-redux";
-import { State } from "../redux/types/types";
 import { store } from "../redux/store";
 import { insertOtherProfile } from "../redux/actions/actions";
 import { User } from "../models/models";
@@ -48,12 +46,8 @@ class VisitsAndLikes extends React.Component<{}, VState> {
         if (validToken === false) {
           deleteUser();
         } else {
-          console.log(userInfoAll);
-          console.log(visitDate);
           if (validated) {
             this.setState({ userInfoAll, visitDate });
-            console.log(visitDate);
-            console.log(userInfoAll);
           }
         }
       })

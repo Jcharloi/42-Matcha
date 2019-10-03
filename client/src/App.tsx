@@ -148,7 +148,10 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Gerer espace url profil
+    - isCompleted true reload la page
     - Disconnect quand le token expire
+    - Croper les images dans visits/likes
     - Infinite scroll (pls no)
 
     Partie back :
