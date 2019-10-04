@@ -250,7 +250,7 @@ class Pictures extends React.Component<Props, PicturesState> {
         4000
       );
     }
-    if (this.props.user !== previousProps.user) {
+    if (this.props.user.user_id !== previousProps.user.user_id) {
       this.setState({
         pictures: this.props.user.pictures,
         picturesNb: this.props.user.pictures.length,

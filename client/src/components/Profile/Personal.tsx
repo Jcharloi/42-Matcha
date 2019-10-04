@@ -173,7 +173,7 @@ class Personal extends React.Component<Props, PState> {
         4000
       );
     }
-    if (this.props.user !== previousProps.user) {
+    if (this.props.user.user_id !== previousProps.user.user_id) {
       this.setState({
         latitude: 0,
         longitude: 0,
