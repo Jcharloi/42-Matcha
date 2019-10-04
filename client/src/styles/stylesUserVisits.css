@@ -1,5 +1,7 @@
 .avatar-visit {
+  display: block;
   margin-right: 1rem !important;
+  object-fit: contain;
 }
 
 .visit-container {
