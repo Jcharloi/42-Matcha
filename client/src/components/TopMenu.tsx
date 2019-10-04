@@ -118,6 +118,7 @@ class TopMenu extends React.Component<Props> {
                 className="ui red button"
                 onClick={() => {
                   this.handleDisconnect();
+                  this.linkToMyProfile();
                 }}
               >
                 Disconnect
