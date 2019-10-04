@@ -24,7 +24,6 @@ interface Props {
 
 class Profile extends React.Component<Props> {
   componentDidMount = async () => {
-    console.log("did mount profile");
     if (this.props.isOther) {
       await Axios.post("http://localhost:5000/profile/visit", {
         token: localStorage.getItem("token"),

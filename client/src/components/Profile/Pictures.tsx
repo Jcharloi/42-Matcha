@@ -240,13 +240,27 @@ class Pictures extends React.Component<Props, PicturesState> {
     this.timer = null;
   };
 
-  public render() {
-    if (this.state.messagePictures && !this.timer) {
+  componentDidUpdate = (previousProps: Props) => {
+    if (this.state.messagePictures && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messagePictures) {
       this.timer = setTimeout(
         () => this.setState({ messagePictures: "" }),
         4000
       );
     }
+    if (this.props.user !== previousProps.user) {
+      this.setState({
+        pictures: this.props.user.pictures,
+        picturesNb: this.props.user.pictures.length,
+        pictureIndex: 0,
+        displayPictures: false
+      });
+    }
+  };
+
+  public render() {
     return (
       <div>
         <div className="body-container">
@@ -258,9 +272,7 @@ class Pictures extends React.Component<Props, PicturesState> {
               className="photo"
               circular
               src={`http://localhost:5000/public/profile-pictures/${this.state.pictures[0].path}`}
-              onClick={() => {
-                this.setDisplayPictures();
-              }}
+              onClick={this.setDisplayPictures}
             />
           </span>
           {this.state.picturesNb < 5 && !this.props.isOther && (

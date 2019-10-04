@@ -251,6 +251,23 @@ class Tags extends React.Component<Props, TState> {
     }
   };
 
+  componentDidUpdate = (previousProps: Props) => {
+    if (this.state.messageTags && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messageTags) {
+      this.timer = setTimeout(() => this.setState({ messageTags: "" }), 4000);
+    }
+    if (this.props.user !== previousProps.user) {
+      this.setState({
+        tagsUser: this.props.user.tags,
+        displayCustom: false,
+        tagsList: [],
+        customTag: ""
+      });
+    }
+  };
+
   public render() {
     if (this.state.messageTags && !this.timer) {
       this.timer = setTimeout(() => {

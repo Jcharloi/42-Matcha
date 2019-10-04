@@ -52,6 +52,25 @@ class Preferences extends React.Component<Props, PState> {
     }
   };
 
+  componentDidUpdate = (previousProps: Props) => {
+    if (this.state.messagePreference && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messagePreference) {
+      this.timer = setTimeout(
+        () => this.setState({ messagePreference: "" }),
+        4000
+      );
+    }
+    if (this.props.user !== previousProps.user) {
+      this.setState({
+        gender: this.props.user.gender,
+        orientation: this.props.user.orientation,
+        bio: this.props.user.presentation
+      });
+    }
+  };
+
   public render() {
     if (this.state.messagePreference) {
       this.timer = setTimeout(
