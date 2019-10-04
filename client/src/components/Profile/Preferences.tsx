@@ -62,7 +62,7 @@ class Preferences extends React.Component<Props, PState> {
         4000
       );
     }
-    if (this.props.user !== previousProps.user) {
+    if (this.props.user.user_id !== previousProps.user.user_id) {
       this.setState({
         gender: this.props.user.gender,
         orientation: this.props.user.orientation,
@@ -72,12 +72,6 @@ class Preferences extends React.Component<Props, PState> {
   };
 
   public render() {
-    if (this.state.messagePreference) {
-      this.timer = setTimeout(
-        () => this.setState({ messagePreference: "" }),
-        4000
-      );
-    }
     return (
       <div
         className={this.props.isOther ? "mcp-o" : "media-container-preferences"}

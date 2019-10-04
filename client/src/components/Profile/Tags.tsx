@@ -258,7 +258,7 @@ class Tags extends React.Component<Props, TState> {
     if (this.state.messageTags) {
       this.timer = setTimeout(() => this.setState({ messageTags: "" }), 4000);
     }
-    if (this.props.user !== previousProps.user) {
+    if (this.props.user.user_id !== previousProps.user.user_id) {
       this.setState({
         tagsUser: this.props.user.tags,
         displayCustom: false,
@@ -269,11 +269,6 @@ class Tags extends React.Component<Props, TState> {
   };
 
   public render() {
-    if (this.state.messageTags && !this.timer) {
-      this.timer = setTimeout(() => {
-        this.setState({ messageTags: "" });
-      }, 4000);
-    }
     return (
       <div className={this.props.isOther ? "mct-o" : "media-container"}>
         <div className="title-container-tag">
