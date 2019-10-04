@@ -70,29 +70,28 @@
 }
 
 .auth-title {
+  box-sizing: content-box;
+  font-size: 4vh;
   line-height: 1;
-  font-size: 50px;
   text-align: center;
 }
 
 .auth-presentation {
+  box-sizing: content-box;
+  font-size: 2vh;
   margin-top: 40px;
   line-height: 1;
-  font-size: 25px;
   text-align: center;
 }
 
 .auth-explication {
+  padding: 3rem;
+  box-sizing: content-box;
+  font-size: 1.5vh;
   margin: 5rem 0 0 0;
   line-height: 1.5;
-  font-size: 25px;
   border: 1px solid #f3c1c3;
   border-radius: 6px;
-  padding: 20px;
-}
-
-.text-little {
-  margin-left: 10px;
 }
 
 .auth-divider {
@@ -111,11 +110,7 @@
   align-items: center;
   width: 100%;
   margin: 2rem 0;
-  padding: 0 2rem;
-}
-
-.auth-step {
-  margin: 0 1rem;
+  font-size: 1.5vh;
 }
 
 .auth-icon-little {
