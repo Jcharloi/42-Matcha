@@ -114,7 +114,7 @@ pgtools
                 console.error(e.stack);
               });
             const adminUserId = await createAdminAccount();
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 20; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);

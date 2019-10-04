@@ -278,7 +278,7 @@ class Personal extends React.Component<Props, PState> {
             ) : (
               <input
                 className="input-value"
-                value={this.state.city}
+                value={this.state.city ? this.state.city : ""}
                 onChange={({ target: { value } }) => this.setCity(value)}
               />
             )}
@@ -286,7 +286,6 @@ class Personal extends React.Component<Props, PState> {
           <div className="ui divider" />
           <div className="block">
             <Icon name="birthday" size="large" color="orange" />
-
             <span className="input-value">
               {this.calculateAge(
                 this.state.day,
