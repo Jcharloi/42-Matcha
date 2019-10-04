@@ -163,13 +163,58 @@ class Personal extends React.Component<Props, PState> {
     if (this.timer) clearTimeout(this.timer);
   };
 
-  public render() {
+  componentDidUpdate = (previousProps: Props) => {
+    if (this.state.messagePersonal && this.timer) {
+      clearTimeout(this.timer);
+    }
     if (this.state.messagePersonal) {
       this.timer = setTimeout(
         () => this.setState({ messagePersonal: "" }),
         4000
       );
     }
+    if (this.props.user !== previousProps.user) {
+      this.setState({
+        latitude: 0,
+        longitude: 0,
+        ip: "",
+        city: this.props.user.city,
+        lastName: this.props.user.last_name,
+        firstName: this.props.user.first_name,
+        mail: this.props.user.mail,
+        day: this.props.user.birthday.split("/")[1],
+        month:
+          this.props.user.birthday.split("/")[0] === "Jan"
+            ? "January"
+            : this.props.user.birthday.split("/")[0] === "Feb"
+            ? "February"
+            : this.props.user.birthday.split("/")[0] === "Mar"
+            ? "March"
+            : this.props.user.birthday.split("/")[0] === "Apr"
+            ? "April"
+            : this.props.user.birthday.split("/")[0] === "May"
+            ? "May"
+            : this.props.user.birthday.split("/")[0] === "Jun"
+            ? "June"
+            : this.props.user.birthday.split("/")[0] === "Jul"
+            ? "July"
+            : this.props.user.birthday.split("/")[0] === "Aug"
+            ? "August"
+            : this.props.user.birthday.split("/")[0] === "Sep"
+            ? "September"
+            : this.props.user.birthday.split("/")[0] === "Oct"
+            ? "October"
+            : this.props.user.birthday.split("/")[0] === "Nov"
+            ? "November"
+            : this.props.user.birthday.split("/")[0] === "Dec"
+            ? "December"
+            : this.props.user.birthday.split("/")[0],
+        year: this.props.user.birthday.split("/")[2]
+      });
+    }
+  };
+
+  public render() {
     const months = [
       "January",
       "February",
@@ -233,7 +278,7 @@ class Personal extends React.Component<Props, PState> {
             ) : (
               <input
                 className="input-value"
-                defaultValue={this.state.city}
+                value={this.state.city}
                 onChange={({ target: { value } }) => this.setCity(value)}
               />
             )}

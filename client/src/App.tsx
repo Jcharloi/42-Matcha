@@ -149,7 +149,8 @@ class App extends React.Component<Props, AppState> {
     /*
     Partie front :
     - Gerer espace url profil
-    - isCompleted true reload la page
+    - margin bas de page
+    - center horizontalement profils
     - Disconnect quand le token expire
     - Croper les images dans visits/likes
     - Infinite scroll (pls no)
@@ -175,13 +176,13 @@ class App extends React.Component<Props, AppState> {
               <PrivateRoutes
                 exact={true}
                 path="/profile/:userName"
-                component={() => <Profile />}
+                component={Profile}
                 isAuth={this.props.isAuth}
               />
               <PrivateRoutes
                 exact={true}
                 path="/profile"
-                component={() => <Profile />}
+                component={Profile}
                 isAuth={this.props.isAuth}
               />
               <CompletedRoutes
