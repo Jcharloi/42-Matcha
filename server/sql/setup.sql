@@ -70,8 +70,10 @@ CREATE TABLE chat
 (
     sender_id varchar(250) NOT NULL,
     receiver_id varchar(250) NOT NULL,
-    date date NOT NULL,
-    message varchar(250) NOT NULL
+    date varchar(250) NOT NULL,
+    message varchar(250) NOT NULL,
+    sender_read boolean NOT NULL,
+    receiver_read boolean NOT NULL,
 );
 
 CREATE TABLE notification

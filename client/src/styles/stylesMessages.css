@@ -1,0 +1,47 @@
+.container-message {
+  width: 100%;
+  height: 60%;
+  border: 2px solid red;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container-user {
+  padding: 1rem;
+  border: 2px solid green;
+  width: 50%;
+  display: flex;
+  margin: 1.5rem 1.5rem;
+}
+
+.ring {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.name-container {
+  position: relative;
+  display: flex;
+  /* border: 2px solid blue; */
+  /* justify-content: space-evenly; */
+  /* width: 80rem; */
+}
+
+.name {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.date-message {
+  position: absolute;
+  font-weight: 400;
+  font-size: 1em;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.4);
+  /* border: 2px solid yellow; */
+  right: 26%;
+  margin-top: -1.5rem;
+  /* top: 20%; */
+}

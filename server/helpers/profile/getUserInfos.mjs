@@ -103,7 +103,6 @@ const getUserPictures = async userId => {
       }
       userPictures.splice(0, 0, userPictures[userPictures.length - 1]);
       userPictures.splice(userPictures.length - 1, 1);
-      // console.log(userPictures);
       return userPictures;
     })
     .catch(e => {

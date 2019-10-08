@@ -24,7 +24,7 @@ class TopMenu extends React.Component<Props> {
       });
   };
 
-  linkToMyProfile = () => {
+  emptyOtherProfile = () => {
     store.dispatch(
       insertOtherProfile({
         user_id: "",
@@ -59,7 +59,7 @@ class TopMenu extends React.Component<Props> {
           {this.props.current !== "profile" ? (
             <Link
               className="item item-page"
-              onClick={this.linkToMyProfile}
+              onClick={this.emptyOtherProfile}
               to="/profile"
             >
               Profile
@@ -67,7 +67,7 @@ class TopMenu extends React.Component<Props> {
           ) : (
             <Link
               className="item active item-page"
-              onClick={this.linkToMyProfile}
+              onClick={this.emptyOtherProfile}
               to="/profile"
             >
               Profile
@@ -113,12 +113,20 @@ class TopMenu extends React.Component<Props> {
           <div className="right menu">
             <div className="item">
               <div className="item item-page">Notifications</div>
-              <div className="item item-page">Messages</div>
+              {this.props.current !== "messages" ? (
+                <Link className="item item-page" to="/messages">
+                  Messages
+                </Link>
+              ) : (
+                <Link className="item active item-page" to="/messages">
+                  Messages
+                </Link>
+              )}
               <div
                 className="ui red button"
                 onClick={() => {
                   this.handleDisconnect();
-                  this.linkToMyProfile();
+                  this.emptyOtherProfile();
                 }}
               >
                 Disconnect

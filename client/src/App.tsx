@@ -21,6 +21,7 @@ import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
 import VisitsAndLikes from "./views/VisitsAndLikes";
+import Messages from "./views/Messages";
 
 interface AppState {
   isLoading: boolean;
@@ -148,11 +149,10 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
-    - Gerer espace url profil
+    - Implementer message part
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
-    - Croper les images dans visits/likes
     - Infinite scroll (pls no)
 
     Partie back :
@@ -210,6 +210,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/likes"
                 component={() => <VisitsAndLikes />}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/messages"
+                component={() => <Messages />}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

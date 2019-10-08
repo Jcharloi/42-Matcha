@@ -17,10 +17,6 @@ interface VState {
   current: string;
 }
 
-interface Props {
-  userInfoAll: User;
-}
-
 class VisitsAndLikes extends React.Component<{}, VState> {
   constructor(props: {}) {
     super(props);
