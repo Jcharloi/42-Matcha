@@ -46,6 +46,7 @@ import { getUsersByPreference } from "./helpers/home/match.mjs";
 import { sortByIndex } from "./helpers/home/sort.mjs";
 import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
+import getReports from "./helpers/profile/reports.mjs";
 
 router.all("/profile/*", tokenMiddleware);
 router.all("/home/*", tokenMiddleware);
@@ -95,5 +96,6 @@ router.get("/public/fake-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
+router.put("/admin/get-reports", getReports);
 
 export default router;

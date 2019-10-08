@@ -21,6 +21,7 @@ import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
 import Home from "./views/Home";
 import VisitsAndLikes from "./views/VisitsAndLikes";
+import AdminReports from "./components/Admin/AdminReports";
 
 interface AppState {
   isLoading: boolean;
@@ -128,7 +129,7 @@ class App extends React.Component<Props, AppState> {
             const current = window.location.pathname;
             if (current && current.search("/profile/") !== -1) {
               await this.getUserInfos(
-                current.split("/")[2],
+                decodeURIComponent(current.split("/")[2]),
                 localStorage.getItem("user_name"),
                 true,
                 authToken
@@ -152,7 +153,6 @@ class App extends React.Component<Props, AppState> {
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
-    - Croper les images dans visits/likes
     - Infinite scroll (pls no)
 
     Partie back :
@@ -210,6 +210,13 @@ class App extends React.Component<Props, AppState> {
                 exact={true}
                 path="/likes"
                 component={() => <VisitsAndLikes />}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/admin-reports"
+                component={() => <AdminReports />}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
