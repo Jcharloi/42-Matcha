@@ -15,36 +15,27 @@ import {
 const getReports = async (req, res) => {
   const user = req.body.userName;
   if (user === "IAmAnAdmin") {
-    let text = `SELECT * FROM user_report`;
+    let text = `SELECT user_name FROM users JOIN user_report ON reporting_user_id = users.user_id 
+    OR reported_user_id = users.user_id`;
     let reportArray = [];
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
-        rows.forEach(async function(row) {
-          let text = `SELECT user_name FROM users WHERE user_id = row.reporting_user_id`;
-          await client
-            .query(text)
-            .then(result => {
-              row.reporting_user_id = result;
-            })
-            .catch(e => {
-              console.error(e.stack);
-            });
-          text = `SELECT user_name FROM users WHERE user_id = row.reported_user_id`;
-          await client
-            .query(text)
-            .then(result => {
-              row.reported_user_id = result;
-            })
-            .catch(e => {
-              console.error(e.stack);
-            });
+        let i = 0;
+        let j = 0;
+        while (i < rows.length / 2) {
+          reportArray[i] = {
+            reporting_user: rows[j + 1].user_name,
+            reported_user: rows[j].user_name
+          };
+          j = j + 2;
+          i++;
+        }
+        // console.log(reportArray);
 
-          // console.log(row.reporting_user_id);
-        });
-        res.send({
+        await res.send({
           validated: true,
-          rows
+          reportArray
         });
       })
       .catch(e => {
