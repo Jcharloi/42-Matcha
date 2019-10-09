@@ -72,6 +72,7 @@ CREATE TABLE chat
     receiver_id varchar(250) NOT NULL,
     date varchar(250) NOT NULL,
     message text NOT NULL,
+    message_id varchar(250) NOT NULL,
     sender_read boolean NOT NULL,
     receiver_read boolean NOT NULL,
 );
