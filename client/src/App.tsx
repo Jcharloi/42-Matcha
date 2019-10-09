@@ -159,6 +159,8 @@ class App extends React.Component<Props, AppState> {
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
+
+    - Faire les redirection sur AdminReports (otherUser) et ajouter le bouton BAN
     */
     return (
       <div>
