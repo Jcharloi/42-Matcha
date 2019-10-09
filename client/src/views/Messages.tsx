@@ -102,14 +102,23 @@ class Messages extends React.Component<User, MState> {
                 lastConnection,
                 mainPicture
               }) => (
-                <div className="container-user" key={senderId}>
+                <div
+                  className="container-user"
+                  key={senderId}
+                  style={{
+                    border: "1px solid rgb(209, 212, 214)",
+                    backgroundColor: !receiverRead
+                      ? "rgba(241, 239, 239, 0.952)"
+                      : "white"
+                  }}
+                >
                   <Image
                     className="avatar-visit"
                     avatar
                     size="tiny"
                     src={`http://localhost:5000/public/profile-pictures/${mainPicture}`}
                   />
-                  <div>
+                  <div className="middle-message">
                     <div className="name-container">
                       <div className="name">{senderName}</div>
                       <div
@@ -123,22 +132,19 @@ class Messages extends React.Component<User, MState> {
                     <span className="date-message">
                       Last message {this.findLastSince(date)}
                     </span>
-                    <div>Message: {message}</div>
-                    <div>
-                      He read: {senderRead.toString()}
-                      <Icon
-                        name={
-                          senderRead
-                            ? "check circle outline"
-                            : receiverRead
-                            ? "circle outline"
-                            : "circle"
-                        }
-                      />
-                    </div>
-                    <div>You read: {receiverRead.toString()}</div>
+                    <div className="text-message">{message}</div>
+                    <Icon
+                      className="icon-message"
+                      size="large"
+                      name={
+                        senderRead
+                          ? "check circle outline"
+                          : receiverRead
+                          ? "circle outline"
+                          : "circle"
+                      }
+                    />
                   </div>
-                  {/* <Divider /> */}
                 </div>
               )
             )}
