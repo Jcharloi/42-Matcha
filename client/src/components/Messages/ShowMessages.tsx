@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Icon } from "semantic-ui-react";
+import { Icon, TextArea } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
 
 interface Props {
@@ -38,11 +38,21 @@ class ShowMessages extends React.Component<Props, {}> {
   public render() {
     return (
       <div>
-        <Icon
-          name="long arrow alternate left"
-          onClick={() => this.props.displayHistory(true, "", "")}
-        />
-        {this.props.userName} and {this.props.userId}
+        <div className="container-message">
+          <Icon
+            className="icon-message"
+            size="huge"
+            name="long arrow alternate left"
+            onClick={() => this.props.displayHistory(true, "", "")}
+          />
+          <div className="container-conv">
+            {"JenniferCharlois"} and {"eef7d602-045f-4db3-92e2-afd6131f5a41"}
+            <div className="message-typing">
+              <TextArea className="textarea-message" />
+              <Icon name="paper plane" size="big" className="send-icon" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

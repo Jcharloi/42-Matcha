@@ -150,6 +150,8 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Socket pour recuperer l'histo quand on fait back
+    - Augmenter size ring green profil
     - Implementer message part
     - margin bas de page
     - center horizontalement profils

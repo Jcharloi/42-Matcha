@@ -1,9 +1,9 @@
 import * as React from "react";
+import Axios from "axios";
+import { deleteUser } from "../../App";
 
 import { Image, Icon } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
-import Axios from "axios";
-import { deleteUser } from "../../App";
 
 interface Props {
   users: Array<{
@@ -67,7 +67,7 @@ class HistoryMessages extends React.Component<Props, {}> {
 
   public render() {
     return (
-      <div className="container-message">
+      <div className="container-history">
         {this.props.users.map(
           ({
             senderId,
@@ -103,7 +103,7 @@ class HistoryMessages extends React.Component<Props, {}> {
                 size="tiny"
                 src={`http://localhost:5000/public/profile-pictures/${mainPicture}`}
               />
-              <div className="middle-message">
+              <div className="middle-history">
                 <div className="name-container">
                   <div className="name">{senderName}</div>
                   <div
@@ -114,12 +114,12 @@ class HistoryMessages extends React.Component<Props, {}> {
                     }
                   ></div>
                 </div>
-                <span className="date-message">
+                <span className="date-history">
                   Last message {this.findLastSince(date)}
                 </span>
-                <div className="text-message">{message}</div>
+                <div className="text-history">{message}</div>
                 <Icon
-                  className="icon-message"
+                  className="icon-history"
                   size="large"
                   name={
                     receiverRead

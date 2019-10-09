@@ -34,7 +34,7 @@ class Messages extends React.Component<User, MState> {
     super(props);
     this.state = {
       isLoading: true,
-      displayHistory: true,
+      displayHistory: false,
       userName: "",
       userId: "",
       users: [
