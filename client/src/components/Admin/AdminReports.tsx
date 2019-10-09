@@ -1,27 +1,25 @@
 import * as React from "react";
 import Axios from "axios";
-import { connect } from "react-redux";
-import { State } from "../../redux/types/types";
-import history from "../../helpers/history";
-import { User } from "../../models/models";
-import { deleteUser } from "../../App";
+
+import { Redirect } from "react-router-dom";
 
 import TopMenu from "../TopMenu";
 
-import { List, Image } from "semantic-ui-react";
-import { thisExpression } from "@babel/types";
+import { List } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
 interface AState {
   reportArray: Array<{ reporting_user: string; reported_user: string }>;
+  redirect: string;
 }
 
 class AdminReports extends React.Component<{}, AState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      reportArray: []
+      reportArray: [],
+      redirect: ""
     };
   }
   componentDidMount = () => {
@@ -37,8 +35,14 @@ class AdminReports extends React.Component<{}, AState> {
       })
       .catch(err => console.error(err));
   };
+
+  selectProfile = (otherUser: string) => {
+    console.log("kref");
+    return <Redirect to="/profile" />;
+  };
+
   public render() {
-    console.log(this.state.reportArray);
+    // console.log(this.state.reportArray);
     return (
       <div>
         <TopMenu current="Reports" />
@@ -55,7 +59,7 @@ class AdminReports extends React.Component<{}, AState> {
                   <List.Header
                     as="a"
                     onClick={() => {
-                      history.push(`/profile/${report.reporting_user}`);
+                      // window.location.refresh();
                     }}
                   >
                     {report.reporting_user}
@@ -64,10 +68,10 @@ class AdminReports extends React.Component<{}, AState> {
                   <List.Header
                     as="a"
                     onClick={() => {
-                      history.push(`/profile/${report.reported_user}`);
+                      // this.setRedirect(report.reported_user);
                     }}
                   >
-                    {report.reported_user}
+                    <p className="reported_user_name">{report.reported_user}</p>
                   </List.Header>
                 </List.Content>
               </List.Item>
