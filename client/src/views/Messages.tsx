@@ -64,8 +64,10 @@ class Messages extends React.Component<User, MState> {
     );
   }
 
-  findLastSince = (lastseen: string) => {
-    lastseen = new Date(+lastseen * 1000).toISOString();
+  findLastSince(lastseen: string) {
+    if (lastseen !== "Just now") {
+      lastseen = new Date(+lastseen * 1000).toISOString();
+    }
     var dateSeen: any = new Date(lastseen);
     var dateNow: any = new Date();
     var plural: string = "s";
@@ -81,7 +83,7 @@ class Messages extends React.Component<User, MState> {
     if (hours) return hours.toString() + " hour" + plural + " ago";
     if (minutes) return minutes.toString() + " minute" + plural + " ago";
     return "just now";
-  };
+  }
 
   public render() {
     return (
@@ -101,12 +103,6 @@ class Messages extends React.Component<User, MState> {
                 mainPicture
               }) => (
                 <div className="container-user" key={senderId}>
-                  {console.log(
-                    lastConnection,
-                    this.findLastSince(lastConnection),
-                    date,
-                    this.findLastSince(date)
-                  )}
                   <Image
                     className="avatar-visit"
                     avatar
@@ -118,8 +114,7 @@ class Messages extends React.Component<User, MState> {
                       <div className="name">{senderName}</div>
                       <div
                         className={
-                          this.findLastSince(lastConnection) === "just now" ||
-                          !lastConnection
+                          this.findLastSince(lastConnection) === "just now"
                             ? "ring ring-color-online"
                             : "ring ring-color-offline"
                         }
