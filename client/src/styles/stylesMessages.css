@@ -1,15 +1,17 @@
 .container-message {
-  width: 100%;
-  height: 60%;
-  border: 2px solid red;
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 60%;
+  margin-top: 1rem;
 }
 
 .container-user {
   padding: 1rem;
-  border: 2px solid green;
+  border: 2px solid rgba(241, 239, 239, 0.952);
+  cursor: pointer;
+  border-radius: 20px;
   width: 50%;
   display: flex;
   margin: 1.5rem 1.5rem;
@@ -21,12 +23,13 @@
   height: 20px;
 }
 
+.middle-message {
+  width: 75%;
+}
+
 .name-container {
   position: relative;
   display: flex;
-  /* border: 2px solid blue; */
-  /* justify-content: space-evenly; */
-  /* width: 80rem; */
 }
 
 .name {
@@ -38,10 +41,22 @@
   position: absolute;
   font-weight: 400;
   font-size: 1em;
-  font-style: normal;
+  font-style: italic;
   color: rgba(0, 0, 0, 0.4);
-  /* border: 2px solid yellow; */
   right: 26%;
   margin-top: -1.5rem;
-  /* top: 20%; */
+}
+
+.text-message {
+  display: flex;
+  height: 4rem;
+  overflow: hidden;
+  margin-top: 0.3rem;
+  font-size: 1.2rem;
+}
+
+.icon-message {
+  position: absolute !important;
+  margin-top: -3rem !important;
+  right: 26%;
 }
