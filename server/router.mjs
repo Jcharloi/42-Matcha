@@ -47,10 +47,13 @@ import { sortByIndex } from "./helpers/home/sort.mjs";
 import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
 import getReports from "./helpers/profile/reports.mjs";
+import { getAllMessages, readMessage } from "./helpers/message/message.mjs";
 
+router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
 router.all("/home/*", tokenMiddleware);
 router.all("/search/*", tokenMiddleware);
+router.all("/message/*", tokenMiddleware);
 router.put("/verify-token", verifyToken);
 router.put("/get-user-infos", getUserAll);
 
@@ -61,6 +64,7 @@ router.get("/reset-password/:id", resetPasswordId);
 router.put("/new-password", newPassword);
 router.post("/connection", connection);
 router.put("/disconnect", disconnect);
+router.put("/admin/get-reports", getReports);
 
 router.put("/profile/get-user-city", getUserCity);
 router.put("/profile/get-user-pictures", getUserPictures);
@@ -85,6 +89,8 @@ router.put("/home/get-users-by-preference", getUsersByPreference);
 router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
+router.put("/message/get-all-messages", getAllMessages);
+router.put("/message/read-message", readMessage);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
@@ -96,6 +102,5 @@ router.get("/public/fake-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
-router.put("/admin/get-reports", getReports);
 
 export default router;

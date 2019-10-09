@@ -4,6 +4,7 @@ import Axios from "axios";
 import { deleteUser } from "../../App";
 import { store } from "../../redux/store";
 import { insertOtherProfile } from "../../redux/actions/actions";
+import history from "../../helpers/history";
 
 import { Icon, Button } from "semantic-ui-react";
 import "../../styles/stylesLike.css";
@@ -68,6 +69,10 @@ class Like extends React.Component<Props, State> {
       });
   };
 
+  redirectMessage = () => {
+    history.push("/messages");
+  };
+
   public render() {
     return (
       <div className="container-match">
@@ -78,7 +83,7 @@ class Like extends React.Component<Props, State> {
               <span className="text-match">This is a match !</span>
             </div>
             <Button.Group>
-              <Button className="purple">
+              <Button className="purple" onClick={this.redirectMessage}>
                 <Icon name="comments" /> Talk
               </Button>
               <Button.Or className="or-button" />
