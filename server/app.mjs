@@ -36,12 +36,11 @@ app.use(async (req, res, next) => {
 io.on("connection", socket => {
   console.log("User connected");
   socket.on("Get all messages", ({ receiverId }) => {
-    let text = `SELECT DISTINCT ON (sender_id) user_name, sender_id, last_connection, chat.date, message, sender_read, receiver_read, path FROM users JOIN chat ON user_id = sender_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE receiver_id = '${receiverId}' AND main = TRUE ORDER BY sender_id, chat.date DESC`;
+    let text = `SELECT user_name, last_connection, a.date, a.sender_id, a.sender_read, a.receiver_read, message, path FROM users JOIN chat a ON user_id = sender_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE a.date = (SELECT MAX(b.date) FROM chat b WHERE receiver_id = '79d3f60b-b18c-441d-8bc9-62ee9ced14ac' AND b.sender_id = a.sender_id) AND main = TRUE GROUP BY user_name, last_connection, a.date, a.sender_id, a.sender_read, a.receiver_read, message, path ORDER BY a.date DESC`;
     let usersMessage = [];
     client
       .query(text)
       .then(({ rows, rowCount }) => {
-        console.log(rows);
         for (let i = 0; i < rowCount; i++) {
           usersMessage.push({
             senderId: rows[i].sender_id,
@@ -53,6 +52,7 @@ io.on("connection", socket => {
             receiverRead: rows[i].receiver_read,
             mainPicture: rows[i].path
           });
+          console.log(usersMessage);
         }
         socket.emit("Receive all messages", usersMessage);
       })

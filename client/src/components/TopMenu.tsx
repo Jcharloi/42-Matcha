@@ -2,13 +2,17 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { store } from "../redux/store";
 import { insertOtherProfile } from "../redux/actions/actions";
+import { State } from "../redux/types/types";
 import Axios from "axios";
+import { connect } from "react-redux";
+import { User } from "../models/models";
 import { deleteUser } from "../App";
 
 import "../styles/stylesTopMenu.css";
 
 interface Props {
   current?: string;
+  user: User;
 }
 
 class TopMenu extends React.Component<Props> {
@@ -51,65 +55,75 @@ class TopMenu extends React.Component<Props> {
     return (
       <div>
         <div className="ui secondary big menu">
-          <img
-            className="item logo"
-            src="http://localhost:5000/public/profile-pictures/logo.png"
-            alt="Logo top menu"
-          />
-          {this.props.current !== "profile" ? (
-            <Link
-              className="item item-page"
-              onClick={this.emptyOtherProfile}
-              to="/profile"
-            >
-              Profile
-            </Link>
-          ) : (
-            <Link
-              className="item active item-page"
-              onClick={this.emptyOtherProfile}
-              to="/profile"
-            >
-              Profile
-            </Link>
-          )}
+          <div className="left menu">
+            <img
+              className="item logo"
+              src="http://localhost:5000/public/profile-pictures/logo.png"
+              alt="Logo top menu"
+            />
+            {this.props.current !== "profile" ? (
+              <Link
+                className="item item-page"
+                onClick={this.emptyOtherProfile}
+                to="/profile"
+              >
+                Profile
+              </Link>
+            ) : (
+              <Link
+                className="item active item-page"
+                onClick={this.emptyOtherProfile}
+                to="/profile"
+              >
+                Profile
+              </Link>
+            )}
 
-          {this.props.current !== "home" ? (
-            <Link className="item item-page" to="/home">
-              Home
-            </Link>
-          ) : (
-            <Link className="item active item-page" to="/home">
-              Home
-            </Link>
-          )}
-          {this.props.current !== "search" ? (
-            <Link className="item item-page" to="/search">
-              Search
-            </Link>
-          ) : (
-            <Link className="item active item-page" to="/search">
-              Search
-            </Link>
-          )}
-          {this.props.current !== "visits" ? (
-            <Link className="item item-page" to="/visits">
-              Visits
-            </Link>
-          ) : (
-            <Link className="item active item-page" to="/visits">
-              Visits
-            </Link>
-          )}
-          {this.props.current !== "likes" ? (
-            <Link className="item item-page" to="/likes">
-              Likes
-            </Link>
-          ) : (
-            <Link className="item active item-page" to="/likes">
-              Likes
-            </Link>
-          )}
+            {this.props.current !== "home" ? (
+              <Link className="item item-page" to="/home">
+                Home
+              </Link>
+            ) : (
+              <Link className="item active item-page" to="/home">
+                Home
+              </Link>
+            )}
+            {this.props.current !== "search" ? (
+              <Link className="item item-page" to="/search">
+                Search
+              </Link>
+            ) : (
+              <Link className="item active item-page" to="/search">
+                Search
+              </Link>
+            )}
+            {this.props.current !== "visits" ? (
+              <Link className="item item-page" to="/visits">
+                Visits
+              </Link>
+            ) : (
+              <Link className="item active item-page" to="/visits">
+                Visits
+              </Link>
+            )}
+            {this.props.current !== "likes" ? (
+              <Link className="item item-page" to="/likes">
+                Likes
+              </Link>
+            ) : (
+              <Link className="item active item-page" to="/likes">
+                Likes
+              </Link>
+            )}
+
+            {console.log(this.props.user.user_name)}
+            {this.props.user.user_name === "IAmAnAdmin" ? (
+              <Link className="ui red button item-page" to="/admin-reports">
+                Reports
+              </Link>
+            ) : null}
+          </div>
+
           <div className="right menu">
             <div className="item">
               <div className="item item-page">Notifications</div>
@@ -139,4 +153,8 @@ class TopMenu extends React.Component<Props> {
   }
 }
 
-export default TopMenu;
+const mapStateToProps = (state: State) => {
+  return { user: state.user };
+};
+
+export default connect(mapStateToProps)(TopMenu);
