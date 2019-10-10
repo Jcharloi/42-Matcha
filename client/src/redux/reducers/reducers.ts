@@ -3,7 +3,9 @@ import {
   INSERT_USER_PROFILE,
   UPDATE_USER_AUTH,
   UpdateAuthAction,
-  INSERT_OTHER_PROFILE
+  INSERT_OTHER_PROFILE,
+  UpdateConnectSocket,
+  CONNECT_SOCKET
 } from "../types/types";
 import { VerifiedUser, User } from "../../models/models";
 
@@ -60,6 +62,19 @@ export const verifiedUserReducer = (
   action: UpdateAuthAction
 ): VerifiedUser => {
   if (action.type === UPDATE_USER_AUTH) {
+    return Object.assign({}, state, action.payload);
+  } else {
+    return state;
+  }
+};
+
+let socketState = {};
+
+export const connectSocketReducer = (
+  state = socketState,
+  action: UpdateConnectSocket
+): {} => {
+  if (action.type === CONNECT_SOCKET) {
     return Object.assign({}, state, action.payload);
   } else {
     return state;

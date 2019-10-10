@@ -1,4 +1,5 @@
 import * as React from "react";
+import openSocket from "socket.io-client";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -12,7 +13,11 @@ import {
 import { connect } from "react-redux";
 import history from "../../helpers/history";
 import Axios from "axios";
-import { updateUserAuth, insertUserProfile } from "../../redux/actions/actions";
+import {
+  updateUserAuth,
+  insertUserProfile,
+  connectSocket
+} from "../../redux/actions/actions";
 import { Dispatch } from "redux";
 
 interface Props {
@@ -84,6 +89,8 @@ class SignIn extends React.Component<Props, State> {
               this.props.dispatch(
                 updateUserAuth({ isAuth: true, isCompleted })
               );
+              const socket = openSocket("http://localhost:5001");
+              this.props.dispatch(connectSocket(socket));
               history.push("/profile");
             } else {
               this.setState({ message, validated: false, loading: false });

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { store } from "../redux/store";
-import { insertOtherProfile } from "../redux/actions/actions";
+import { insertOtherProfile, connectSocket } from "../redux/actions/actions";
 import { State } from "../redux/types/types";
 import Axios from "axios";
 import { connect } from "react-redux";
@@ -13,6 +13,7 @@ import "../styles/stylesTopMenu.css";
 interface Props {
   current?: string;
   user: User;
+  socket: {};
 }
 
 class TopMenu extends React.Component<Props> {
@@ -21,7 +22,10 @@ class TopMenu extends React.Component<Props> {
       userName: localStorage.getItem("user_name")
     })
       .then(({ data: { validated } }) => {
-        if (validated) deleteUser();
+        if (validated) {
+          store.dispatch(connectSocket({}));
+          deleteUser();
+        }
       })
       .catch(e => {
         console.error(e.stack);
@@ -155,7 +159,7 @@ class TopMenu extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: State) => {
-  return { user: state.user };
+  return { user: state.user, socket: state.socket };
 };
 
 export default connect(mapStateToProps)(TopMenu);

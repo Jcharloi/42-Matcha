@@ -9,7 +9,8 @@ import thunk from "redux-thunk";
 import {
   verifiedUserReducer,
   userProfileReducer,
-  otherProfileReducer
+  otherProfileReducer,
+  connectSocketReducer
 } from "./reducers/reducers";
 
 declare global {
@@ -23,11 +24,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
   verified: verifiedUserReducer,
   user: userProfileReducer,
-  otherUser: otherProfileReducer
+  otherUser: otherProfileReducer,
+  connectSocket: connectSocketReducer
 });
-
-//typer mapStatetoProps when many reducers
-// export type AppState = ReturnType<typeof userProfileReducer>;
 
 export const store: Store = createStore(
   rootReducer,

@@ -2,13 +2,15 @@ import * as React from "react";
 import Axios from "axios";
 import { Router, Switch, Route } from "react-router-dom";
 import history from "./helpers/history";
+import openSocket from "socket.io-client";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
 import {
   updateUserAuth,
   insertUserProfile,
-  insertOtherProfile
+  insertOtherProfile,
+  connectSocket
 } from "./redux/actions/actions";
 import { Pictures, UserTags } from "./models/models";
 
@@ -136,6 +138,8 @@ class App extends React.Component<Props, AppState> {
                 authToken
               );
             }
+            const socket = openSocket("http://localhost:5001");
+            store.dispatch(connectSocket(socket));
           } else {
             localStorage.clear();
           }
@@ -150,15 +154,21 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Afficher le vu dans le dernier message
+    - Pouvoir envoyer des messages
+    - Afficher les nouveaux messages
+    - Creer de nouveaux messages quand c'est vide
+    - overflow hidden et scroll
+    - 
     - Socket pour recuperer l'histo quand on fait back
     - Augmenter size ring green profil
-    - Implementer message part
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
     - Infinite scroll (pls no)
-
+    
     Partie back :
+    - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
 
