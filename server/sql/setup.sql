@@ -74,7 +74,7 @@ CREATE TABLE chat
     message text NOT NULL,
     message_id varchar(250) NOT NULL,
     sender_read boolean NOT NULL,
-    receiver_read boolean NOT NULL,
+    receiver_read boolean NOT NULL
 );
 
 CREATE TABLE notification

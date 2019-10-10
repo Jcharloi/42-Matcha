@@ -4,8 +4,12 @@ import Axios from "axios";
 import { Redirect } from "react-router-dom";
 
 import TopMenu from "../TopMenu";
+import { store } from "../../redux/store";
+import history from "../../helpers/history";
 
-import { List } from "semantic-ui-react";
+import { insertOtherProfile } from "../../redux/actions/actions";
+
+import { List, Button } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
@@ -37,8 +41,25 @@ class AdminReports extends React.Component<{}, AState> {
   };
 
   selectProfile = (otherUser: string) => {
-    console.log("kref");
-    return <Redirect to="/profile" />;
+    Axios.put(`http://localhost:5000/get-user-infos`, {
+      userName: otherUser
+    })
+      .then(({ data: { validated, userInfos } }) => {
+        if (validated) {
+          store.dispatch(insertOtherProfile(userInfos));
+          console.log(userInfos);
+          history.push(`/profile/` + userInfos.user_name);
+        }
+      })
+      .catch(err => console.error(err));
+  };
+
+  banUser = (targetUser: string) => {
+    Axios.put(`http://localhost:5000/admin/ban-user`, {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      targetUser: targetUser
+    });
   };
 
   public render() {
@@ -59,7 +80,7 @@ class AdminReports extends React.Component<{}, AState> {
                   <List.Header
                     as="a"
                     onClick={() => {
-                      // window.location.refresh();
+                      this.selectProfile(report.reporting_user);
                     }}
                   >
                     {report.reporting_user}
@@ -68,11 +89,12 @@ class AdminReports extends React.Component<{}, AState> {
                   <List.Header
                     as="a"
                     onClick={() => {
-                      // this.setRedirect(report.reported_user);
+                      this.selectProfile(report.reported_user);
                     }}
                   >
                     <p className="reported_user_name">{report.reported_user}</p>
                   </List.Header>
+                  <Button negative>Ban</Button>
                 </List.Content>
               </List.Item>
             ))}
