@@ -117,17 +117,18 @@ class TopMenu extends React.Component<Props> {
             )}
 
             {console.log(this.props.user.user_name)}
-            {this.props.user.user_id ===
-            "eef7d602-045f-4db3-92e2-afd6131f5a41" ? (
-              <Link className="ui red button" to="/admin-reports">
-                Reports
-              </Link>
-            ) : null}
           </div>
 
           <div className="right menu">
             <div className="item">
+              {this.props.user.user_id ===
+              "eef7d602-045f-4db3-92e2-afd6131f5a41" ? (
+                <Link className="ui red button" to="/admin-reports">
+                  Reports
+                </Link>
+              ) : null}
               <div className="item item-page">Notifications</div>
+
               {this.props.current !== "messages" ? (
                 <Link className="item item-page" to="/messages">
                   Messages
