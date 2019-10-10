@@ -1,5 +1,5 @@
 import * as React from "react";
-import openSocket from "socket.io-client";
+import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -89,7 +89,7 @@ class SignIn extends React.Component<Props, State> {
               this.props.dispatch(
                 updateUserAuth({ isAuth: true, isCompleted })
               );
-              const socket = openSocket("http://localhost:5001");
+              const socket = io("http://localhost");
               this.props.dispatch(connectSocket(socket));
               history.push("/profile");
             } else {

@@ -154,6 +154,7 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Fix bug avec le profile et l'user name
     - Afficher le vu dans le dernier message
     - Pouvoir envoyer des messages
     - Afficher les nouveaux messages

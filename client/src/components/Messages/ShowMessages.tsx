@@ -1,5 +1,6 @@
 import * as React from "react";
 import { User } from "../../models/models";
+import io from "socket.io-client";
 
 import { Icon, TextArea, Image, Form } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
@@ -72,11 +73,12 @@ class ShowMessages extends React.Component<Props, State> {
   }
 
   getMessages = () => {
-    this.props.socket.emit("Get data for messages", {
+    const socket = io("http://localhost/5001");
+    socket.emit("Get data for messages", {
       senderId: this.props.sender.id,
       receiverId: this.props.receiverId
     });
-    this.props.socket.on(
+    socket.on(
       "Get messages",
       (
         messages: Array<{
@@ -92,6 +94,7 @@ class ShowMessages extends React.Component<Props, State> {
       }
     );
   };
+
   componentDidUpdate = ({}, prevState: State) => {
     // const socket = openSocket("http://localhost:5001");
     // socket.on(
