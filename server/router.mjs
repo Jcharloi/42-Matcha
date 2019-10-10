@@ -48,6 +48,7 @@ import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
 import getReports from "./helpers/profile/reports.mjs";
 import { getAllMessages, readMessage } from "./helpers/message/message.mjs";
+import ban from "./helpers/admin/ban.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -102,5 +103,6 @@ router.get("/public/fake-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
+router.put("/admin/ban-user", ban);
 
 export default router;

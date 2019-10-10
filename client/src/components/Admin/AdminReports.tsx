@@ -9,7 +9,7 @@ import history from "../../helpers/history";
 
 import { insertOtherProfile } from "../../redux/actions/actions";
 
-import { List } from "semantic-ui-react";
+import { List, Button } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
@@ -54,6 +54,14 @@ class AdminReports extends React.Component<{}, AState> {
       .catch(err => console.error(err));
   };
 
+  banUser = (targetUser: string) => {
+    Axios.put(`http://localhost:5000/admin/ban-user`, {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      targetUser: targetUser
+    });
+  };
+
   public render() {
     // console.log(this.state.reportArray);
     return (
@@ -86,6 +94,7 @@ class AdminReports extends React.Component<{}, AState> {
                   >
                     <p className="reported_user_name">{report.reported_user}</p>
                   </List.Header>
+                  <Button negative>Ban</Button>
                 </List.Content>
               </List.Item>
             ))}
