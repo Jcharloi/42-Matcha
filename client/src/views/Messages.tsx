@@ -10,12 +10,15 @@ import { User } from "../models/models";
 
 import "../styles/stylesMessages.css";
 
+interface Props {
+  user: User;
+  socket: {};
+}
+
 interface MState {
   isLoading: boolean;
   displayHistory: boolean;
-  userName: string;
-  userId: string;
-  users: Array<{
+  historyUsers: Array<{
     senderId: string;
     senderName: string;
     receiverId: string;
@@ -27,30 +30,24 @@ interface MState {
     receiverRead: boolean;
     mainPicture: string;
   }>;
+  sender: {
+    name: string;
+    id: string;
+    picture: string;
+    lastConnection: string;
+  };
+  receiverId: string;
 }
 
-class Messages extends React.Component<User, MState> {
-  constructor(props: User) {
+class Messages extends React.Component<Props, MState> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       isLoading: true,
-      displayHistory: false,
-      userName: "",
-      userId: "",
-      users: [
-        {
-          senderId: "",
-          senderName: "",
-          receiverId: "",
-          lastConnection: "",
-          date: "",
-          message: "",
-          messageId: "",
-          senderRead: false,
-          receiverRead: false,
-          mainPicture: ""
-        }
-      ]
+      displayHistory: true,
+      historyUsers: [],
+      receiverId: "",
+      sender: { name: "", id: "", picture: "", lastConnection: "" }
     };
   }
 
@@ -58,14 +55,14 @@ class Messages extends React.Component<User, MState> {
     Axios.put("http://localhost:5000/message/get-all-messages", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
-      receiverId: this.props.user_id
+      receiverId: this.props.user.user_id
     })
       .then(({ data: { validToken, validated, usersMessage } }) => {
         if (validToken === false) {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ users: usersMessage, isLoading: false });
+            this.setState({ historyUsers: usersMessage, isLoading: false });
           }
         }
       })
@@ -97,10 +94,15 @@ class Messages extends React.Component<User, MState> {
 
   displayHistory = (
     displayHistory: boolean,
-    userName: string,
-    userId: string
+    receiverId: string,
+    sender: {
+      name: string;
+      id: string;
+      picture: string;
+      lastConnection: string;
+    }
   ): void => {
-    this.setState({ displayHistory, userName, userId });
+    this.setState({ displayHistory, receiverId, sender });
   };
 
   public render() {
@@ -109,14 +111,15 @@ class Messages extends React.Component<User, MState> {
         <TopMenu current="messages" />
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
-            users={this.state.users}
+            users={this.state.historyUsers}
             displayHistory={this.displayHistory}
           />
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
-            userId={this.state.userId}
-            userName={this.state.userName}
+            sender={this.state.sender}
+            socket={this.props.socket}
+            receiverId={this.props.user.user_id}
             displayHistory={this.displayHistory}
           />
         )}
@@ -125,8 +128,8 @@ class Messages extends React.Component<User, MState> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
+const mapStateToProps = (state: State) => {
+  return { user: state.user, socket: state.socket };
 };
 
 export default connect(mapStateToProps)(Messages);

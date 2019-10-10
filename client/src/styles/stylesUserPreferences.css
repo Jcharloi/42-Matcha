@@ -43,6 +43,7 @@ select {
 }
 
 .bio {
+  max-height: 17rem;
   width: 100% !important;
   margin-top: 4rem !important;
 }

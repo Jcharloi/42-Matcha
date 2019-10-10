@@ -1,4 +1,6 @@
 import client from "../../sql/sql.mjs";
+import { createRandomId } from "../../common.mjs";
+import { users } from "../../app.mjs";
 
 const getAllMessages = async (req, res) => {
   let text = `SELECT user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path FROM users JOIN chat a ON user_id = sender_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE a.date = (SELECT MAX(b.date) FROM chat b WHERE receiver_id = $1 AND b.sender_id = a.sender_id) AND main = TRUE GROUP BY user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path ORDER BY a.date DESC`;
@@ -43,4 +45,21 @@ const readMessage = async (req, res) => {
     });
 };
 
-export { getAllMessages, readMessage };
+const sendNewMessage = async (req, res) => {
+  console.log(users.length);
+  let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, ${Math.floor(
+    Date.now() / 1000
+  )}, $3, '${createRandomId(5)}', TRUE, FALSE)`;
+  let values = [req.body.receiverId, req.body.senderId, req.body.message];
+  await client
+    .query(text, values)
+    .then(() => {
+      res.send({ validated: true });
+    })
+    .catch(e => {
+      console.error(e.stack);
+      res.send({ validated: false });
+    });
+};
+
+export { getAllMessages, readMessage, sendNewMessage };

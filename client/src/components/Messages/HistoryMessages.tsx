@@ -20,8 +20,8 @@ interface Props {
   }>;
   displayHistory: (
     displayHistory: boolean,
-    userName: string,
-    userId: string
+    receiverId: string,
+    user: { name: string; id: string; picture: string; lastConnection: string }
   ) => void;
 }
 
@@ -94,7 +94,12 @@ class HistoryMessages extends React.Component<Props, {}> {
                 if (!receiverRead) {
                   this.readMessage(senderId, receiverId, messageId);
                 }
-                this.props.displayHistory(false, senderName, senderId);
+                this.props.displayHistory(false, receiverId, {
+                  name: senderName,
+                  id: senderId,
+                  picture: mainPicture,
+                  lastConnection
+                });
               }}
             >
               <Image
