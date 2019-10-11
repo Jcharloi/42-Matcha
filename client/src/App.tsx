@@ -10,7 +10,7 @@ import {
   insertUserProfile,
   insertOtherProfile
 } from "./redux/actions/actions";
-import { Pictures, UserTags } from "./models/models";
+import { Pictures, UserTags, VerifiedUser } from "./models/models";
 
 import PublicRoutes from "./components/Routes/PublicRoutes";
 import PrivateRoutes from "./components/Routes/PrivateRoutes";
@@ -26,11 +26,6 @@ import Messages from "./views/Messages";
 
 interface AppState {
   isLoading: boolean;
-}
-
-interface Props {
-  isAuth: boolean;
-  isCompleted: boolean;
 }
 
 export function deleteUser() {
@@ -59,8 +54,8 @@ export function isProfileCompleted(
   return false;
 }
 
-class App extends React.Component<Props, AppState> {
-  constructor(props: Props) {
+class App extends React.Component<VerifiedUser, AppState> {
+  constructor(props: VerifiedUser) {
     super(props);
     this.state = {
       isLoading: true
@@ -152,12 +147,9 @@ class App extends React.Component<Props, AppState> {
     Partie front :
     - Fix bug avec le profile et l'user name
     - Afficher le vu dans le dernier message
-    - Pouvoir envoyer des messages
-    - Afficher les nouveaux messages
     - Creer de nouveaux messages quand c'est vide
-    - overflow hidden et scroll
-    - 
-    - Socket pour recuperer l'histo quand on fait back
+    - Socket pour recuperer l'histo quand on fait back ?
+
     - Augmenter size ring green profil
     - margin bas de page
     - center horizontalement profils
@@ -167,7 +159,6 @@ class App extends React.Component<Props, AppState> {
     Partie back :
     - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
-    - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
 
     - Faire les redirection sur AdminReports (otherUser) et ajouter le bouton BAN
     */
@@ -247,11 +238,8 @@ class App extends React.Component<Props, AppState> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
-  return {
-    isAuth: state.verified.isAuth,
-    isCompleted: state.verified.isCompleted
-  };
+const mapStateToProps = (state: State): VerifiedUser => {
+  return state.verified;
 };
 
 export default connect(mapStateToProps)(App);

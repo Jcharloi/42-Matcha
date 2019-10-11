@@ -1,12 +1,11 @@
 import client from "../../sql/sql.mjs";
 import { createRandomId } from "../../common.mjs";
-import { socketConnection } from "../../app.mjs";
-import { ioConnection } from "../../app.mjs";
+import { socketConnection, ioConnection } from "../../app.mjs";
 
-const getAllMessages = async (req, res) => {
+const checkAllMessages = async receiverId => {
   let text = `SELECT user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path FROM users JOIN chat a ON user_id = sender_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE a.date = (SELECT MAX(b.date) FROM chat b WHERE receiver_id = $1 AND b.sender_id = a.sender_id) AND main = TRUE GROUP BY user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path ORDER BY a.date DESC`;
-  let values = [req.body.receiverId];
-  await client
+  let values = [receiverId];
+  return await client
     .query(text, values)
     .then(({ rows, rowCount }) => {
       let usersMessage = [];
@@ -24,12 +23,23 @@ const getAllMessages = async (req, res) => {
           mainPicture: rows[i].path
         });
       }
-      res.send({ validated: true, usersMessage });
+      return { validated: true, usersMessage };
     })
     .catch(e => {
       console.error(e.stack);
-      res.send({ validated: false });
+      return { validated: false };
     });
+};
+
+const getAllMessages = async (req, res) => {
+  const { validated, usersMessage } = await checkAllMessages(
+    req.body.receiverId
+  );
+  if (validated) {
+    res.send({ validated, usersMessage });
+  } else {
+    res.send({ validated });
+  }
 };
 
 const readMessage = async (req, res) => {
@@ -58,7 +68,7 @@ const getMessagesPeople = async (req, res) => {
           message: rows[i].message,
           messageId: rows[i].message_id,
           date: rows[i].date,
-          senderId: rows[i].sender_id,
+          sentPosition: rows[i].sender_id,
           receiverRead: rows[i].receiver_read,
           senderRead: rows[i].sender_read
         });
@@ -85,15 +95,21 @@ const sendNewMessage = async (req, res) => {
   ];
   await client
     .query(text, values)
-    .then(() => {
-      ioConnection.sockets.emit("Send new message", {
+    .then(async () => {
+      ioConnection.sockets.emit("New message", {
         message: req.body.message,
         messageId: messageId,
         date: messageDate,
-        senderId: "",
+        sentPosition: req.body.receiverId,
         receiverRead: false,
         senderRead: true
       });
+      // const { validated, usersMessage } = await checkAllMessages(
+      // req.body.senderId
+      // );
+      // if (validated) {
+      // ioConnection.sockets.emit("New history", usersMessage);
+      // }
       res.send({ validated: true });
     })
     .catch(e => {

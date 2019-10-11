@@ -31,7 +31,7 @@ interface State {
     message: string;
     messageId: string;
     date: string;
-    senderId: string;
+    sentPosition: string;
     receiverRead: boolean;
     senderRead: boolean;
   }>;
@@ -49,7 +49,6 @@ class ShowMessages extends React.Component<Props, State> {
   }
 
   componentDidMount = () => {
-    this.scrollToBottom();
     Axios.put("http://localhost:5000/message/get-messages-people", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
@@ -65,27 +64,8 @@ class ShowMessages extends React.Component<Props, State> {
               isLoading: false,
               allMessages
             });
-            socket.on(
-              "Send new message",
-              (messageReceived: {
-                message: string;
-                messageId: string;
-                date: string;
-                senderId: string;
-                receiverRead: boolean;
-                senderRead: boolean;
-              }) => {
-                const newMessages = [
-                  ...this.state.allMessages,
-                  messageReceived
-                ];
-                if (this.state.allMessages.length !== newMessages.length) {
-                  this.setState({
-                    allMessages: newMessages
-                  });
-                }
-              }
-            );
+            this.receiveNewMessages();
+            this.scrollToBottom();
           }
         }
       })
@@ -96,6 +76,22 @@ class ShowMessages extends React.Component<Props, State> {
 
   componentDidUpdate = () => {
     this.scrollToBottom();
+    // Axios.put("http://localhost:50001/message/read-message", {
+    //   token: localStorage.getItem("token"),
+    //   userName: localStorage.getItem("user_name"),
+    //   senderId: this.props.sender.id,
+    //   receiverId: this.props.receiverId,
+    //   messageId: this.state.allMessages[this.state.allMessages.length - 1]
+    //     .messageId
+    // })
+    //   .then(({ data: { validToken } }) => {
+    //     if (validToken === false) {
+    //       deleteUser();
+    //     }
+    //   })
+    //   .catch(e => {
+    //     console.log(e.message);
+    //   });
   };
 
   componentWillUnmount = () => {
@@ -126,14 +122,35 @@ class ShowMessages extends React.Component<Props, State> {
     if (days) return days.toString() + " day" + plural + " ago";
     if (hours) return hours.toString() + " hour" + plural + " ago";
     if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "just now";
+    return "Just now";
   }
+
+  receiveNewMessages = () => {
+    socket.on(
+      "New message",
+      (messageReceived: {
+        message: string;
+        messageId: string;
+        date: string;
+        sentPosition: string;
+        receiverRead: boolean;
+        senderRead: boolean;
+      }) => {
+        const newMessages = [...this.state.allMessages, messageReceived];
+        if (this.state.allMessages.length !== newMessages.length) {
+          this.setState({
+            allMessages: newMessages
+          });
+        }
+      }
+    );
+  };
 
   setNewMessage = (newMessage: string) => {
     this.setState({ newMessage });
   };
 
-  sendMessage = () => {
+  sendNewMessage = () => {
     Axios.post("http://localhost:5000/message/send-new-message", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
@@ -194,7 +211,7 @@ class ShowMessages extends React.Component<Props, State> {
                   <div
                     className={
                       this.findLastSince(this.props.sender.lastConnection) ===
-                      "just now"
+                      "Just now"
                         ? "ring ring-color-online"
                         : "ring ring-color-offline"
                     }
@@ -207,11 +224,14 @@ class ShowMessages extends React.Component<Props, State> {
               </div>
               <div className="show-messages" id="show-message">
                 {this.state.allMessages.map(
-                  ({ date, message, messageId, senderId }) => (
+                  (
+                    { date, message, messageId, sentPosition, receiverRead },
+                    index
+                  ) => (
                     <div key={messageId}>
                       <div
                         className={
-                          senderId === this.props.sender.id
+                          sentPosition === this.props.sender.id
                             ? "date-value-sender"
                             : "date-value-receiver"
                         }
@@ -220,16 +240,28 @@ class ShowMessages extends React.Component<Props, State> {
                       </div>
                       <div
                         className={`container-message-${
-                          senderId !== this.props.sender.id
-                            ? "receiver"
-                            : "sender"
+                          sentPosition === this.props.sender.id
+                            ? "sender"
+                            : "receiver"
                         }`}
                       >
+                        <span>
+                          {index === this.state.allMessages.length - 1 ? (
+                            <Icon
+                              size="large"
+                              name={
+                                receiverRead
+                                  ? "check circle outline"
+                                  : "circle outline"
+                              }
+                            />
+                          ) : null}
+                        </span>
                         <div
                           className={"message-value"}
                           style={{
                             backgroundColor:
-                              this.props.sender.id === senderId
+                              this.props.sender.id === sentPosition
                                 ? "rgb(243, 244, 245)"
                                 : "rgb(203, 231, 255)"
                           }}
@@ -256,7 +288,7 @@ class ShowMessages extends React.Component<Props, State> {
                   name="paper plane"
                   size="big"
                   className="send-icon"
-                  onClick={this.sendMessage}
+                  onClick={this.sendNewMessage}
                 />
               </div>
             </div>

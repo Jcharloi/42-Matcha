@@ -7,6 +7,7 @@ import TopMenu from "../components/TopMenu";
 import HistoryMessages from "../components/Messages/HistoryMessages";
 import ShowMessage from "../components/Messages/ShowMessages";
 import { User } from "../models/models";
+import socket from "../helpers/socket";
 
 import "../styles/stylesMessages.css";
 
@@ -58,12 +59,40 @@ class Messages extends React.Component<User, MState> {
         } else {
           if (validated) {
             this.setState({ historyUsers: usersMessage, isLoading: false });
+            this.receiveAllMessages();
           }
         }
       })
       .catch(e => {
         console.log(e.message);
       });
+  };
+
+  receiveAllMessages = () => {
+    socket.on(
+      "New history",
+      (
+        historyReceived: Array<{
+          senderId: string;
+          senderName: string;
+          receiverId: string;
+          lastConnection: string;
+          date: string;
+          message: string;
+          messageId: string;
+          senderRead: boolean;
+          receiverRead: boolean;
+          mainPicture: string;
+        }>
+      ) => {
+        console.log(this.state.historyUsers.length, historyReceived.length);
+        if (this.state.historyUsers.length !== historyReceived.length) {
+          this.setState({
+            historyUsers: historyReceived
+          });
+        }
+      }
+    );
   };
 
   findLastSince(lastseen: string) {
