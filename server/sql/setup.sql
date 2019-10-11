@@ -62,8 +62,8 @@ CREATE TABLE user_block
 
 CREATE TABLE user_report
 (
-    reporting_user_id varchar(250) NOT NULL UNIQUE,
-    reported_user_id varchar(250) NOT NULL UNIQUE
+    reporting_user_id varchar(250) NOT NULL,
+    reported_user_id varchar(250) NOT NULL
 );
 
 CREATE TABLE chat

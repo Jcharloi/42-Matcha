@@ -25,7 +25,6 @@ const sanctioningUser = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rowCount }) => {
-        console.log(rowCount);
         if (rowCount !== 0) {
           res.send({
             validated: false,

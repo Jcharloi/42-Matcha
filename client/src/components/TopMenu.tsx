@@ -115,8 +115,6 @@ class TopMenu extends React.Component<Props> {
                 Likes
               </Link>
             )}
-
-            {console.log(this.props.user.user_name)}
           </div>
 
           <div className="right menu">

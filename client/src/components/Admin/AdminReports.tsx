@@ -15,6 +15,7 @@ import "../../styles/stylesAdminReports.css";
 
 interface AState {
   reportArray: Array<{ reporting_user: string; reported_user: string }>;
+  newReportArray: Array<{ reporting_user: string; reported_user: string }>;
   redirect: string;
 }
 
@@ -23,6 +24,7 @@ class AdminReports extends React.Component<{}, AState> {
     super(props);
     this.state = {
       reportArray: [],
+      newReportArray: [],
       redirect: ""
     };
   }
@@ -33,7 +35,6 @@ class AdminReports extends React.Component<{}, AState> {
     })
       .then(({ data: { validated, reportArray } }) => {
         if (validated) {
-          // console.log;
           this.setState({ reportArray });
         }
       })
@@ -47,28 +48,49 @@ class AdminReports extends React.Component<{}, AState> {
       .then(({ data: { validated, userInfos } }) => {
         if (validated) {
           store.dispatch(insertOtherProfile(userInfos));
-          console.log(userInfos);
+          // console.log(userInfos);
           history.push(`/profile/` + userInfos.user_name);
         }
       })
       .catch(err => console.error(err));
   };
 
-  banUser = (targetUser: string) => {
-    Axios.put(`http://localhost:5000/admin/ban-user`, {
+  banUser = async (targetUser: string) => {
+    let targetUserId;
+    await Axios.put(`http://localhost:5000/get-user-infos`, {
+      userName: targetUser
+    })
+      .then(({ data: { validated, userInfos } }) => {
+        if (validated) {
+          targetUserId = userInfos.user_id;
+        }
+      })
+      .catch(err => console.error(err));
+    await console.log(targetUserId);
+    await Axios.put(`http://localhost:5000/admin/ban-user`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
-      targetUser: targetUser
-    });
+      targetUserId: targetUserId
+    })
+      .then(() => {
+        this.setState({
+          reportArray: this.state.reportArray.filter(reports => {
+            if (reports.reported_user !== targetUser) return true;
+          })
+        });
+      })
+      .catch(err => console.error(err));
+
+    console.log(this.state.reportArray);
   };
 
   public render() {
-    // console.log(this.state.reportArray);
     return (
       <div>
         <TopMenu current="Reports" />
         <div className="reports-container">
           <List relaxed size="massive">
+            {/* {console.log(this.state.reportArray)} */}
             {this.state.reportArray.map((report, index) => (
               <List.Item key={index}>
                 {/* <Image
@@ -94,7 +116,14 @@ class AdminReports extends React.Component<{}, AState> {
                   >
                     <p className="reported_user_name">{report.reported_user}</p>
                   </List.Header>
-                  <Button negative>Ban</Button>
+                  <Button
+                    onClick={() => {
+                      this.banUser(report.reported_user);
+                    }}
+                    negative
+                  >
+                    Ban
+                  </Button>
                 </List.Content>
               </List.Item>
             ))}
