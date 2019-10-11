@@ -39,6 +39,7 @@ io.on("connection", socket => {
   console.log("User connected");
   //send every message
   socket.on("Get data for messages", async ({ senderId, receiverId }) => {
+    console.log("get data");
     let text = `SELECT message, message_id, date, sender_read, sender_id, receiver_read FROM chat WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 and receiver_id = $1) ORDER BY date ASC`;
     let values = [senderId, receiverId];
     await client

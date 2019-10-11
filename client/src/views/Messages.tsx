@@ -10,11 +10,6 @@ import { User } from "../models/models";
 
 import "../styles/stylesMessages.css";
 
-interface Props {
-  user: User;
-  socket: {};
-}
-
 interface MState {
   isLoading: boolean;
   displayHistory: boolean;
@@ -39,8 +34,8 @@ interface MState {
   receiverId: string;
 }
 
-class Messages extends React.Component<Props, MState> {
-  constructor(props: Props) {
+class Messages extends React.Component<User, MState> {
+  constructor(props: User) {
     super(props);
     this.state = {
       isLoading: true,
@@ -55,7 +50,7 @@ class Messages extends React.Component<Props, MState> {
     Axios.put("http://localhost:5000/message/get-all-messages", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
-      receiverId: this.props.user.user_id
+      receiverId: this.props.user_id
     })
       .then(({ data: { validToken, validated, usersMessage } }) => {
         if (validToken === false) {
@@ -118,8 +113,7 @@ class Messages extends React.Component<Props, MState> {
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
             sender={this.state.sender}
-            socket={this.props.socket}
-            receiverId={this.props.user.user_id}
+            receiverId={this.props.user_id}
             displayHistory={this.displayHistory}
           />
         )}
@@ -128,8 +122,8 @@ class Messages extends React.Component<Props, MState> {
   }
 }
 
-const mapStateToProps = (state: State) => {
-  return { user: state.user, socket: state.socket };
+const mapStateToProps = (state: State): User => {
+  return state.user;
 };
 
 export default connect(mapStateToProps)(Messages);

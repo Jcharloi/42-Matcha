@@ -3,7 +3,6 @@ import { User, VerifiedUser } from "../../models/models";
 export const INSERT_USER_PROFILE = "INSERT_USER_PROFILE";
 export const INSERT_OTHER_PROFILE = "INSERT_OTHER_PROFILE";
 export const UPDATE_USER_AUTH = "UPDATE_USER_AUTH";
-export const CONNECT_SOCKET = "CONNECT_SOCKET";
 
 export interface InsertProfileAction {
   type: typeof INSERT_USER_PROFILE | typeof INSERT_OTHER_PROFILE;
@@ -15,14 +14,8 @@ export interface UpdateAuthAction {
   payload: VerifiedUser;
 }
 
-export interface UpdateConnectSocket {
-  type: typeof CONNECT_SOCKET;
-  payload: {};
-}
-
 export interface State {
   verified: VerifiedUser;
   user: User;
   otherUser: User;
-  socket: {};
 }

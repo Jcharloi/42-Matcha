@@ -2,15 +2,13 @@ import * as React from "react";
 import Axios from "axios";
 import { Router, Switch, Route } from "react-router-dom";
 import history from "./helpers/history";
-import openSocket from "socket.io-client";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
 import {
   updateUserAuth,
   insertUserProfile,
-  insertOtherProfile,
-  connectSocket
+  insertOtherProfile
 } from "./redux/actions/actions";
 import { Pictures, UserTags } from "./models/models";
 
@@ -138,8 +136,6 @@ class App extends React.Component<Props, AppState> {
                 authToken
               );
             }
-            const socket = openSocket("http://localhost:5001");
-            store.dispatch(connectSocket(socket));
           } else {
             localStorage.clear();
           }

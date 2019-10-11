@@ -9,8 +9,7 @@ import thunk from "redux-thunk";
 import {
   verifiedUserReducer,
   userProfileReducer,
-  otherProfileReducer,
-  connectSocketReducer
+  otherProfileReducer
 } from "./reducers/reducers";
 
 declare global {
@@ -24,8 +23,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
   verified: verifiedUserReducer,
   user: userProfileReducer,
-  otherUser: otherProfileReducer,
-  connectSocket: connectSocketReducer
+  otherUser: otherProfileReducer
 });
 
 export const store: Store = createStore(

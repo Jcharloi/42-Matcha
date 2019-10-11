@@ -1,12 +1,11 @@
 import * as React from "react";
-import { User } from "../../models/models";
-import io from "socket.io-client";
+import socket from "../../helpers/socket";
+import history from "../../helpers/history";
+import { deleteUser } from "../../App";
+import Axios from "axios";
 
 import { Icon, TextArea, Image, Form } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
-import history from "../../helpers/history";
-import Axios from "axios";
-import { deleteUser } from "../../App";
 
 interface Props {
   sender: {
@@ -21,7 +20,6 @@ interface Props {
     receiverId: string,
     user: { name: string; id: string; picture: string; lastConnection: string }
   ) => void;
-  socket: {};
 }
 
 interface State {
@@ -48,6 +46,7 @@ class ShowMessages extends React.Component<Props, State> {
   }
 
   componentDidMount = () => {
+    // console.log(this.props.socket);
     this.getMessages();
   };
 
@@ -73,7 +72,6 @@ class ShowMessages extends React.Component<Props, State> {
   }
 
   getMessages = () => {
-    const socket = io("http://localhost/5001");
     socket.emit("Get data for messages", {
       senderId: this.props.sender.id,
       receiverId: this.props.receiverId
