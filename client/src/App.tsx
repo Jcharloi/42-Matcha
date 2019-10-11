@@ -150,15 +150,22 @@ class App extends React.Component<Props, AppState> {
   render() {
     /*
     Partie front :
+    - Fix bug avec le profile et l'user name
+    - Afficher le vu dans le dernier message
+    - Pouvoir envoyer des messages
+    - Afficher les nouveaux messages
+    - Creer de nouveaux messages quand c'est vide
+    - overflow hidden et scroll
+    - 
     - Socket pour recuperer l'histo quand on fait back
     - Augmenter size ring green profil
-    - Implementer message part
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
     - Infinite scroll (pls no)
-
+    
     Partie back :
+    - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
     - DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
 

@@ -21,7 +21,9 @@ class TopMenu extends React.Component<Props> {
       userName: localStorage.getItem("user_name")
     })
       .then(({ data: { validated } }) => {
-        if (validated) deleteUser();
+        if (validated) {
+          deleteUser();
+        }
       })
       .catch(e => {
         console.error(e.stack);

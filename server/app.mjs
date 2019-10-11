@@ -12,6 +12,8 @@ const portApp = process.env.PORT || 5000;
 const portSocket = process.env.PORT || 5001;
 const server = http.createServer(app);
 const io = socketIO(server);
+export let socketConnection = [];
+export let ioConnection = "";
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -33,6 +35,8 @@ app.use(async (req, res, next) => {
 });
 
 io.on("connection", socket => {
+  socketConnection.push(socket);
+  ioConnection = io;
   console.log("User connected");
   //send every message
 });

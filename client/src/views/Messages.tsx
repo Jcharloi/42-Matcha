@@ -13,9 +13,7 @@ import "../styles/stylesMessages.css";
 interface MState {
   isLoading: boolean;
   displayHistory: boolean;
-  userName: string;
-  userId: string;
-  users: Array<{
+  historyUsers: Array<{
     senderId: string;
     senderName: string;
     receiverId: string;
@@ -27,6 +25,13 @@ interface MState {
     receiverRead: boolean;
     mainPicture: string;
   }>;
+  sender: {
+    name: string;
+    id: string;
+    picture: string;
+    lastConnection: string;
+  };
+  receiverId: string;
 }
 
 class Messages extends React.Component<User, MState> {
@@ -34,23 +39,10 @@ class Messages extends React.Component<User, MState> {
     super(props);
     this.state = {
       isLoading: true,
-      displayHistory: false,
-      userName: "",
-      userId: "",
-      users: [
-        {
-          senderId: "",
-          senderName: "",
-          receiverId: "",
-          lastConnection: "",
-          date: "",
-          message: "",
-          messageId: "",
-          senderRead: false,
-          receiverRead: false,
-          mainPicture: ""
-        }
-      ]
+      displayHistory: true,
+      historyUsers: [],
+      receiverId: "",
+      sender: { name: "", id: "", picture: "", lastConnection: "" }
     };
   }
 
@@ -65,7 +57,7 @@ class Messages extends React.Component<User, MState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ users: usersMessage, isLoading: false });
+            this.setState({ historyUsers: usersMessage, isLoading: false });
           }
         }
       })
@@ -97,10 +89,15 @@ class Messages extends React.Component<User, MState> {
 
   displayHistory = (
     displayHistory: boolean,
-    userName: string,
-    userId: string
+    receiverId: string,
+    sender: {
+      name: string;
+      id: string;
+      picture: string;
+      lastConnection: string;
+    }
   ): void => {
-    this.setState({ displayHistory, userName, userId });
+    this.setState({ displayHistory, receiverId, sender });
   };
 
   public render() {
@@ -109,14 +106,14 @@ class Messages extends React.Component<User, MState> {
         <TopMenu current="messages" />
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
-            users={this.state.users}
+            users={this.state.historyUsers}
             displayHistory={this.displayHistory}
           />
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
-            userId={this.state.userId}
-            userName={this.state.userName}
+            sender={this.state.sender}
+            receiverId={this.props.user_id}
             displayHistory={this.displayHistory}
           />
         )}

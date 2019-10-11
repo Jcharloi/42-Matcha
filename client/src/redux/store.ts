@@ -26,9 +26,6 @@ const rootReducer = combineReducers({
   otherUser: otherProfileReducer
 });
 
-//typer mapStatetoProps when many reducers
-// export type AppState = ReturnType<typeof userProfileReducer>;
-
 export const store: Store = createStore(
   rootReducer,
   composeEnhancers(applyMiddleware(thunk))

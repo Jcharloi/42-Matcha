@@ -47,7 +47,12 @@ import { sortByIndex } from "./helpers/home/sort.mjs";
 import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
 import getReports from "./helpers/profile/reports.mjs";
-import { getAllMessages, readMessage } from "./helpers/message/message.mjs";
+import {
+  getAllMessages,
+  readMessage,
+  getMessagesPeople,
+  sendNewMessage
+} from "./helpers/message/message.mjs";
 import ban from "./helpers/admin/ban.mjs";
 
 router.all("/admin/*", tokenMiddleware);
@@ -92,6 +97,8 @@ router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
 router.put("/message/get-all-messages", getAllMessages);
 router.put("/message/read-message", readMessage);
+router.put("/message/get-messages-people", getMessagesPeople);
+router.post("/message/send-new-message", sendNewMessage);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
