@@ -24,7 +24,7 @@ const getReports = async (req, res) => {
         let i = 0;
         let j = 0;
         while (i < rows.length / 2) {
-          console.log(rows);
+          // console.log(rows);
           reportArray[i] = {
             reporting_user: rows[j + 1].user_name,
             reported_user: rows[j].user_name
