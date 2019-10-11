@@ -29,6 +29,7 @@ const getReports = async (req, res) => {
             reporting_user: rows[j + 1].user_name,
             reported_user: rows[j].user_name
           };
+
           j = j + 2;
           i++;
         }

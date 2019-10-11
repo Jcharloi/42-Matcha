@@ -4,12 +4,13 @@ import Axios from "axios";
 import { Redirect } from "react-router-dom";
 
 import TopMenu from "../TopMenu";
+import { Link } from "react-router-dom";
 import { store } from "../../redux/store";
 import history from "../../helpers/history";
 
 import { insertOtherProfile } from "../../redux/actions/actions";
 
-import { List, Button } from "semantic-ui-react";
+import { List, Button, Feed } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
@@ -84,38 +85,58 @@ class AdminReports extends React.Component<{}, AState> {
     console.log(this.state.reportArray);
   };
 
+  reportNb = (targetUser: string) => {
+    let report_nb = 0;
+    let i = 0;
+    while (this.state.reportArray[i]) {
+      if (this.state.reportArray[i].reported_user == targetUser) {
+        report_nb++;
+      }
+      i++;
+    }
+    return report_nb;
+  };
+
   public render() {
     return (
       <div>
         <TopMenu current="Reports" />
         <div className="reports-container">
-          <List relaxed size="massive">
-            {/* {console.log(this.state.reportArray)} */}
+          <Feed>
             {this.state.reportArray.map((report, index) => (
-              <List.Item key={index}>
+              <Feed.Event key={index} className="user-container">
                 {/* <Image
                   className="avatar"
                   avatar
                   src={`http://localhost:5000/public/profile-pictures/${user.path}`}
                 /> */}
-                <List.Content>
-                  <List.Header
-                    as="a"
-                    onClick={() => {
-                      this.selectProfile(report.reporting_user);
-                    }}
-                  >
-                    {report.reporting_user}
-                  </List.Header>
-                  <List.Description>reported</List.Description>
-                  <List.Header
-                    as="a"
-                    onClick={() => {
-                      this.selectProfile(report.reported_user);
-                    }}
-                  >
-                    <p className="reported_user_name">{report.reported_user}</p>
-                  </List.Header>
+                <Feed.Content className="feed-content">
+                  <Feed.Content className="feed-content">
+                    <div
+                      className="link-feed"
+                      onClick={() => {
+                        this.selectProfile(report.reporting_user);
+                      }}
+                    >
+                      <Link to={`/profile/` + report.reporting_user}>
+                        {report.reporting_user}
+                      </Link>
+                      &nbsp;reported&nbsp;
+                    </div>
+                    <div
+                      className="link-feed"
+                      onClick={() => {
+                        this.selectProfile(report.reported_user);
+                      }}
+                    >
+                      <Link to={`/profile/` + report.reported_user}>
+                        <span className="reported_user_name">
+                          {report.reported_user}
+                        </span>
+                        &nbsp;(reported : {this.reportNb(report.reported_user)})
+                      </Link>
+                    </div>
+                  </Feed.Content>
                   <Button
                     onClick={() => {
                       this.banUser(report.reported_user);
@@ -124,10 +145,10 @@ class AdminReports extends React.Component<{}, AState> {
                   >
                     Ban
                   </Button>
-                </List.Content>
-              </List.Item>
+                </Feed.Content>
+              </Feed.Event>
             ))}
-          </List>
+          </Feed>
         </div>
       </div>
     );
