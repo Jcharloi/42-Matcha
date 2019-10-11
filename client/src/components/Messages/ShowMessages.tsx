@@ -5,7 +5,10 @@ import { deleteUser } from "../../App";
 import Axios from "axios";
 
 import { Icon, TextArea, Image, Form } from "semantic-ui-react";
+import Scroll from "react-scroll";
 import "../../styles/stylesMessages.css";
+
+const scroll = Scroll.animateScroll;
 
 interface Props {
   sender: {
@@ -24,7 +27,7 @@ interface Props {
 
 interface State {
   isLoading: boolean;
-  messages: Array<{
+  allMessages: Array<{
     message: string;
     messageId: string;
     date: string;
@@ -40,15 +43,70 @@ class ShowMessages extends React.Component<Props, State> {
     super(props);
     this.state = {
       isLoading: true,
-      messages: [],
+      allMessages: [],
       newMessage: ""
     };
   }
 
   componentDidMount = () => {
-    // console.log(this.props.socket);
-    this.getMessages();
+    this.scrollToBottom();
+    Axios.put("http://localhost:5000/message/get-messages-people", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      senderId: this.props.sender.id,
+      receiverId: this.props.receiverId
+    })
+      .then(({ data: { validToken, validated, allMessages } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({
+              isLoading: false,
+              allMessages
+            });
+            socket.on(
+              "Send new message",
+              (messageReceived: {
+                message: string;
+                messageId: string;
+                date: string;
+                senderId: string;
+                receiverRead: boolean;
+                senderRead: boolean;
+              }) => {
+                const newMessages = [
+                  ...this.state.allMessages,
+                  messageReceived
+                ];
+                if (this.state.allMessages.length !== newMessages.length) {
+                  this.setState({
+                    allMessages: newMessages
+                  });
+                }
+              }
+            );
+          }
+        }
+      })
+      .catch(e => {
+        console.log(e.message);
+      });
   };
+
+  componentDidUpdate = () => {
+    this.scrollToBottom();
+  };
+
+  componentWillUnmount = () => {
+    //
+  };
+
+  scrollToBottom() {
+    scroll.scrollToBottom({
+      containerId: "show-message"
+    });
+  }
 
   findLastSince(lastseen: string) {
     if (lastseen !== "Just now") {
@@ -71,47 +129,6 @@ class ShowMessages extends React.Component<Props, State> {
     return "just now";
   }
 
-  getMessages = () => {
-    socket.emit("Get data for messages", {
-      senderId: this.props.sender.id,
-      receiverId: this.props.receiverId
-    });
-    socket.on(
-      "Get messages",
-      (
-        messages: Array<{
-          message: "";
-          messageId: "";
-          date: "";
-          senderId: "";
-          receiverRead: false;
-          senderRead: false;
-        }>
-      ) => {
-        this.setState({ isLoading: false, messages });
-      }
-    );
-  };
-
-  componentDidUpdate = ({}, prevState: State) => {
-    // const socket = openSocket("http://localhost:5001");
-    // socket.on(
-    //   "Get messages",
-    //   (
-    //     messages: Array<{
-    //       message: "";
-    //       messageId: "";
-    //       date: "";
-    //       senderId: "";
-    //       receiverRead: false;
-    //       senderRead: false;
-    //     }>
-    //   ) => {
-    //     this.setState({ isLoading: false, messages });
-    //   }
-    // );
-  };
-
   setNewMessage = (newMessage: string) => {
     this.setState({ newMessage });
   };
@@ -128,9 +145,8 @@ class ShowMessages extends React.Component<Props, State> {
         if (validToken === false) {
           deleteUser();
         } else {
-          console.log(validated);
           if (validated) {
-            // this.getMessages();
+            this.setState({ newMessage: "" });
           }
         }
       })
@@ -162,7 +178,6 @@ class ShowMessages extends React.Component<Props, State> {
                 })
               }
             />
-
             <div className="container-conv">
               <div className="show-profile">
                 <div className="container-profile">
@@ -190,8 +205,8 @@ class ShowMessages extends React.Component<Props, State> {
                   </span>
                 </div>
               </div>
-              <div className="show-messages">
-                {this.state.messages.map(
+              <div className="show-messages" id="show-message">
+                {this.state.allMessages.map(
                   ({ date, message, messageId, senderId }) => (
                     <div key={messageId}>
                       <div
@@ -204,11 +219,11 @@ class ShowMessages extends React.Component<Props, State> {
                         {this.findLastSince(date)}
                       </div>
                       <div
-                        className={
+                        className={`container-message-${
                           senderId !== this.props.sender.id
-                            ? "container-message-receiver"
-                            : ""
-                        }
+                            ? "receiver"
+                            : "sender"
+                        }`}
                       >
                         <div
                           className={"message-value"}

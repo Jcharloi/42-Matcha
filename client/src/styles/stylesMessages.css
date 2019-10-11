@@ -133,14 +133,18 @@
 /* MESSAGES PART */
 
 .show-messages {
-  max-height: 68rem;
+  max-height: 65rem;
+  overflow: hidden;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding: 1rem;
 }
 
 .date-value-receiver {
   font-style: italic;
   color: rgb(172, 170, 170);
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 0 0.6rem 0;
   display: flex;
   justify-content: flex-end;
 }
@@ -149,22 +153,27 @@
   font-style: italic;
   color: rgb(172, 170, 170);
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 0 0.6rem 0;
 }
 
 .container-message-receiver {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  /* border: 2px solid green; */
+}
+
+.container-message-sender {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .message-value {
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 1.2rem;
   border-radius: 20px;
-  min-width: 45%;
   padding: 1.5rem;
+  max-width: 45%;
 }
 
 /* TYPING PART */
@@ -173,10 +182,6 @@
   margin-top: 2rem;
   height: 7rem;
   display: flex;
-  /* border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border: 1px solid rgb(212, 218, 212); */
-  /* border: 2px solid orange; */
 }
 
 .textarea-message {
@@ -190,7 +195,6 @@
 }
 
 .send-icon {
-  /* border: 2px solid blue; */
   cursor: pointer;
   min-width: 10% !important;
   max-width: 10% !important;

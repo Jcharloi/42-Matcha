@@ -50,6 +50,7 @@ import getReports from "./helpers/profile/reports.mjs";
 import {
   getAllMessages,
   readMessage,
+  getMessagesPeople,
   sendNewMessage
 } from "./helpers/message/message.mjs";
 import ban from "./helpers/admin/ban.mjs";
@@ -96,6 +97,7 @@ router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
 router.put("/message/get-all-messages", getAllMessages);
 router.put("/message/read-message", readMessage);
+router.put("/message/get-messages-people", getMessagesPeople);
 router.post("/message/send-new-message", sendNewMessage);
 
 router.get("/public/profile-pictures/:id", (req, res) => {
