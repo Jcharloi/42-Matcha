@@ -15,8 +15,8 @@ class Connection extends React.Component<Props, {}> {
           className={
             findLastSince(this.props.connection) === "Just now" ||
             !this.props.connection
-              ? "ring ring-color-online"
-              : "ring ring-color-offline"
+              ? "ring-profile ring-color-online"
+              : "ring-profile ring-color-offline"
           }
         />
         <div className="text">
