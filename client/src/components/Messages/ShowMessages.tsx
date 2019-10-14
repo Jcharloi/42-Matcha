@@ -1,7 +1,7 @@
 import * as React from "react";
 import socket from "../../helpers/socket";
 import history from "../../helpers/history";
-import { deleteUser } from "../../App";
+import { deleteUser, findLastSince } from "../../App";
 import Axios from "axios";
 
 import { Icon, TextArea, Image, Form } from "semantic-ui-react";
@@ -104,27 +104,6 @@ class ShowMessages extends React.Component<Props, State> {
     });
   }
 
-  findLastSince(lastseen: string) {
-    if (lastseen !== "Just now") {
-      lastseen = new Date(+lastseen * 1000).toISOString();
-    }
-    var dateSeen: any = new Date(lastseen);
-    var dateNow: any = new Date();
-    var plural: string = "s";
-    var seconds = Math.floor((dateNow - dateSeen) / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    var months = Math.floor(days / 31);
-    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
-
-    if (months) return months.toString() + " month" + plural + " ago";
-    if (days) return days.toString() + " day" + plural + " ago";
-    if (hours) return hours.toString() + " hour" + plural + " ago";
-    if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "Just now";
-  }
-
   receiveNewMessages = () => {
     socket.on(
       "New message",
@@ -151,25 +130,28 @@ class ShowMessages extends React.Component<Props, State> {
   };
 
   sendNewMessage = () => {
-    Axios.post("http://localhost:5000/message/send-new-message", {
-      token: localStorage.getItem("token"),
-      userName: localStorage.getItem("user_name"),
-      message: this.state.newMessage,
-      senderId: this.props.sender.id,
-      receiverId: this.props.receiverId
-    })
-      .then(({ data: { validToken, validated } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          if (validated) {
-            this.setState({ newMessage: "" });
-          }
-        }
+    //trim whitespace
+    if (this.state.newMessage != "") {
+      Axios.post("http://localhost:5000/message/send-new-message", {
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name"),
+        message: this.state.newMessage,
+        senderId: this.props.sender.id,
+        receiverId: this.props.receiverId
       })
-      .catch(e => {
-        console.log(e.message);
-      });
+        .then(({ data: { validToken, validated } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              this.setState({ newMessage: "" });
+            }
+          }
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
+    }
   };
 
   showProfileUser = () => {
@@ -210,15 +192,14 @@ class ShowMessages extends React.Component<Props, State> {
                   </div>
                   <div
                     className={
-                      this.findLastSince(this.props.sender.lastConnection) ===
+                      findLastSince(this.props.sender.lastConnection) ===
                       "Just now"
                         ? "ring ring-color-online"
                         : "ring ring-color-offline"
                     }
                   ></div>
                   <span className="last-connection">
-                    Online{" "}
-                    {this.findLastSince(this.props.sender.lastConnection)}
+                    Online {findLastSince(this.props.sender.lastConnection)}
                   </span>
                 </div>
               </div>
@@ -236,7 +217,7 @@ class ShowMessages extends React.Component<Props, State> {
                             : "date-value-receiver"
                         }
                       >
-                        {this.findLastSince(date)}
+                        {findLastSince(date)}
                       </div>
                       <div
                         className={`container-message-${
@@ -245,7 +226,7 @@ class ShowMessages extends React.Component<Props, State> {
                             : "receiver"
                         }`}
                       >
-                        <span>
+                        {/* <span>
                           {index === this.state.allMessages.length - 1 ? (
                             <Icon
                               size="large"
@@ -256,7 +237,7 @@ class ShowMessages extends React.Component<Props, State> {
                               }
                             />
                           ) : null}
-                        </span>
+                        </span> */}
                         <div
                           className={"message-value"}
                           style={{

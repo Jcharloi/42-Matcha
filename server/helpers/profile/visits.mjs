@@ -1,16 +1,6 @@
 import client from "../../sql/sql.mjs";
-import {
-  getUserId,
-  calculateAge,
-  calculateDistance,
-  filterByBlockedUser,
-  filterByIncompletedUser
-} from "../../common.mjs";
-import {
-  getUserLatitudeAndLongitude,
-  getUserPictures,
-  getUserTags
-} from "../profile/getUserInfos.mjs";
+import { getUserId, calculateAge } from "../../common.mjs";
+import { getUserPictures, getUserTags } from "../profile/getUserInfos.mjs";
 
 const logVisit = async (userName, visitedUser) => {
   const visiting_user_id = await getUserId(userName);
@@ -89,7 +79,7 @@ const getUserVisitsAndLikes = async (req, res) => {
             presentation: rows[i].presentation,
             birthday: rows[i].birthday,
             age: calculateAge(rows[i].birthday),
-            connection: new Date(rows[i].last_connection * 1000),
+            connection: rows[i].last_connection,
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
             score: rows[i].score,

@@ -11,6 +11,11 @@ import socket from "../helpers/socket";
 
 import "../styles/stylesMessages.css";
 
+interface Props {
+  user: User;
+  otherUser: User;
+}
+
 interface MState {
   isLoading: boolean;
   displayHistory: boolean;
@@ -35,8 +40,8 @@ interface MState {
   receiverId: string;
 }
 
-class Messages extends React.Component<User, MState> {
-  constructor(props: User) {
+class Messages extends React.Component<Props, MState> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       isLoading: true,
@@ -48,24 +53,40 @@ class Messages extends React.Component<User, MState> {
   }
 
   componentDidMount = () => {
-    Axios.put("http://localhost:5000/message/get-all-messages", {
-      token: localStorage.getItem("token"),
-      userName: localStorage.getItem("user_name"),
-      receiverId: this.props.user_id
-    })
-      .then(({ data: { validToken, validated, usersMessage } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          if (validated) {
-            this.setState({ historyUsers: usersMessage, isLoading: false });
-            this.receiveAllMessages();
-          }
+    if (
+      window.location.pathname &&
+      window.location.pathname.search("/messages/") !== -1
+    ) {
+      this.setState({
+        isLoading: false,
+        displayHistory: false,
+        sender: {
+          name: this.props.otherUser.user_name,
+          id: this.props.otherUser.user_id,
+          picture: this.props.otherUser.pictures[0].path,
+          lastConnection: this.props.otherUser.connection
         }
-      })
-      .catch(e => {
-        console.log(e.message);
       });
+    } else {
+      Axios.put("http://localhost:5000/message/get-all-messages", {
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name"),
+        receiverId: this.props.user.user_id
+      })
+        .then(({ data: { validToken, validated, usersMessage } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              this.setState({ historyUsers: usersMessage, isLoading: false });
+              this.receiveAllMessages();
+            }
+          }
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
+    }
   };
 
   receiveAllMessages = () => {
@@ -85,7 +106,6 @@ class Messages extends React.Component<User, MState> {
           mainPicture: string;
         }>
       ) => {
-        console.log(this.state.historyUsers.length, historyReceived.length);
         if (this.state.historyUsers.length !== historyReceived.length) {
           this.setState({
             historyUsers: historyReceived
@@ -94,27 +114,6 @@ class Messages extends React.Component<User, MState> {
       }
     );
   };
-
-  findLastSince(lastseen: string) {
-    if (lastseen !== "Just now") {
-      lastseen = new Date(+lastseen * 1000).toISOString();
-    }
-    var dateSeen: any = new Date(lastseen);
-    var dateNow: any = new Date();
-    var plural: string = "s";
-    var seconds = Math.floor((dateNow - dateSeen) / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    var months = Math.floor(days / 31);
-    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
-
-    if (months) return months.toString() + " month" + plural + " ago";
-    if (days) return days.toString() + " day" + plural + " ago";
-    if (hours) return hours.toString() + " hour" + plural + " ago";
-    if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "just now";
-  }
 
   displayHistory = (
     displayHistory: boolean,
@@ -136,14 +135,14 @@ class Messages extends React.Component<User, MState> {
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
             users={this.state.historyUsers}
-            receiverId={this.props.user_id}
+            receiverId={this.props.user.user_id}
             displayHistory={this.displayHistory}
           />
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
             sender={this.state.sender}
-            receiverId={this.props.user_id}
+            receiverId={this.props.user.user_id}
             displayHistory={this.displayHistory}
           />
         )}
@@ -152,8 +151,8 @@ class Messages extends React.Component<User, MState> {
   }
 }
 
-const mapStateToProps = (state: State): User => {
-  return state.user;
+const mapStateToProps = (state: State): Props => {
+  return { user: state.user, otherUser: state.otherUser };
 };
 
 export default connect(mapStateToProps)(Messages);

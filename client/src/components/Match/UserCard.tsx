@@ -3,6 +3,7 @@ import history from "../../helpers/history";
 import { store } from "../../redux/store";
 import { insertOtherProfile } from "../../redux/actions/actions";
 import { User } from "../../models/models";
+import { findLastSince } from "../../App";
 
 import "../../styles/stylesUserHome.css";
 
@@ -39,24 +40,6 @@ class UserCard extends React.Component<Props, CState> {
       c = b + 0;
 
     return "hsl(" + c + ", 120%, 40%)";
-  }
-
-  find_last_since(lastseen: string) {
-    var dateSeen: any = new Date(lastseen);
-    var dateNow: any = new Date();
-    var plural: string = "s";
-    var seconds = Math.floor((dateNow - dateSeen) / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    var months = Math.floor(days / 31);
-    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
-
-    if (months) return months.toString() + " month" + plural + " ago";
-    if (days) return days.toString() + " day" + plural + " ago";
-    if (hours) return hours.toString() + " hour" + plural + " ago";
-    if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "just now";
   }
 
   selectProfile = () => {
@@ -107,9 +90,7 @@ class UserCard extends React.Component<Props, CState> {
           <span className="right floated">
             {!this.props.userInfo.connection
               ? `Online now`
-              : `Last seen ${this.find_last_since(
-                  this.props.userInfo.connection
-                )}`}
+              : `Last seen ${findLastSince(this.props.userInfo.connection)}`}
           </span>
         </div>
       </div>

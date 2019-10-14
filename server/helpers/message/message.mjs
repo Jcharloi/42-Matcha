@@ -1,5 +1,5 @@
 import client from "../../sql/sql.mjs";
-import { createRandomId } from "../../common.mjs";
+import { createRandomId, getUserId } from "../../common.mjs";
 import { socketConnection, ioConnection } from "../../app.mjs";
 
 const checkAllMessages = async receiverId => {
@@ -132,11 +132,11 @@ const sendNewMessage = async (req, res) => {
         receiverRead: false,
         senderRead: true
       });
-      // const { validated, usersMessage } = await checkAllMessages(
-      // req.body.senderId
-      // );
+      const userId = await getUserId(req.body.userName);
+      console.log(socketConnection);
+      // const { validated, usersMessage } = await checkAllMessages(userId);
       // if (validated) {
-      // ioConnection.sockets.emit("New history", usersMessage);
+      //   ioConnection.sockets.emit("New history", usersMessage);
       // }
       res.send({ validated: true });
     })

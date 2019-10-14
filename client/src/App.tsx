@@ -35,6 +35,27 @@ export function deleteUser() {
   history.push("/");
 }
 
+export function findLastSince(lastseen: string) {
+  if (lastseen !== "Just now") {
+    lastseen = new Date(+lastseen * 1000).toISOString();
+  }
+  var dateSeen: any = new Date(lastseen);
+  var dateNow: any = new Date();
+  var plural: string = "s";
+  var seconds = Math.floor((dateNow - dateSeen) / 1000);
+  var minutes = Math.floor(seconds / 60);
+  var hours = Math.floor(minutes / 60);
+  var days = Math.floor(hours / 24);
+  var months = Math.floor(days / 31);
+  if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
+
+  if (months) return months.toString() + " month" + plural + " ago";
+  if (days) return days.toString() + " day" + plural + " ago";
+  if (hours) return hours.toString() + " hour" + plural + " ago";
+  if (minutes) return minutes.toString() + " minute" + plural + " ago";
+  return "Just now";
+}
+
 export function isProfileCompleted(
   city: string,
   gender: string,
@@ -146,21 +167,22 @@ class App extends React.Component<VerifiedUser, AppState> {
     /*
     Partie front :
     - Appuyer sur entrée
-    - Afficher le vu dans le dernier message
-    - Creer de nouveaux messages quand c'est vide
+    - Fix bug Vu quand t'as envoye un message
     - Socket pour recuperer l'histo quand on fait back ?
+    - Creer de nouveaux messages quand c'est vide - Missing the URL shit
 
     - Augmenter size ring green profil
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
     - Infinite scroll (pls no)
+
+    - Protect get users info
     
     Partie back :
     - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
-
-    - Faire les redirection sur AdminReports (otherUser) et ajouter le bouton BAN
+    - Ne pas degager le compte admin
     */
     return (
       <div>
@@ -219,14 +241,21 @@ class App extends React.Component<VerifiedUser, AppState> {
               <CompletedRoutes
                 exact={true}
                 path="/admin-reports"
-                component={() => <AdminReports />}
+                component={AdminReports}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />
               <CompletedRoutes
                 exact={true}
                 path="/messages"
-                component={() => <Messages />}
+                component={Messages}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/messages/:userName"
+                component={Messages}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

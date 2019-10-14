@@ -15,28 +15,6 @@ import {
   filterByIncompletedUser
 } from "../../common.mjs";
 
-//Orientation = Man, Woman, Other, Both
-/*
-  Woman -> Woman | WHERE gender = woman AND (orientation = woman OR orientation = both)
-  Woman -> Man | WHERE gender = man AND (orientation = woman OR orientation = both)
-  Woman -> Other | WHERE gender = other AND (orientation = woman OR orientation = both)
-  Woman -> Both | WHERE gender = 'Man' ${orientationForBothWoman} OR gender = 'Woman' ${orientationForBothWoman}
-
-  Man -> Woman | WHERE gender = woman AND (orientation = man OR orientation = both)
-  Man -> Man | WHERE gender = man AND (orientation = man OR orientation = both)
-  Man -> Other | WHERE gender = other AND (orientation = man OR orientation = both)
-  Man -> Both | WHERE gender = 'Man' AND (orientation = 'Man' OR orientation = 'Both') OR gender = 'Woman' AND (orientation = 'Man' OR orientation = 'Both')
-
-  Other -> Woman | WHERE gender = woman AND orientation = other
-  Other -> Man | WHERE gender = man AND orientation = other
-  Other -> Other | WHERE gender = other AND orientation = other
-  Other -> Both | WHERE gender = (man AND orientation = other) || (woman AND orientation = other)
-
-  10 pts -> 0-100km
-  5 pts -> 0-200km -> Retrier apres par rapport aux tags -> Les plus hauts % en premier
-  0 pts -> +200km -> Retrier apres par rapport aux tags -> Les plus hauts % en premier
-*/
-
 const compareTag = (myTags, tagUser) => {
   return (
     myTags.findIndex(myTag => {
@@ -104,7 +82,7 @@ const getUsersByPreference = async (req, res) => {
             longitude: rows[i].longitude,
             birthday: rows[i].birthday,
             age: calculateAge(rows[i].birthday),
-            connection: new Date(rows[i].last_connection * 1000),
+            connection: rows[i].last_connection,
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
             score: rows[i].score,

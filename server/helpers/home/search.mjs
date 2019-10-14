@@ -60,7 +60,7 @@ const getUsersBySearch = async (req, res) => {
             longitude: rows[i].longitude,
             birthday: rows[i].birthday,
             age: calculateAge(rows[i].birthday),
-            connection: new Date(rows[i].last_connection * 1000),
+            connection: rows[i].last_connection,
             pictures: await getUserPictures(rows[i].user_id),
             tags: await getUserTags(rows[i].user_id),
             score: rows[i].score,

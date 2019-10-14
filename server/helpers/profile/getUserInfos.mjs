@@ -58,7 +58,7 @@ const getUserInfos = async userId => {
         gender: rows[0].gender,
         orientation: rows[0].orientation,
         presentation: rows[0].presentation,
-        connection: new Date(rows[0].last_connection * 1000),
+        connection: rows[0].last_connection,
         score: rows[0].score,
         city: rows[0].city
       };

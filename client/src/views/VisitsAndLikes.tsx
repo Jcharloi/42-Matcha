@@ -2,7 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import history from "../helpers/history";
 import { Link } from "react-router-dom";
-import { deleteUser } from "../App";
+import { deleteUser, findLastSince } from "../App";
 import { store } from "../redux/store";
 import { insertOtherProfile } from "../redux/actions/actions";
 import { User } from "../models/models";
@@ -50,25 +50,6 @@ class VisitsAndLikes extends React.Component<{}, VState> {
       .catch(err => console.error(err));
   };
 
-  findLastSince = (lastseen: string) => {
-    lastseen = new Date(+lastseen * 1000).toISOString();
-    var dateSeen: any = new Date(lastseen);
-    var dateNow: any = new Date();
-    var plural: string = "s";
-    var seconds = Math.floor((dateNow - dateSeen) / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    var months = Math.floor(days / 31);
-    if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
-
-    if (months) return months.toString() + " month" + plural + " ago";
-    if (days) return days.toString() + " day" + plural + " ago";
-    if (hours) return hours.toString() + " hour" + plural + " ago";
-    if (minutes) return minutes.toString() + " minute" + plural + " ago";
-    return "just now";
-  };
-
   selectProfile = (otherUser: User) => {
     store.dispatch(insertOtherProfile(otherUser));
     history.push(`/profile/` + otherUser.user_name);
@@ -107,7 +88,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
                     />
                   </div>
                   <Feed.Date className="time-feed">
-                    {this.findLastSince(this.state.visitDate[index].date)}
+                    {findLastSince(this.state.visitDate[index].date)}
                   </Feed.Date>
                 </Feed.Content>
               </Feed.Event>
