@@ -1,8 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
 
-import { Redirect } from "react-router-dom";
-
 import TopMenu from "../TopMenu";
 import { Link } from "react-router-dom";
 import { store } from "../../redux/store";
@@ -10,7 +8,7 @@ import history from "../../helpers/history";
 
 import { insertOtherProfile } from "../../redux/actions/actions";
 
-import { List, Button, Feed } from "semantic-ui-react";
+import { Button, Feed } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
@@ -77,6 +75,7 @@ class AdminReports extends React.Component<{}, AState> {
         this.setState({
           reportArray: this.state.reportArray.filter(reports => {
             if (reports.reported_user !== targetUser) return true;
+            return false;
           })
         });
       })
@@ -89,7 +88,7 @@ class AdminReports extends React.Component<{}, AState> {
     let report_nb = 0;
     let i = 0;
     while (this.state.reportArray[i]) {
-      if (this.state.reportArray[i].reported_user == targetUser) {
+      if (this.state.reportArray[i].reported_user === targetUser) {
         report_nb++;
       }
       i++;
