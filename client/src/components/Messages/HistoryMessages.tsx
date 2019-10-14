@@ -23,6 +23,7 @@ interface Props {
     receiverId: string,
     user: { name: string; id: string; picture: string; lastConnection: string }
   ) => void;
+  receiverId: string;
 }
 
 class HistoryMessages extends React.Component<Props, {}> {
@@ -83,7 +84,7 @@ class HistoryMessages extends React.Component<Props, {}> {
           }) => (
             <div
               className="container-user"
-              key={senderId}
+              key={senderId === this.props.receiverId ? receiverId : senderId}
               style={{
                 border: "1px solid rgb(209, 212, 214)",
                 backgroundColor: !receiverRead
@@ -96,7 +97,8 @@ class HistoryMessages extends React.Component<Props, {}> {
                 }
                 this.props.displayHistory(false, receiverId, {
                   name: senderName,
-                  id: senderId,
+                  id:
+                    senderId === this.props.receiverId ? receiverId : senderId,
                   picture: mainPicture,
                   lastConnection
                 });
@@ -122,7 +124,10 @@ class HistoryMessages extends React.Component<Props, {}> {
                 <span className="date-history">
                   Last message {this.findLastSince(date)}
                 </span>
-                <div className="text-history">{message}</div>
+                <div className="text-history">
+                  {senderId === this.props.receiverId ? "You : " : ""}
+                  {message}
+                </div>
                 <Icon
                   className="icon-history"
                   size="large"

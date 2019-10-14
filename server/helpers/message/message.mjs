@@ -3,27 +3,55 @@ import { createRandomId } from "../../common.mjs";
 import { socketConnection, ioConnection } from "../../app.mjs";
 
 const checkAllMessages = async receiverId => {
-  let text = `SELECT user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path FROM users JOIN chat a ON user_id = sender_id JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE a.date = (SELECT MAX(b.date) FROM chat b WHERE receiver_id = $1 AND b.sender_id = a.sender_id) AND main = TRUE GROUP BY user_name, last_connection, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read, message, message_id, path ORDER BY a.date DESC`;
+  let text = `SELECT message, message_id, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read
+        FROM chat a 
+        WHERE a.message_id IN (SELECT b.message_id FROM chat b WHERE (b.receiver_id = $1 OR b.sender_id = $1))
+        AND a.date = (SELECT MAX(b.date) FROM chat b WHERE (b.receiver_id = a.receiver_id AND b.sender_id = a.sender_id) OR (sender_id = a.receiver_id AND b.receiver_id = a.sender_id)) ORDER BY a.date DESC`;
   let values = [receiverId];
   return await client
     .query(text, values)
-    .then(({ rows, rowCount }) => {
+    .then(async ({ rows, rowCount }) => {
       let usersMessage = [];
+      let validated = true;
       for (let i = 0; i < rowCount; i++) {
-        usersMessage.push({
-          senderId: rows[i].sender_id,
-          senderName: rows[i].user_name,
-          receiverId: rows[i].receiver_id,
-          lastConnection: rows[i].last_connection,
-          date: rows[i].date,
-          message: rows[i].message,
-          messageId: rows[i].message_id,
-          senderRead: rows[i].sender_read,
-          receiverRead: rows[i].receiver_read,
-          mainPicture: rows[i].path
-        });
+        text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
+        values = [
+          rows[i].sender_id === receiverId
+            ? rows[i].receiver_id
+            : rows[i].sender_id
+        ];
+        const { validatedRes, user } = await client
+          .query(text, values)
+          .then(async ({ rows }) => {
+            return {
+              validatedRes: true,
+              user: {
+                senderName: rows[0].user_name,
+                lastConnection: rows[0].last_connection,
+                mainPicture: rows[0].path
+              }
+            };
+          })
+          .catch(e => {
+            console.error(e.stack);
+            return { validatedRes: false };
+          });
+        if (validatedRes) {
+          usersMessage.push({
+            message: rows[i].message,
+            messageId: rows[i].message_id,
+            date: rows[i].date,
+            senderId: rows[i].sender_id,
+            receiverId: rows[i].receiver_id,
+            senderRead: rows[i].sender_read,
+            receiverRead: rows[i].receiver_read,
+            ...user
+          });
+        } else {
+          validated = false;
+        }
       }
-      return { validated: true, usersMessage };
+      return { validated, usersMessage };
     })
     .catch(e => {
       console.error(e.stack);

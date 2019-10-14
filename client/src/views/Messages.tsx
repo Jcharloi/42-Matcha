@@ -136,6 +136,7 @@ class Messages extends React.Component<User, MState> {
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
             users={this.state.historyUsers}
+            receiverId={this.props.user_id}
             displayHistory={this.displayHistory}
           />
         )}

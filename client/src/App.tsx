@@ -145,7 +145,7 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Fix bug avec le profile et l'user name
+    - Appuyer sur entrée
     - Afficher le vu dans le dernier message
     - Creer de nouveaux messages quand c'est vide
     - Socket pour recuperer l'histo quand on fait back ?
