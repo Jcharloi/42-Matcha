@@ -250,6 +250,11 @@ class ShowMessages extends React.Component<Props, State> {
                     onChange={({ target: { value } }: any) =>
                       this.setNewMessage(value)
                     }
+                    onKeyDown={({ keyCode, shiftKey }: any) => {
+                      if (!shiftKey && keyCode === 13) {
+                        this.sendNewMessage();
+                      }
+                    }}
                   />
                 </Form>
                 <Icon

@@ -167,7 +167,6 @@ class App extends React.Component<VerifiedUser, AppState> {
     /*
     Partie front :
     - Temps qui change avec le temps WAW
-    - Appuyer sur entrée
     - Socket pour recuperer l'histo quand on fait back ? JE SAIS PAS JPP
 
     - margin bas de page
