@@ -62,7 +62,7 @@ router.all("/home/*", tokenMiddleware);
 router.all("/search/*", tokenMiddleware);
 router.all("/message/*", tokenMiddleware);
 router.put("/verify-token", verifyToken);
-router.put("/get-user-infos", getUserAll);
+router.put("/profile/get-user-infos", getUserAll);
 
 router.post("/inscription", inscription);
 router.get("/validate-account/:id", validateAccount);

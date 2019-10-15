@@ -3,6 +3,8 @@ import socket from "../../helpers/socket";
 import history from "../../helpers/history";
 import { deleteUser, findLastSince } from "../../App";
 import Axios from "axios";
+import { store } from "../../redux/store";
+import { insertOtherProfile } from "../../redux/actions/actions";
 
 import { Icon, TextArea, Image, Form } from "semantic-ui-react";
 import Scroll from "react-scroll";
@@ -76,22 +78,6 @@ class ShowMessages extends React.Component<Props, State> {
 
   componentDidUpdate = () => {
     this.scrollToBottom();
-    // Axios.put("http://localhost:50001/message/read-message", {
-    //   token: localStorage.getItem("token"),
-    //   userName: localStorage.getItem("user_name"),
-    //   senderId: this.props.sender.id,
-    //   receiverId: this.props.receiverId,
-    //   messageId: this.state.allMessages[this.state.allMessages.length - 1]
-    //     .messageId
-    // })
-    //   .then(({ data: { validToken } }) => {
-    //     if (validToken === false) {
-    //       deleteUser();
-    //     }
-    //   })
-    //   .catch(e => {
-    //     console.log(e.message);
-    //   });
   };
 
   componentWillUnmount = () => {
@@ -153,9 +139,23 @@ class ShowMessages extends React.Component<Props, State> {
     }
   };
 
-  showProfileUser = () => {
-    console.log("show profile user");
-    history.push(`/profile/${this.props.sender.name}`);
+  showProfileUser = (targetName: string) => {
+    Axios.put(`http://localhost:5000/profile/get-user-infos`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetName
+    })
+      .then(({ data: { validToken, validated, userInfos } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            store.dispatch(insertOtherProfile(userInfos));
+            history.push(`/profile/${userInfos.user_name}`);
+          }
+        }
+      })
+      .catch(err => console.error(err));
   };
 
   public render() {
@@ -184,9 +184,12 @@ class ShowMessages extends React.Component<Props, State> {
                     avatar
                     size="tiny"
                     src={`http://localhost:5000/public/profile-pictures/${this.props.sender.picture}`}
-                    onClick={this.showProfileUser}
+                    onClick={() => this.showProfileUser(this.props.sender.name)}
                   />
-                  <div className="name-profile" onClick={this.showProfileUser}>
+                  <div
+                    className="name-profile"
+                    onClick={() => this.showProfileUser(this.props.sender.name)}
+                  >
                     {this.props.sender.name}
                   </div>
                   <div

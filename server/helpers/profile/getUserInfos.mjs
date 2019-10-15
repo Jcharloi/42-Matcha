@@ -11,7 +11,7 @@ const { ip_city } = keys;
 
 const getUserAll = async (req, res) => {
   let text = `SELECT user_id FROM users WHERE user_name = $1`;
-  let values = [req.body.userName];
+  let values = [req.body.targetName];
   await client
     .query(text, values)
     .then(async ({ rowCount, rows }) => {
@@ -24,7 +24,7 @@ const getUserAll = async (req, res) => {
         if (req.body.isOther) {
           const validated = await checkBlockedUser(
             req.body.ourName,
-            req.body.userName
+            req.body.targetName
           );
           if (validated) {
             res.send({ validated: true, userInfos });

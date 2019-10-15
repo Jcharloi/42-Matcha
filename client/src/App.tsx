@@ -84,43 +84,47 @@ class App extends React.Component<VerifiedUser, AppState> {
   }
 
   getUserInfos = async (
-    userName: string | null,
-    ourName: string | null,
+    targetName: string | null,
     isOther: boolean,
     isAuth: boolean
   ): Promise<void> => {
-    await Axios.put(`http://localhost:5000/get-user-infos`, {
-      userName,
-      ourName,
+    await Axios.put(`http://localhost:5000/profile/get-user-infos`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetName,
       isOther
     })
-      .then(({ data: { userInfos, validated } }) => {
-        if (
-          validated &&
-          !userInfos.message &&
-          !userInfos.pictures.message &&
-          !userInfos.tags.message
-        ) {
-          if (!isOther) {
-            let isCompleted = isProfileCompleted(
-              userInfos.city,
-              userInfos.gender,
-              userInfos.presentation,
-              userInfos.pictures,
-              userInfos.tags
-            );
-            store.dispatch(insertUserProfile(userInfos));
-            store.dispatch(updateUserAuth({ isAuth, isCompleted }));
-          } else {
-            store.dispatch(
-              insertOtherProfile({
-                ...userInfos,
-                pictures:
-                  userInfos.pictures && userInfos.pictures.length > 0
-                    ? userInfos.pictures
-                    : [{ date: "1", path: "unknown.png", main: false }]
-              })
-            );
+      .then(({ data: { validToken, userInfos, validated } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (
+            validated &&
+            !userInfos.message &&
+            !userInfos.pictures.message &&
+            !userInfos.tags.message
+          ) {
+            if (!isOther) {
+              let isCompleted = isProfileCompleted(
+                userInfos.city,
+                userInfos.gender,
+                userInfos.presentation,
+                userInfos.pictures,
+                userInfos.tags
+              );
+              store.dispatch(insertUserProfile(userInfos));
+              store.dispatch(updateUserAuth({ isAuth, isCompleted }));
+            } else {
+              store.dispatch(
+                insertOtherProfile({
+                  ...userInfos,
+                  pictures:
+                    userInfos.pictures && userInfos.pictures.length > 0
+                      ? userInfos.pictures
+                      : [{ date: "1", path: "unknown.png", main: false }]
+                })
+              );
+            }
           }
         }
       })
@@ -139,7 +143,6 @@ class App extends React.Component<VerifiedUser, AppState> {
           if (authToken) {
             await this.getUserInfos(
               localStorage.getItem("user_name"),
-              localStorage.getItem("user_name"),
               false,
               authToken
             );
@@ -147,7 +150,6 @@ class App extends React.Component<VerifiedUser, AppState> {
             if (current && current.search("/profile/") !== -1) {
               await this.getUserInfos(
                 decodeURIComponent(current.split("/")[2]),
-                localStorage.getItem("user_name"),
                 true,
                 authToken
               );
@@ -174,7 +176,7 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Disconnect quand le token expire
     - Infinite scroll (pls no)
 
-    - Protect get users info
+    - Fix bug report page
     
     Partie back :
     - Changer status res
