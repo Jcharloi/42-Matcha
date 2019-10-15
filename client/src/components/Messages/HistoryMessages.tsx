@@ -66,9 +66,10 @@ class HistoryMessages extends React.Component<Props, {}> {
               key={senderId === this.props.receiverId ? receiverId : senderId}
               style={{
                 border: "1px solid rgb(209, 212, 214)",
-                backgroundColor: !receiverRead
-                  ? "rgba(241, 239, 239, 0.952)"
-                  : "white"
+                backgroundColor:
+                  !receiverRead && senderId !== this.props.receiverId
+                    ? "rgba(241, 239, 239, 0.952)"
+                    : "white"
               }}
               onClick={() => {
                 if (!receiverRead) {
@@ -115,6 +116,8 @@ class HistoryMessages extends React.Component<Props, {}> {
                       ? senderRead
                         ? "check circle outline"
                         : "circle outline"
+                      : senderId === this.props.receiverId
+                      ? "circle outline"
                       : "circle"
                   }
                 />
