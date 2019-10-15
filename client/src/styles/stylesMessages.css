@@ -71,7 +71,6 @@
   height: 80rem;
   display: flex;
   justify-content: center;
-  /* border: 2px solid red; */
 }
 
 .icon-message {
@@ -81,8 +80,6 @@
 }
 
 .container-conv {
-  /* overflow: scroll; */
-  /* scroll-behavior: auto; */
   max-height: 80rem;
   display: flex;
   flex-direction: column;
@@ -169,6 +166,7 @@
 }
 
 .message-value {
+  white-space: pre;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 1.2rem;
   border-radius: 20px;

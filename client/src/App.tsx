@@ -39,14 +39,14 @@ export function findLastSince(lastseen: string) {
   if (lastseen !== "Just now") {
     lastseen = new Date(+lastseen * 1000).toISOString();
   }
-  var dateSeen: any = new Date(lastseen);
-  var dateNow: any = new Date();
-  var plural: string = "s";
-  var seconds = Math.floor((dateNow - dateSeen) / 1000);
-  var minutes = Math.floor(seconds / 60);
-  var hours = Math.floor(minutes / 60);
-  var days = Math.floor(hours / 24);
-  var months = Math.floor(days / 31);
+  const dateSeen: any = new Date(lastseen);
+  const dateNow: any = new Date();
+  let plural: string = "s";
+  const seconds = Math.floor((dateNow - dateSeen) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 31);
   if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
 
   if (months) return months.toString() + " month" + plural + " ago";
@@ -166,12 +166,10 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
+    - Temps qui change avec le temps WAW
     - Appuyer sur entrée
-    - Fix bug Vu quand t'as envoye un message
-    - Socket pour recuperer l'histo quand on fait back ?
-    - Creer de nouveaux messages quand c'est vide - Missing the URL shit
+    - Socket pour recuperer l'histo quand on fait back ? JE SAIS PAS JPP
 
-    - Augmenter size ring green profil
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire

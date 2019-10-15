@@ -130,12 +130,11 @@ class ShowMessages extends React.Component<Props, State> {
   };
 
   sendNewMessage = () => {
-    //trim whitespace
-    if (this.state.newMessage != "") {
+    if (this.state.newMessage.trim() !== "") {
       Axios.post("http://localhost:5000/message/send-new-message", {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name"),
-        message: this.state.newMessage,
+        message: this.state.newMessage.trim(),
         senderId: this.props.sender.id,
         receiverId: this.props.receiverId
       })
@@ -156,7 +155,7 @@ class ShowMessages extends React.Component<Props, State> {
 
   showProfileUser = () => {
     console.log("show profile user");
-    history.push("/profile/" + this.props.sender.name);
+    history.push(`/profile/${this.props.sender.name}`);
   };
 
   public render() {
@@ -226,18 +225,6 @@ class ShowMessages extends React.Component<Props, State> {
                             : "receiver"
                         }`}
                       >
-                        {/* <span>
-                          {index === this.state.allMessages.length - 1 ? (
-                            <Icon
-                              size="large"
-                              name={
-                                receiverRead
-                                  ? "check circle outline"
-                                  : "circle outline"
-                              }
-                            />
-                          ) : null}
-                        </span> */}
                         <div
                           className={"message-value"}
                           style={{

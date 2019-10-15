@@ -48,7 +48,7 @@ class AdminReports extends React.Component<{}, AState> {
         if (validated) {
           store.dispatch(insertOtherProfile(userInfos));
           // console.log(userInfos);
-          history.push(`/profile/` + userInfos.user_name);
+          history.push(`/profile/${userInfos.user_name}`);
         }
       })
       .catch(err => console.error(err));
