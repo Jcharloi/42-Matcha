@@ -10,6 +10,7 @@ import UserCard from "../components/Match/UserCard";
 import SortIndex from "../components/Match/SortIndex";
 import FilterInterval from "../components/Match/FilterInterval";
 import ModalFilter from "../components/Match/ModalFilter";
+import socket from "../helpers/socket";
 
 import { Divider } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";
@@ -59,6 +60,9 @@ class Home extends React.Component<User, HState> {
           this.setState({ userMatchInfo, copyUserMatch: userMatchInfo });
         }
         this.setState({ messageHome: message, isLoading: false });
+        socket.on("greeting", function(message: any) {
+          console.log("Le serveur a un message pour vous : " + message);
+        });
       })
       .catch(err => console.error(err));
   };
