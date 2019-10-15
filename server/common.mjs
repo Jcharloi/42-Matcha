@@ -144,6 +144,21 @@ const calculateDistance = (myCoordinates, userMatchInfo) => {
   return userMatchInfo;
 };
 
+const checkMutualLikes = async (userOne, userTwo) => {
+  let text = `SELECT count(*) FROM user_like WHERE (liking_user_id = $1 AND liked_user_id = $2) OR (liked_user_id = $1 AND liking_user_id = $2)`;
+  let values = [userOne, userTwo];
+  return await client
+    .query(text, values)
+    .then(({ rows: [{ count }] }) => {
+      if (count === "2") return { validated: true };
+      else return { validated: false };
+    })
+    .catch(e => {
+      console.error(e.stack);
+      return { validated: false };
+    });
+};
+
 const checkBlockedUser = async (ourName, userName) => {
   const ourUserId = await getUserId(ourName);
   const userId = await getUserId(userName);
@@ -240,6 +255,7 @@ export {
   compareTag,
   calculateDistance,
   checkBlockedUser,
+  checkMutualLikes,
   filterByBlockedUser,
   filterByIncompletedUser
 };

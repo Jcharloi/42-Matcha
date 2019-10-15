@@ -52,7 +52,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
 
   selectProfile = (otherUser: User) => {
     store.dispatch(insertOtherProfile(otherUser));
-    history.push(`/profile/` + otherUser.user_name);
+    history.push(`/profile/${otherUser.user_name}`);
   };
 
   public render() {

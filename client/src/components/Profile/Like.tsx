@@ -70,7 +70,7 @@ class Like extends React.Component<Props, State> {
   };
 
   redirectMessage = () => {
-    history.push("/messages/" + this.props.otherUser.user_name);
+    history.push(`/messages/${this.props.otherUser.user_name}`);
   };
 
   public render() {

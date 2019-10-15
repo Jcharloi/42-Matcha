@@ -49,6 +49,7 @@ import { getUsersBySearch } from "./helpers/home/search.mjs";
 import getReports from "./helpers/profile/reports.mjs";
 import {
   getAllMessages,
+  checkAndGetSender,
   readMessage,
   getMessagesPeople,
   sendNewMessage
@@ -61,7 +62,7 @@ router.all("/home/*", tokenMiddleware);
 router.all("/search/*", tokenMiddleware);
 router.all("/message/*", tokenMiddleware);
 router.put("/verify-token", verifyToken);
-router.put("/get-user-infos", getUserAll);
+router.put("/profile/get-user-infos", getUserAll);
 
 router.post("/inscription", inscription);
 router.get("/validate-account/:id", validateAccount);
@@ -96,6 +97,7 @@ router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
 router.put("/message/get-all-messages", getAllMessages);
+router.put("/message/get-sender-infos", checkAndGetSender);
 router.put("/message/read-message", readMessage);
 router.put("/message/get-messages-people", getMessagesPeople);
 router.post("/message/send-new-message", sendNewMessage);

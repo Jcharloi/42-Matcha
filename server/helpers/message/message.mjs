@@ -1,6 +1,52 @@
 import client from "../../sql/sql.mjs";
-import { createRandomId, getUserId } from "../../common.mjs";
+import { createRandomId, getUserId, checkMutualLikes } from "../../common.mjs";
 import { socketConnection, ioConnection } from "../../app.mjs";
+
+const getSenderInfos = async sender => {
+  let text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
+  let values = [sender];
+  return await client
+    .query(text, values)
+    .then(async ({ rows, rowCount }) => {
+      if (rowCount > 0) {
+        return {
+          validatedRes: true,
+          user: {
+            senderName: rows[0].user_name,
+            lastConnection: rows[0].last_connection,
+            mainPicture: rows[0].path
+          }
+        };
+      } else {
+        return { validatedRes: false };
+      }
+    })
+    .catch(e => {
+      console.error(e.stack);
+      return { validatedRes: false };
+    });
+};
+
+const checkAndGetSender = async (req, res) => {
+  const senderId = await getUserId(req.body.senderName);
+  const userId = await getUserId(req.body.userName);
+  if (!senderId) {
+    res.send({ validated: false });
+  } else {
+    const { validatedRes, user } = await getSenderInfos(senderId);
+    if (validatedRes) {
+      user.id = senderId;
+      const { validated } = await checkMutualLikes(senderId, userId);
+      if (validated) {
+        res.send({ validated: true, user });
+      } else {
+        res.send({ validated: false });
+      }
+    } else {
+      res.send({ validated: false });
+    }
+  }
+};
 
 const checkAllMessages = async receiverId => {
   let text = `SELECT message, message_id, a.date, a.sender_id, a.receiver_id, a.sender_read, a.receiver_read
@@ -14,28 +60,11 @@ const checkAllMessages = async receiverId => {
       let usersMessage = [];
       let validated = true;
       for (let i = 0; i < rowCount; i++) {
-        text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
-        values = [
+        const { validatedRes, user } = await getSenderInfos(
           rows[i].sender_id === receiverId
             ? rows[i].receiver_id
             : rows[i].sender_id
-        ];
-        const { validatedRes, user } = await client
-          .query(text, values)
-          .then(async ({ rows }) => {
-            return {
-              validatedRes: true,
-              user: {
-                senderName: rows[0].user_name,
-                lastConnection: rows[0].last_connection,
-                mainPicture: rows[0].path
-              }
-            };
-          })
-          .catch(e => {
-            console.error(e.stack);
-            return { validatedRes: false };
-          });
+        );
         if (validatedRes) {
           usersMessage.push({
             message: rows[i].message,
@@ -133,7 +162,7 @@ const sendNewMessage = async (req, res) => {
         senderRead: true
       });
       const userId = await getUserId(req.body.userName);
-      console.log(socketConnection);
+      // console.log(socketConnection);
       // const { validated, usersMessage } = await checkAllMessages(userId);
       // if (validated) {
       //   ioConnection.sockets.emit("New history", usersMessage);
@@ -146,4 +175,10 @@ const sendNewMessage = async (req, res) => {
     });
 };
 
-export { getAllMessages, readMessage, getMessagesPeople, sendNewMessage };
+export {
+  checkAndGetSender,
+  getAllMessages,
+  readMessage,
+  getMessagesPeople,
+  sendNewMessage
+};

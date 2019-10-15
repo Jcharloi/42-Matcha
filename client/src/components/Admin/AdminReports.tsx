@@ -5,6 +5,7 @@ import TopMenu from "../TopMenu";
 import { Link } from "react-router-dom";
 import { store } from "../../redux/store";
 import history from "../../helpers/history";
+import { deleteUser } from "../../App";
 
 import { insertOtherProfile } from "../../redux/actions/actions";
 
@@ -27,6 +28,7 @@ class AdminReports extends React.Component<{}, AState> {
       redirect: ""
     };
   }
+
   componentDidMount = () => {
     Axios.put(`http://localhost:5000/admin/get-reports`, {
       userName: localStorage.getItem("user_name"),
@@ -41,58 +43,60 @@ class AdminReports extends React.Component<{}, AState> {
   };
 
   selectProfile = (otherUser: string) => {
-    Axios.put(`http://localhost:5000/get-user-infos`, {
-      userName: otherUser
+    Axios.put(`http://localhost:5000/profile/get-user-infos`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetName: otherUser
     })
-      .then(({ data: { validated, userInfos } }) => {
-        if (validated) {
-          store.dispatch(insertOtherProfile(userInfos));
-          // console.log(userInfos);
-          history.push(`/profile/` + userInfos.user_name);
+      .then(({ data: { validToken, validated, userInfos } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            store.dispatch(insertOtherProfile(userInfos));
+            history.push(`/profile/${userInfos.user_name}`);
+          }
         }
       })
       .catch(err => console.error(err));
   };
 
-  banUser = async (targetUser: string) => {
-    let targetUserId;
-    await Axios.put(`http://localhost:5000/get-user-infos`, {
-      userName: targetUser
+  banUser = (targetUser: string) => {
+    Axios.put(`http://localhost:5000/profile/get-user-infos`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetName: targetUser
     })
-      .then(({ data: { validated, userInfos } }) => {
-        if (validated) {
-          targetUserId = userInfos.user_id;
+      .then(({ data: { validToken, validated, userInfos } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            Axios.put(`http://localhost:5000/admin/ban-user`, {
+              userName: localStorage.getItem("user_name"),
+              token: localStorage.getItem("token"),
+              targetUserId: userInfos.user_id
+            })
+              .then(() => {
+                this.setState({
+                  reportArray: this.state.reportArray.filter(reports => {
+                    if (reports.reported_user !== targetUser) return true;
+                    return false;
+                  })
+                });
+              })
+              .catch(err => console.error(err));
+          }
         }
       })
       .catch(err => console.error(err));
-    await console.log(targetUserId);
-    await Axios.put(`http://localhost:5000/admin/ban-user`, {
-      userName: localStorage.getItem("user_name"),
-      token: localStorage.getItem("token"),
-      targetUserId: targetUserId
-    })
-      .then(() => {
-        this.setState({
-          reportArray: this.state.reportArray.filter(reports => {
-            if (reports.reported_user !== targetUser) return true;
-            return false;
-          })
-        });
-      })
-      .catch(err => console.error(err));
-
-    console.log(this.state.reportArray);
   };
 
   reportNb = (targetUser: string) => {
     let report_nb = 0;
-    let i = 0;
-    while (this.state.reportArray[i]) {
-      if (this.state.reportArray[i].reported_user === targetUser) {
-        report_nb++;
-      }
-      i++;
-    }
+    this.state.reportArray.map(({ reported_user }) => {
+      return reported_user === targetUser ? report_nb++ : report_nb;
+    });
     return report_nb;
   };
 
@@ -104,11 +108,6 @@ class AdminReports extends React.Component<{}, AState> {
           <Feed>
             {this.state.reportArray.map((report, index) => (
               <Feed.Event key={index} className="user-container">
-                {/* <Image
-                  className="avatar"
-                  avatar
-                  src={`http://localhost:5000/public/profile-pictures/${user.path}`}
-                /> */}
                 <Feed.Content className="feed-content">
                   <Feed.Content className="feed-content">
                     <div

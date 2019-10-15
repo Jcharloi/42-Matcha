@@ -57,36 +57,58 @@ class Messages extends React.Component<Props, MState> {
       window.location.pathname &&
       window.location.pathname.search("/messages/") !== -1
     ) {
-      this.setState({
-        isLoading: false,
-        displayHistory: false,
-        sender: {
-          name: this.props.otherUser.user_name,
-          id: this.props.otherUser.user_id,
-          picture: this.props.otherUser.pictures[0].path,
-          lastConnection: this.props.otherUser.connection
-        }
-      });
-    } else {
-      Axios.put("http://localhost:5000/message/get-all-messages", {
+      Axios.put("http://localhost:5000/message/get-sender-infos", {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name"),
-        receiverId: this.props.user.user_id
+        senderName: decodeURIComponent(window.location.pathname.split("/")[2])
       })
-        .then(({ data: { validToken, validated, usersMessage } }) => {
+        .then(({ data: { validToken, validated, user } }) => {
           if (validToken === false) {
             deleteUser();
           } else {
             if (validated) {
-              this.setState({ historyUsers: usersMessage, isLoading: false });
-              this.receiveAllMessages();
+              this.setState({
+                isLoading: false,
+                displayHistory: false,
+                sender: {
+                  name: user.senderName,
+                  id: user.id,
+                  picture: user.mainPicture,
+                  lastConnection: user.lastConnection
+                }
+              });
+            } else {
+              this.getAllMessages();
             }
           }
         })
         .catch(e => {
-          console.log(e.message);
+          console.error(e.message);
         });
+    } else {
+      this.getAllMessages();
     }
+  };
+
+  getAllMessages = () => {
+    Axios.put("http://localhost:5000/message/get-all-messages", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      receiverId: this.props.user.user_id
+    })
+      .then(({ data: { validToken, validated, usersMessage } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({ historyUsers: usersMessage, isLoading: false });
+            this.receiveAllMessages();
+          }
+        }
+      })
+      .catch(e => {
+        console.error(e.message);
+      });
   };
 
   receiveAllMessages = () => {

@@ -39,14 +39,14 @@ export function findLastSince(lastseen: string) {
   if (lastseen !== "Just now") {
     lastseen = new Date(+lastseen * 1000).toISOString();
   }
-  var dateSeen: any = new Date(lastseen);
-  var dateNow: any = new Date();
-  var plural: string = "s";
-  var seconds = Math.floor((dateNow - dateSeen) / 1000);
-  var minutes = Math.floor(seconds / 60);
-  var hours = Math.floor(minutes / 60);
-  var days = Math.floor(hours / 24);
-  var months = Math.floor(days / 31);
+  const dateSeen: any = new Date(lastseen);
+  const dateNow: any = new Date();
+  let plural: string = "s";
+  const seconds = Math.floor((dateNow - dateSeen) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 31);
   if (minutes === 1 || hours === 1 || days === 1 || months === 1) plural = "";
 
   if (months) return months.toString() + " month" + plural + " ago";
@@ -84,43 +84,47 @@ class App extends React.Component<VerifiedUser, AppState> {
   }
 
   getUserInfos = async (
-    userName: string | null,
-    ourName: string | null,
+    targetName: string | null,
     isOther: boolean,
     isAuth: boolean
   ): Promise<void> => {
-    await Axios.put(`http://localhost:5000/get-user-infos`, {
-      userName,
-      ourName,
+    await Axios.put(`http://localhost:5000/profile/get-user-infos`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      targetName,
       isOther
     })
-      .then(({ data: { userInfos, validated } }) => {
-        if (
-          validated &&
-          !userInfos.message &&
-          !userInfos.pictures.message &&
-          !userInfos.tags.message
-        ) {
-          if (!isOther) {
-            let isCompleted = isProfileCompleted(
-              userInfos.city,
-              userInfos.gender,
-              userInfos.presentation,
-              userInfos.pictures,
-              userInfos.tags
-            );
-            store.dispatch(insertUserProfile(userInfos));
-            store.dispatch(updateUserAuth({ isAuth, isCompleted }));
-          } else {
-            store.dispatch(
-              insertOtherProfile({
-                ...userInfos,
-                pictures:
-                  userInfos.pictures && userInfos.pictures.length > 0
-                    ? userInfos.pictures
-                    : [{ date: "1", path: "unknown.png", main: false }]
-              })
-            );
+      .then(({ data: { validToken, userInfos, validated } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (
+            validated &&
+            !userInfos.message &&
+            !userInfos.pictures.message &&
+            !userInfos.tags.message
+          ) {
+            if (!isOther) {
+              let isCompleted = isProfileCompleted(
+                userInfos.city,
+                userInfos.gender,
+                userInfos.presentation,
+                userInfos.pictures,
+                userInfos.tags
+              );
+              store.dispatch(insertUserProfile(userInfos));
+              store.dispatch(updateUserAuth({ isAuth, isCompleted }));
+            } else {
+              store.dispatch(
+                insertOtherProfile({
+                  ...userInfos,
+                  pictures:
+                    userInfos.pictures && userInfos.pictures.length > 0
+                      ? userInfos.pictures
+                      : [{ date: "1", path: "unknown.png", main: false }]
+                })
+              );
+            }
           }
         }
       })
@@ -139,7 +143,6 @@ class App extends React.Component<VerifiedUser, AppState> {
           if (authToken) {
             await this.getUserInfos(
               localStorage.getItem("user_name"),
-              localStorage.getItem("user_name"),
               false,
               authToken
             );
@@ -147,7 +150,6 @@ class App extends React.Component<VerifiedUser, AppState> {
             if (current && current.search("/profile/") !== -1) {
               await this.getUserInfos(
                 decodeURIComponent(current.split("/")[2]),
-                localStorage.getItem("user_name"),
                 true,
                 authToken
               );
@@ -166,18 +168,15 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Appuyer sur entrée
-    - Fix bug Vu quand t'as envoye un message
-    - Socket pour recuperer l'histo quand on fait back ?
-    - Creer de nouveaux messages quand c'est vide - Missing the URL shit
+    - Temps qui change avec le temps WAW
+    - Socket pour recuperer l'histo quand on fait back ? JE SAIS PAS JPP
 
-    - Augmenter size ring green profil
     - margin bas de page
     - center horizontalement profils
     - Disconnect quand le token expire
     - Infinite scroll (pls no)
 
-    - Protect get users info
+    - Fix bug report page
     
     Partie back :
     - Changer status res
