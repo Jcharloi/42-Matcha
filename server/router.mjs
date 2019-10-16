@@ -55,6 +55,7 @@ import {
   sendNewMessage
 } from "./helpers/message/message.mjs";
 import ban from "./helpers/admin/ban.mjs";
+import notify from "./helpers/profile/notifications.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -91,7 +92,7 @@ router.post("/profile/get-user-:current", getUserVisitsAndLikes);
 router.post("/profile/visit", visitedUser);
 router.post("/profile/sanctioning-user", sanctioningUser);
 router.put("/profile/change-password", changePassword);
-
+router.put("/profile/notify", notify);
 router.put("/home/get-users-by-preference", getUsersByPreference);
 router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
@@ -101,7 +102,6 @@ router.put("/message/get-sender-infos", checkAndGetSender);
 router.put("/message/read-message", readMessage);
 router.put("/message/get-messages-people", getMessagesPeople);
 router.post("/message/send-new-message", sendNewMessage);
-
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
   const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
