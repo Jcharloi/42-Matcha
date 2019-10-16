@@ -45,10 +45,8 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log("User disconnect");
     if (clients.length > 0) {
-      clients.map((client, index) => {
-        if (client.socketId === socket.id) {
-          clients.splice(index, 1);
-        }
+      clients = clients.filter(client => {
+        return client.socketId !== socket.id;
       });
     }
   });

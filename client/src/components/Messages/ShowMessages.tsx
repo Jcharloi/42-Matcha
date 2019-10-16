@@ -207,10 +207,7 @@ class ShowMessages extends React.Component<Props, State> {
               </div>
               <div className="show-messages" id="show-message">
                 {this.state.allMessages.map(
-                  (
-                    { date, message, messageId, sentPosition, receiverRead },
-                    index
-                  ) => (
+                  ({ date, message, messageId, sentPosition }) => (
                     <div key={messageId}>
                       <div
                         className={
