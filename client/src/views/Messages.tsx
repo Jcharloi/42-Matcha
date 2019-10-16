@@ -111,30 +111,33 @@ class Messages extends React.Component<Props, MState> {
       });
   };
 
+  initNewHistory = (
+    historyReceived: Array<{
+      senderId: string;
+      senderName: string;
+      receiverId: string;
+      lastConnection: string;
+      date: string;
+      message: string;
+      messageId: string;
+      senderRead: boolean;
+      receiverRead: boolean;
+      mainPicture: string;
+    }>
+  ) => {
+    if (this.state.historyUsers !== historyReceived) {
+      this.setState({
+        historyUsers: historyReceived
+      });
+    }
+  };
+
   receiveAllMessages = () => {
-    socket.on(
-      "New history",
-      (
-        historyReceived: Array<{
-          senderId: string;
-          senderName: string;
-          receiverId: string;
-          lastConnection: string;
-          date: string;
-          message: string;
-          messageId: string;
-          senderRead: boolean;
-          receiverRead: boolean;
-          mainPicture: string;
-        }>
-      ) => {
-        if (this.state.historyUsers.length !== historyReceived.length) {
-          this.setState({
-            historyUsers: historyReceived
-          });
-        }
-      }
-    );
+    socket.on("New history", this.initNewHistory);
+  };
+
+  componentWillUnmount = () => {
+    socket.removeListener("New history", this.initNewHistory);
   };
 
   displayHistory = (

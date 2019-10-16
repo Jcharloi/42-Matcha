@@ -115,6 +115,7 @@ class App extends React.Component<VerifiedUser, AppState> {
               );
               store.dispatch(insertUserProfile(userInfos));
               store.dispatch(updateUserAuth({ isAuth, isCompleted }));
+              socket.emit("send-user-name", localStorage.getItem("user_name"));
             } else {
               store.dispatch(
                 insertOtherProfile({
@@ -176,7 +177,6 @@ class App extends React.Component<VerifiedUser, AppState> {
     /*
     Partie front :
     - Temps qui change avec le temps WAW
-    - Socket pour recuperer l'histo quand on fait back ? JE SAIS PAS JPP
 
     - margin bas de page
     - center horizontalement profils

@@ -145,7 +145,7 @@ const getMessagesPeople = async (req, res) => {
 
 const sendNewMessage = async (req, res) => {
   const messageId = createRandomId(10);
-  const messageDate = Math.floor(Date.now() / 1000);
+  const messageDate = Math.floor(Date.now());
   let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
   let values = [
     req.body.receiverId,
@@ -158,6 +158,8 @@ const sendNewMessage = async (req, res) => {
     .query(text, values)
     .then(async () => {
       let socketId = getSocketId(clients, req.body.userName);
+      let userId = await getUserId(req.body.userName);
+      let history = await checkAllMessages(userId);
       ioConnection.to(socketId).emit("New message", {
         message: req.body.message,
         messageId: messageId,
@@ -166,7 +168,12 @@ const sendNewMessage = async (req, res) => {
         receiverRead: false,
         senderRead: true
       });
+      if (history.validated) {
+        ioConnection.to(socketId).emit("New history", history.usersMessage);
+      }
       socketId = getSocketId(clients, req.body.senderName);
+      userId = await getUserId(req.body.senderName);
+      history = await checkAllMessages(userId);
       ioConnection.to(socketId).emit("New message", {
         message: req.body.message,
         messageId: messageId,
@@ -175,34 +182,9 @@ const sendNewMessage = async (req, res) => {
         receiverRead: false,
         senderRead: true
       });
-      // const senderId = await getUserId(req.body.userName);
-      // const receiverId = await getUserId(req.body.senderName);
-      // let getSocketId;
-      // const historySender = await checkAllMessages(senderId);
-      // if (historySender.validated) {
-      //   clients.map(({ userName, socketId }) => {
-      //     userName === req.body.userName
-      //       ? (getSocketId = socketId)
-      //       : (getSocketId = "");
-      //   });
-      //   console.log("socket id for sender, ourself", getSocketId);
-      //   ioConnection
-      //     .to(getSocketId)
-      //     .emit("New history", historySender.usersMessage);
-      // }
-      // const historyReceiver = await checkAllMessages(receiverId);
-      // if (historyReceiver.validated) {
-      //   console.log(req.body.senderName);
-      //   clients.map(({ userName, socketId }) => {
-      //     userName === req.body.senderName
-      //       ? (getSocketId = socketId)
-      //       : (getSocketId = "");
-      //   });
-      //   console.log("socket id for receiver, other guy", getSocketId);
-      //   ioConnection
-      //     .to(getSocketId)
-      //     .emit("New history", historyReceiver.usersMessage);
-      // }
+      if (history.validated) {
+        ioConnection.to(socketId).emit("New history", history.usersMessage);
+      }
       res.send({ validated: true });
     })
     .catch(e => {

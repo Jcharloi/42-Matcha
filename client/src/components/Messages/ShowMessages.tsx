@@ -81,7 +81,7 @@ class ShowMessages extends React.Component<Props, State> {
   };
 
   componentWillUnmount = () => {
-    //
+    socket.removeListener("New message", this.initNewMessage);
   };
 
   scrollToBottom() {
@@ -90,25 +90,24 @@ class ShowMessages extends React.Component<Props, State> {
     });
   }
 
+  initNewMessage = (messageReceived: {
+    message: string;
+    messageId: string;
+    date: string;
+    sentPosition: string;
+    receiverRead: boolean;
+    senderRead: boolean;
+  }) => {
+    const newMessages = [...this.state.allMessages, messageReceived];
+    if (this.state.allMessages.length !== newMessages.length) {
+      this.setState({
+        allMessages: newMessages
+      });
+    }
+  };
+
   receiveNewMessages = () => {
-    socket.on(
-      "New message",
-      (messageReceived: {
-        message: string;
-        messageId: string;
-        date: string;
-        sentPosition: string;
-        receiverRead: boolean;
-        senderRead: boolean;
-      }) => {
-        const newMessages = [...this.state.allMessages, messageReceived];
-        if (this.state.allMessages.length !== newMessages.length) {
-          this.setState({
-            allMessages: newMessages
-          });
-        }
-      }
-    );
+    socket.on("New message", this.initNewMessage);
   };
 
   setNewMessage = (newMessage: string) => {
@@ -208,10 +207,7 @@ class ShowMessages extends React.Component<Props, State> {
               </div>
               <div className="show-messages" id="show-message">
                 {this.state.allMessages.map(
-                  (
-                    { date, message, messageId, sentPosition, receiverRead },
-                    index
-                  ) => (
+                  ({ date, message, messageId, sentPosition }) => (
                     <div key={messageId}>
                       <div
                         className={

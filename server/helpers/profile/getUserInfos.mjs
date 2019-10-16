@@ -23,7 +23,7 @@ const getUserAll = async (req, res) => {
         userInfos.tags = await getUserTags(userId);
         if (req.body.isOther) {
           const validated = await checkBlockedUser(
-            req.body.ourName,
+            req.body.userName,
             req.body.targetName
           );
           if (validated) {
