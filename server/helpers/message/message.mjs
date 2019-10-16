@@ -1,5 +1,10 @@
 import client from "../../sql/sql.mjs";
-import { createRandomId, getUserId, checkMutualLikes } from "../../common.mjs";
+import {
+  createRandomId,
+  getUserId,
+  checkMutualLikes,
+  getSocketId
+} from "../../common.mjs";
 import { ioConnection, clients } from "../../app.mjs";
 
 const getSenderInfos = async sender => {
@@ -152,7 +157,8 @@ const sendNewMessage = async (req, res) => {
   await client
     .query(text, values)
     .then(async () => {
-      ioConnection.sockets.emit("New message", {
+      let socketId = getSocketId(clients, req.body.userName);
+      ioConnection.to(socketId).emit("New message", {
         message: req.body.message,
         messageId: messageId,
         date: messageDate,
@@ -160,15 +166,43 @@ const sendNewMessage = async (req, res) => {
         receiverRead: false,
         senderRead: true
       });
-      const userId = await getUserId(req.body.userName);
-      const { validated, usersMessage } = await checkAllMessages(userId);
-      if (validated) {
-        console.log(clients);
-        // ioConnection.sockets.connected["uEdsmaC7zfsMM6ZnAAAD"].emit(
-        //   "New history",
-        //   usersMessage
-        // );
-      }
+      socketId = getSocketId(clients, req.body.senderName);
+      ioConnection.to(socketId).emit("New message", {
+        message: req.body.message,
+        messageId: messageId,
+        date: messageDate,
+        sentPosition: req.body.receiverId,
+        receiverRead: false,
+        senderRead: true
+      });
+      // const senderId = await getUserId(req.body.userName);
+      // const receiverId = await getUserId(req.body.senderName);
+      // let getSocketId;
+      // const historySender = await checkAllMessages(senderId);
+      // if (historySender.validated) {
+      //   clients.map(({ userName, socketId }) => {
+      //     userName === req.body.userName
+      //       ? (getSocketId = socketId)
+      //       : (getSocketId = "");
+      //   });
+      //   console.log("socket id for sender, ourself", getSocketId);
+      //   ioConnection
+      //     .to(getSocketId)
+      //     .emit("New history", historySender.usersMessage);
+      // }
+      // const historyReceiver = await checkAllMessages(receiverId);
+      // if (historyReceiver.validated) {
+      //   console.log(req.body.senderName);
+      //   clients.map(({ userName, socketId }) => {
+      //     userName === req.body.senderName
+      //       ? (getSocketId = socketId)
+      //       : (getSocketId = "");
+      //   });
+      //   console.log("socket id for receiver, other guy", getSocketId);
+      //   ioConnection
+      //     .to(getSocketId)
+      //     .emit("New history", historyReceiver.usersMessage);
+      // }
       res.send({ validated: true });
     })
     .catch(e => {

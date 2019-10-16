@@ -122,6 +122,7 @@ class ShowMessages extends React.Component<Props, State> {
         userName: localStorage.getItem("user_name"),
         message: this.state.newMessage.trim(),
         senderId: this.props.sender.id,
+        senderName: this.props.sender.name,
         receiverId: this.props.receiverId
       })
         .then(({ data: { validToken, validated } }) => {
