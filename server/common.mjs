@@ -245,6 +245,14 @@ const filterByIncompletedUser = userMatchInfo => {
   );
 };
 
+const getSocketId = (clients, name) => {
+  let getSocketId;
+  clients.map(({ userName, socketId }) => {
+    userName === name ? (getSocketId = socketId) : "";
+  });
+  return getSocketId;
+};
+
 export {
   getUserCoordinatesByCity,
   getUserCityByCoordinates,
@@ -257,5 +265,6 @@ export {
   checkBlockedUser,
   checkMutualLikes,
   filterByBlockedUser,
-  filterByIncompletedUser
+  filterByIncompletedUser,
+  getSocketId
 };
