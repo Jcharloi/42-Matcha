@@ -6,6 +6,8 @@ import cors from "cors";
 import router from "./router.mjs";
 import http from "http";
 import socketIO from "socket.io";
+import client from "./sql/sql.mjs";
+import { getUserId } from "./common.mjs";
 
 const app = express();
 const portApp = process.env.PORT || 5000;
@@ -32,7 +34,7 @@ app.use(async (req, res, next) => {
   next();
 });
 
-export let clients = [];
+var clients = [];
 io.on("connection", socket => {
   console.log("User connected");
 
