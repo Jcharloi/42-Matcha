@@ -6,11 +6,9 @@ import { Link } from "react-router-dom";
 import { store } from "../../redux/store";
 import history from "../../helpers/history";
 import { deleteUser } from "../../App";
-
 import { insertOtherProfile } from "../../redux/actions/actions";
 
 import { Button, Feed } from "semantic-ui-react";
-import { getSocketId } from "../../helpers/socket.js";
 
 import "../../styles/stylesAdminReports.css";
 
@@ -35,9 +33,13 @@ class AdminReports extends React.Component<{}, AState> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
-      .then(({ data: { validated, reportArray } }) => {
-        if (validated) {
-          this.setState({ reportArray });
+      .then(({ data: { validToken, validated, reportArray } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({ reportArray });
+          }
         }
       })
       .catch(err => console.error(err));
