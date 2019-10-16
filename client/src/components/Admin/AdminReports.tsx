@@ -10,6 +10,7 @@ import { deleteUser } from "../../App";
 import { insertOtherProfile } from "../../redux/actions/actions";
 
 import { Button, Feed } from "semantic-ui-react";
+import { getSocketId } from "../../helpers/socket.js";
 
 import "../../styles/stylesAdminReports.css";
 

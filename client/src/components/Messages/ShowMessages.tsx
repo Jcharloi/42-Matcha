@@ -1,5 +1,5 @@
 import * as React from "react";
-import socket from "../../helpers/socket";
+import { socket } from "../../helpers/socket";
 import history from "../../helpers/history";
 import { deleteUser, findLastSince } from "../../App";
 import Axios from "axios";

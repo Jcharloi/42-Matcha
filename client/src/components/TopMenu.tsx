@@ -6,7 +6,7 @@ import { State } from "../redux/types/types";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { User } from "../models/models";
-import socket from "../helpers/socket";
+import { socket } from "../helpers/socket";
 import { deleteUser } from "../App";
 
 import "../styles/stylesTopMenu.css";
