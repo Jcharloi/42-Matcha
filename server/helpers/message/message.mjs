@@ -145,7 +145,7 @@ const getMessagesPeople = async (req, res) => {
 
 const sendNewMessage = async (req, res) => {
   const messageId = createRandomId(10);
-  const messageDate = Math.floor(Date.now() / 1000);
+  const messageDate = Math.floor(Date.now());
   let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
   let values = [
     req.body.receiverId,
