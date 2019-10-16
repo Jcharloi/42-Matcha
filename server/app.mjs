@@ -14,6 +14,7 @@ const portApp = process.env.PORT || 5000;
 const portSocket = process.env.PORT || 5001;
 const server = http.createServer(app);
 const io = socketIO(server);
+export let ioConnection = io;
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -34,13 +35,13 @@ app.use(async (req, res, next) => {
   next();
 });
 
-var clients = [];
+export let clients = [];
 io.on("connection", socket => {
   console.log("User connected");
 
   socket.on("disconnect", () => {
+    console.log("User disconnect");
     if (clients.length > 0) {
-      console.log("User disconnect");
       clients.map((client, index) => {
         if (client.socketId === socket.id) {
           clients.splice(index, 1);

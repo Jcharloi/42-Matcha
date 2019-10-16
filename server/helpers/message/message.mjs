@@ -1,5 +1,6 @@
 import client from "../../sql/sql.mjs";
 import { createRandomId, getUserId, checkMutualLikes } from "../../common.mjs";
+import { ioConnection, clients } from "../../app.mjs";
 
 const getSenderInfos = async sender => {
   let text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
@@ -138,7 +139,6 @@ const getMessagesPeople = async (req, res) => {
 };
 
 const sendNewMessage = async (req, res) => {
-  // console.log(socketConnection.length);
   const messageId = createRandomId(10);
   const messageDate = Math.floor(Date.now() / 1000);
   let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
@@ -161,11 +161,14 @@ const sendNewMessage = async (req, res) => {
         senderRead: true
       });
       const userId = await getUserId(req.body.userName);
-      // console.log(socketConnection);
-      // const { validated, usersMessage } = await checkAllMessages(userId);
-      // if (validated) {
-      //   ioConnection.sockets.emit("New history", usersMessage);
-      // }
+      const { validated, usersMessage } = await checkAllMessages(userId);
+      if (validated) {
+        console.log(clients);
+        // ioConnection.sockets.connected["uEdsmaC7zfsMM6ZnAAAD"].emit(
+        //   "New history",
+        //   usersMessage
+        // );
+      }
       res.send({ validated: true });
     })
     .catch(e => {
