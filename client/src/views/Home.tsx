@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
 import { deleteUser } from "../App";
+import socket from "../helpers/socket";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/Match/UserCard";
@@ -59,6 +60,9 @@ class Home extends React.Component<User, HState> {
           this.setState({ userMatchInfo, copyUserMatch: userMatchInfo });
         }
         this.setState({ messageHome: message, isLoading: false });
+        // socket.on("greeting", function(message: any) {
+        // console.log("Le serveur a un message pour vous : " + message);
+        // });
       })
       .catch(err => console.error(err));
   };

@@ -1,6 +1,5 @@
 import client from "../../sql/sql.mjs";
 import { createRandomId, getUserId, checkMutualLikes } from "../../common.mjs";
-import { socketConnection, ioConnection } from "../../app.mjs";
 
 const getSenderInfos = async sender => {
   let text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
@@ -139,7 +138,7 @@ const getMessagesPeople = async (req, res) => {
 };
 
 const sendNewMessage = async (req, res) => {
-  console.log(socketConnection.length);
+  // console.log(socketConnection.length);
   const messageId = createRandomId(10);
   const messageDate = Math.floor(Date.now() / 1000);
   let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;

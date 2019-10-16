@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 import TopMenu from "../components/TopMenu";
 import HistoryMessages from "../components/Messages/HistoryMessages";
 import ShowMessage from "../components/Messages/ShowMessages";
-import { User } from "../models/models";
 import socket from "../helpers/socket";
+import { User } from "../models/models";
 
 import "../styles/stylesMessages.css";
 

@@ -2,6 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { Router, Switch, Route } from "react-router-dom";
 import history from "./helpers/history";
+import socket from "./helpers/socket";
 import { connect } from "react-redux";
 import { State } from "./redux/types/types";
 import { store } from "./redux/store";
@@ -126,6 +127,7 @@ class App extends React.Component<VerifiedUser, AppState> {
               );
             }
           }
+          socket.emit("send-user-name", localStorage.getItem("user_name"));
         }
       })
       .catch(error => {
