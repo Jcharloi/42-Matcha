@@ -128,7 +128,6 @@ class App extends React.Component<VerifiedUser, AppState> {
               );
             }
           }
-          socket.emit("send-user-name", localStorage.getItem("user_name"));
           socket.on("notification", (data: any) => {
             console.log(
               "You have recieved a " + data.type + " from " + data.sender

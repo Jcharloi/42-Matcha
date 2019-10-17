@@ -15,9 +15,11 @@ const notify = async (req, res) => {
   } else {
     let text = `SELECT last_connection FROM users WHERE user_id = $1`;
     let values = [receiver_id];
+    console.log;
     await client
       .query(text, values)
       .then(async ({ rows }) => {
+        console.log(rows[0].last_connection);
         if (rows[0].last_connection === "Just now") {
           ioConnection
             .to(getSocketId(clients, req.body.userToNotify))
@@ -33,6 +35,7 @@ const notify = async (req, res) => {
             true
           ];
         } else {
+          let newDate = new Date();
           values = [
             receiver_id,
             sender_id,
@@ -42,6 +45,17 @@ const notify = async (req, res) => {
           ];
         }
         text = `INSERT INTO notification (receiver_id, sender_id, date, notif_type, seen) VALUES ($1, $2, $3, $4, $5)`;
+        await client
+          .query(text, values)
+          .then(() => {
+            res.send({
+              validated: true
+            });
+          })
+          .catch(e => {
+            console.error(e.stack);
+            res.send({ validated: false });
+          });
       })
       .catch(e => {
         console.error(e.stack);
