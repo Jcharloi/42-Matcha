@@ -92,7 +92,7 @@ router.post("/profile/get-user-:current", getUserVisitsAndLikes);
 router.post("/profile/visit", visitedUser);
 router.post("/profile/sanctioning-user", sanctioningUser);
 router.put("/profile/change-password", changePassword);
-router.put("/profile/notify", notify);
+// router.put("/profile/notify", notify);
 router.put("/home/get-users-by-preference", getUsersByPreference);
 router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
