@@ -13,7 +13,7 @@ const logVisit = async (userName, visitedUser) => {
     return await client
       .query(text, values)
       .then(async ({ rows: [{ count }] }) => {
-        var connectionDate = Math.floor(Date.now() / 1000);
+        var connectionDate = Math.floor(Date.now());
         text =
           count === "0"
             ? `INSERT INTO user_visit (visiting_user_id, visited_user_id, date) VALUES ($1, $2, '${connectionDate}')`

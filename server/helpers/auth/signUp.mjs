@@ -41,7 +41,7 @@ const inscription = async (req, res) => {
             "Both",
             "0",
             false,
-            Math.floor(Date.now() / 1000),
+            Math.floor(Date.now()),
             uniqueLinkId
           ];
           await client

@@ -18,7 +18,7 @@ const notify = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rows }) => {
-        if (rows[0].last_connection === "Just now") {
+        if (rows[0].last_connection === "now") {
           ioConnection
             .to(getSocketId(clients, req.body.userToNotify))
             .emit("notification", { type: notif_type, sender: notif_sender });

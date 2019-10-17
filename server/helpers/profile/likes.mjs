@@ -17,7 +17,7 @@ const toggleLike = async body => {
         text =
           count === "0"
             ? `INSERT INTO user_like (liking_user_id, liked_user_id, date) VALUES ($1, $2, ${Math.floor(
-                Date.now() / 1000
+                Date.now()
               )})`
             : `DELETE FROM user_like WHERE liking_user_id = $1 AND liked_user_id = $2`;
         let values = [liking_user_id, liked_user_id];

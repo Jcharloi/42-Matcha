@@ -8,7 +8,7 @@ const disconnect = async (req, res) => {
     res.send({ validated: false });
   } else {
     const text = `UPDATE users SET last_connection='${Math.floor(
-      Date.now() / 1000
+      Date.now()
     )}' WHERE user_id = '${userId}'`;
     await client
       .query(text)
