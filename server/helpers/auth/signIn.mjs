@@ -33,7 +33,7 @@ const connection = async (req, res) => {
                 userInfos = await getUserInfos(userId);
                 userInfos.pictures = await getUserPictures(userId);
                 userInfos.tags = await getUserTags(userId);
-                text = `UPDATE users SET last_connection='Just now' WHERE user_id='${userInfos.user_id}'`;
+                text = `UPDATE users SET last_connection='now' WHERE user_id='${userInfos.user_id}'`;
                 await client
                   .query(text)
                   .then(() => {

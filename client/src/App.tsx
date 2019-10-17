@@ -37,8 +37,8 @@ export function deleteUser() {
 }
 
 export function findLastSince(lastseen: string) {
-  if (lastseen !== "Just now") {
-    lastseen = new Date(+lastseen * 1000).toISOString();
+  if (lastseen !== "now") {
+    lastseen = new Date(+lastseen).toISOString();
   }
   const dateSeen: any = new Date(lastseen);
   const dateNow: any = new Date();
@@ -54,7 +54,8 @@ export function findLastSince(lastseen: string) {
   if (days) return days.toString() + " day" + plural + " ago";
   if (hours) return hours.toString() + " hour" + plural + " ago";
   if (minutes) return minutes.toString() + " minute" + plural + " ago";
-  return "Just now";
+  if (seconds) return seconds.toString() + " second" + plural + " ago";
+  return "now";
 }
 
 export function isProfileCompleted(

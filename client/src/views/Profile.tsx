@@ -56,7 +56,7 @@ class Profile extends React.Component<Props> {
             <div className="user-name">{this.props.user.user_name}</div>
             <Connection
               connection={
-                this.props.isOther ? this.props.user.connection : "Just now"
+                this.props.isOther ? this.props.user.connection : "now"
               }
             />
             <ProgressBar isOther={this.props.isOther} />

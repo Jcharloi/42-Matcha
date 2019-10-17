@@ -194,8 +194,7 @@ class ShowMessages extends React.Component<Props, State> {
                   </div>
                   <div
                     className={
-                      findLastSince(this.props.sender.lastConnection) ===
-                      "Just now"
+                      findLastSince(this.props.sender.lastConnection) === "now"
                         ? "ring ring-color-online"
                         : "ring ring-color-offline"
                     }
