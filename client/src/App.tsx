@@ -27,6 +27,7 @@ import Messages from "./views/Messages";
 
 interface AppState {
   isLoading: boolean;
+  messageApp?: string | null;
 }
 
 export function deleteUser() {
@@ -133,6 +134,27 @@ class App extends React.Component<VerifiedUser, AppState> {
             console.log(
               "You have recieved a " + data.type + " from " + data.sender
             );
+            if (data.type === "like" || data.type === "message") {
+              this.setState({
+                messageApp: data.sender + " just " + data.type + "d you XD!"
+              });
+            }
+            if (data.type === "visit") {
+              this.setState({
+                messageApp: data.sender + " just visited your profile."
+              });
+            }
+            if (data.type === "match") {
+              this.setState({
+                messageApp:
+                  "This is a Match ! " + data.sender + " just liked you back !"
+              });
+            }
+            if (data.type === "unmatch") {
+              this.setState({
+                messageApp: "Ouch ! " + data.sender + " disloved you :("
+              });
+            }
           });
         }
       })
@@ -140,7 +162,7 @@ class App extends React.Component<VerifiedUser, AppState> {
         console.log("Error : ", error.message);
       });
   };
-
+  timer!: NodeJS.Timeout;
   async componentDidMount() {
     if (localStorage.getItem("user_name") && localStorage.getItem("token")) {
       await Axios.put("http://localhost:5000/verify-token", {
@@ -172,6 +194,14 @@ class App extends React.Component<VerifiedUser, AppState> {
     }
     this.setState({ isLoading: false });
   }
+  componentDidUpdate = () => {
+    if (this.state.messageApp && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messageApp) {
+      this.timer = setTimeout(() => this.setState({ messageApp: "" }), 4000);
+    }
+  };
 
   render() {
     /*
@@ -192,6 +222,11 @@ class App extends React.Component<VerifiedUser, AppState> {
     */
     return (
       <div>
+        {this.state.messageApp && (
+          <div className="toast-message ui floating message">
+            <p>{this.state.messageApp}</p>
+          </div>
+        )}
         <Router history={history}>
           {!this.state.isLoading && (
             <Switch>

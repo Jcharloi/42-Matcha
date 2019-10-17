@@ -1,6 +1,7 @@
 import client from "../../sql/sql.mjs";
 import { getUserId, calculateAge } from "../../common.mjs";
 import { getUserPictures, getUserTags } from "../profile/getUserInfos.mjs";
+import notify from "./notifications.mjs";
 
 const logVisit = async (userName, visitedUser) => {
   const visiting_user_id = await getUserId(userName);
@@ -22,6 +23,7 @@ const logVisit = async (userName, visitedUser) => {
         return await client
           .query(text, values)
           .then(() => {
+            notify(userName, visitedUser, "visit");
             return {
               validated: true,
               message:
