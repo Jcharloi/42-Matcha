@@ -27,7 +27,9 @@ const connection = async (req, res) => {
                 const token = jwt.sign(
                   { userName: req.body.userName },
                   secret,
-                  { expiresIn: "24h" }
+                  {
+                    expiresIn: "2h"
+                  }
                 );
                 let userInfos = {};
                 userInfos = await getUserInfos(userId);

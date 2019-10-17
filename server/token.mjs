@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import client from "./sql/sql.mjs";
 import keys from "./keys.json";
+import { getUserId } from "./common.mjs";
 const { secret } = keys;
 
 const verifyToken = async (req, res) => {
@@ -28,10 +29,25 @@ const checkAuthToken = async (token, userName) => {
   }
   return await jwt.verify(token, secret, async (err, decoded) => {
     if (err) {
-      return {
-        validToken: false,
-        message: "Stop playing with our localStorage 😤"
-      };
+      const userId = await getUserId(userName);
+      let text = `UPDATE users SET last_connection = '${Math.floor(
+        Date.now()
+      )}' WHERE user_id = '${userId}'`;
+      return await client
+        .query(text)
+        .then(() => {
+          return {
+            validToken: false,
+            message: "Stop playing with our localStorage 😤"
+          };
+        })
+        .catch(e => {
+          console.error(e.stack);
+          return {
+            validToken: false,
+            message: "Stop playing with our localStorage 😤"
+          };
+        });
     } else {
       const text = `SELECT * FROM users WHERE user_name = $1`;
       const values = [userName];

@@ -176,11 +176,8 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Temps qui change avec le temps WAW
-
     - margin bas de page
     - center horizontalement profils
-    - Disconnect quand le token expire
     - Infinite scroll (pls no)
 
     - Fix bug report page
@@ -190,6 +187,18 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Ne pas delete si y a encore la photo sur la db !
     - Ne pas degager le compte admin
     */
+    // if (this.props.isAuth) {
+    //   setInterval(() => {
+    //     Axios.put("http://localhost:5000/verify-connection", {
+    //       token: localStorage.getItem("token"),
+    //       userName: localStorage.getItem("user_name")
+    //     })
+    //       .then(() => {})
+    //       .catch(e => {
+    //         console.log(e.message);
+    //       });
+    //   }, 5000);
+    // }
     return (
       <div>
         <Router history={history}>
