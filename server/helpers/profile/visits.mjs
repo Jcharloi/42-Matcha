@@ -23,7 +23,7 @@ const logVisit = async (userName, visitedUser) => {
         return await client
           .query(text, values)
           .then(() => {
-            notify(userName, visitedUser, "visit");
+            count === "0" ? notify(userName, visitedUser, "visit") : null;
             return {
               validated: true,
               message:

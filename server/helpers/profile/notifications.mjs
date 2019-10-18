@@ -10,12 +10,13 @@ const notify = async (userName, userToNotify, type) => {
   const sender_id = await getUserId(userName);
   const notif_type = type;
   const notif_sender = userName;
+
   if (!receiver_id || !sender_id) {
     return { validated: false };
   } else {
     let text = `SELECT last_connection FROM users WHERE user_id = $1`;
     let values = [receiver_id];
-    console.log;
+
     await client
       .query(text, values)
       .then(async ({ rows }) => {
@@ -23,8 +24,6 @@ const notify = async (userName, userToNotify, type) => {
           ioConnection
             .to(getSocketId(clients, userToNotify))
             .emit("notification", { type: notif_type, sender: notif_sender });
-          console.log("sent to " + getSocketId(clients, userToNotify));
-          console.log(clients);
           let newDate = Math.floor(Date.now());
           values = [receiver_id, sender_id, newDate, type, true];
         } else {
@@ -46,6 +45,7 @@ const notify = async (userName, userToNotify, type) => {
       })
       .catch(e => {
         console.error(e.stack);
+        return { validated: false };
       });
   }
 };
