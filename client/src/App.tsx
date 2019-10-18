@@ -137,7 +137,7 @@ class App extends React.Component<VerifiedUser, AppState> {
             );
             if (data.type === "like" || data.type === "message") {
               this.setState({
-                messageApp: data.sender + " just " + data.type + "d you XD!"
+                messageApp: data.sender + " just " + data.type + "d you !"
               });
             }
             if (data.type === "visit") {
@@ -151,7 +151,7 @@ class App extends React.Component<VerifiedUser, AppState> {
                   "This is a Match ! " + data.sender + " just liked you back !"
               });
             }
-            if (data.type === "unmatch") {
+            if (data.type === "dislike") {
               this.setState({
                 messageApp: "Ouch ! " + data.sender + " disloved you :("
               });
