@@ -44,7 +44,7 @@ import {
   getUserVisitsAndLikes,
   visitedUser
 } from "./helpers/profile/visits.mjs";
-import { sanctioningUser } from "./helpers/profile/sanctioning.mjs";
+import { sanctioningUser } from "./helpers/admin/sanctioning.mjs";
 import { getUsersByPreference } from "./helpers/home/match.mjs";
 import { sortByIndex } from "./helpers/home/sort.mjs";
 import { filterByInterval } from "./helpers/home/filter.mjs";
@@ -57,7 +57,7 @@ import {
   getMessagesPeople,
   sendNewMessage
 } from "./helpers/message/message.mjs";
-import ban from "./helpers/admin/ban.mjs";
+import { banUser } from "./helpers/admin/ban.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -76,6 +76,7 @@ router.post("/connection", connection);
 router.put("/disconnect", disconnect);
 router.put("/admin/verify-connection", checkConnection);
 router.put("/admin/get-reports", getReports);
+router.put("/admin/ban-user", banUser);
 
 router.put("/profile/get-user-city", getUserCity);
 router.put("/profile/get-user-pictures", getUserPictures);
@@ -95,7 +96,6 @@ router.post("/profile/get-user-:current", getUserVisitsAndLikes);
 router.post("/profile/visit", visitedUser);
 router.post("/profile/sanctioning-user", sanctioningUser);
 router.put("/profile/change-password", changePassword);
-// router.put("/profile/notify", notify);
 router.put("/home/get-users-by-preference", getUsersByPreference);
 router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
@@ -115,6 +115,5 @@ router.get("/public/fake-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
-router.put("/admin/ban-user", ban);
 
 export default router;

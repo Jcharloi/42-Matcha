@@ -9,7 +9,6 @@ interface Props {
 
 class Connection extends React.Component<Props, {}> {
   public render() {
-    console.log(findLastSince(this.props.connection));
     return (
       <div className="connection-container">
         <div

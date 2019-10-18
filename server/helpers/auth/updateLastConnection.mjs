@@ -37,9 +37,7 @@ const checkConnection = async (req, res) => {
       .then(({ rows: [{ last_connection }] }) => {
         const difference = Math.floor(Date.now()) - last_connection;
         const toMinutes = Math.round(difference / 1000 / 60 / 60);
-        // console.log(toMinutes);
         if (toMinutes <= 30) {
-          console.log("Connected");
           const validated = updateLastConnection(userId);
           if (validated) {
             res.send({ validated, connected: true });
@@ -47,7 +45,6 @@ const checkConnection = async (req, res) => {
             res.send({ validated, connected: false });
           }
         } else {
-          console.log("Disconnected");
           res.send({ connected: false });
         }
       })

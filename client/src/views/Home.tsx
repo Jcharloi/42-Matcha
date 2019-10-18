@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
 import { deleteUser } from "../App";
-import { socket } from "../helpers/socket";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/Match/UserCard";

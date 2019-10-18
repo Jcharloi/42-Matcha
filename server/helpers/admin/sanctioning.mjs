@@ -20,7 +20,6 @@ const sanctioningUser = async (req, res) => {
     } else {
       text = `SELECT * FROM user_block WHERE blocking_user_id = $1 AND blocked_user_id = $2`;
     }
-    // console.log(req.body.targetUserId);
     let values = [userId, req.body.targetUserId];
     await client
       .query(text, values)

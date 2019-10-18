@@ -1,9 +1,7 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 import updatePopularityScore from "./popularityScore.mjs";
-import { logVisit } from "./visits.mjs";
-import notify from "./notifications.mjs";
-import { getUserName } from "../profile/getUserInfos.mjs";
+import notifyUser from "./notifications.mjs";
 
 const toggleLike = async body => {
   const liking_user_id = await getUserId(body.userName);
@@ -29,13 +27,12 @@ const toggleLike = async body => {
             if (count === "0") {
               // await logVisit(body.userName, body.targetUser);
               if (checkMatch(liking_user_id, liked_user_id)) {
-                notify(body.userName, body.targetUser, "match");
+                notifyUser(body.userName, body.targetUser, "match");
               } else {
-                notify(body.userName, body.targetUser, "like");
+                notifyUser(body.userName, body.targetUser, "like");
               }
             } else {
-              console.log("dislove");
-              notify(body.userName, body.targetUser, "dislike");
+              notifyUser(body.userName, body.targetUser, "dislike");
             }
             const score = await updatePopularityScore(liked_user_id);
             return count === "0"
@@ -88,12 +85,8 @@ const checkMatch = async (self, target) => {
     return false;
   } else {
     if (targetLikedSelf == true && selfLikedTarget == true) {
-      console.log(self);
-      // notify(await getUserName(self), await getUserName(target), "match");
-      console.log("match notif sent");
       matched = true;
     }
-    console.log("checked match");
     return { selfLikedTarget, targetLikedSelf, matched };
   }
 };

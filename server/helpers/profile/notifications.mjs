@@ -5,8 +5,8 @@ import socketIO from "socket.io";
 import { Socket } from "dgram";
 import { ioConnection, clients } from "../../app.mjs";
 
-const notify = async (userName, userToNotify, type) => {
-  const receiver_id = await getUserId(userToNotify);
+const notifyUser = async (userName, userTonotifyUser, type) => {
+  const receiver_id = await getUserId(userTonotifyUser);
   const sender_id = await getUserId(userName);
   const notif_type = type;
   const notif_sender = userName;
@@ -21,20 +21,17 @@ const notify = async (userName, userToNotify, type) => {
       .then(async ({ rows: [{ last_connection }] }) => {
         const difference = Math.floor(Date.now()) - last_connection;
         const toMinutes = Math.round(difference / 1000 / 60);
-        // console.log(toMinutes);
         if (toMinutes <= 1) {
           ioConnection
-            .to(getSocketId(clients, userToNotify))
+            .to(getSocketId(clients, userTonotifyUser))
             .emit("notification", { type: notif_type, sender: notif_sender });
         }
-        console.log("1");
         text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND seen = $4`;
         values = [receiver_id, sender_id, type, toMinutes <= 1 ? true : false];
         await client
           .query(text, values)
           .then(async ({ rows: [{ count }] }) => {
             let connectionDate = Math.floor(Date.now());
-            console.log("2");
             text =
               count === "0"
                 ? `INSERT INTO notification (receiver_id, sender_id, date, notif_type, seen) VALUES ($1, $2, ${connectionDate}, $3, $4)`
@@ -42,7 +39,6 @@ const notify = async (userName, userToNotify, type) => {
             await client
               .query(text, values)
               .then(() => {
-                console.log("3");
                 return {
                   validated: true
                 };
@@ -53,7 +49,6 @@ const notify = async (userName, userToNotify, type) => {
               });
           })
           .catch(e => {
-            console.log("ici");
             console.error(e.stack);
             return { validated: false };
           });
@@ -65,4 +60,4 @@ const notify = async (userName, userToNotify, type) => {
   }
 };
 
-export default notify;
+export default notifyUser;

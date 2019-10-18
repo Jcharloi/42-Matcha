@@ -1,7 +1,6 @@
 import client from "../../sql/sql.mjs";
 
-const ban = async (req, res) => {
-  console.log(req.body.targetUserId);
+const banUser = async (req, res) => {
   let text = "DELETE FROM users WHERE user_id = $1";
   let values = [req.body.targetUserId];
   await client
@@ -34,9 +33,7 @@ const ban = async (req, res) => {
                       let values = [req.body.targetUserId];
                       await client
                         .query(text, values)
-                        .then(async () => {
-                          console.log("Tt");
-                        })
+                        .then(() => {})
                         .catch(e => {
                           console.error(e);
                         });
@@ -64,4 +61,4 @@ const ban = async (req, res) => {
     });
 };
 
-export default ban;
+export { banUser };

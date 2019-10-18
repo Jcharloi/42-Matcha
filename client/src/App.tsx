@@ -132,9 +132,6 @@ class App extends React.Component<VerifiedUser, AppState> {
             }
           }
           socket.on("notification", (data: any) => {
-            console.log(
-              "You have recieved a " + data.type + " from " + data.sender
-            );
             if (data.type === "like" || data.type === "message") {
               this.setState({
                 messageApp: data.sender + " just " + data.type + "d you !"
@@ -203,42 +200,7 @@ class App extends React.Component<VerifiedUser, AppState> {
     if (this.state.messageApp) {
       this.timer = setTimeout(() => this.setState({ messageApp: "" }), 4000);
     }
-  };
-
-  componentWillUnmount = () => {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-    if (this.timerConnection) {
-      clearTimeout(this.timerConnection);
-    }
-  };
-
-  render() {
-    /*
-    Partie front :
-    - Deco when offline
-    - margin bas de page
-    - center horizontalement profils
-    - Infinite scroll (pls no)
-
-    - Last_connection update toutes les 5 minutes, si < 5 minutes -> connecté
-      Sinon déconnecté
-
-    - Fix bug position fixed show profile message
-    - Responsive
-    - Messages en petit
-
-    - Fix bug report page
-    
-    Partie back :
-    - Changer status res
-    - Ne pas delete si y a encore la photo sur la db !
-    - Ne pas degager le compte admin
-    */
-    console.log("FFFFFFFF" + this.timerConnection);
     if (!this.timerConnection) {
-      console.log("greiouhgerouhgeo");
       if (this.props.isAuth) {
         this.timerConnection = setInterval(() => {
           Axios.put("http://localhost:5000/admin/verify-connection", {
@@ -256,6 +218,38 @@ class App extends React.Component<VerifiedUser, AppState> {
         }, 30000);
       }
     }
+  };
+
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.timerConnection) {
+      clearTimeout(this.timerConnection);
+    }
+  };
+
+  render() {
+    /*
+    Partie front :
+    - margin bas de page
+    - center horizontalement profils
+    - Infinite scroll (pls no)
+    - CSS notif
+
+    - Fix bug position fixed show profile message
+    - Responsive
+    - Messages en petit
+
+    - Fix bug report page
+    
+    Partie back :
+    - Check l'historique en fonction du match
+    - Changer status res
+    - Ne pas delete si y a encore la photo sur la db !
+    - Ne pas degager le compte admin
+    - Edit ban function
+    */
     return (
       <div>
         {this.state.messageApp && (
