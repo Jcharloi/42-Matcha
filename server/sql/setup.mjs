@@ -78,7 +78,9 @@ const createAdminAccount = async () => {
   const userId = "eef7d602-045f-4db3-92e2-afd6131f5a41";
   const { lat, lon } = await getUserCoordinatesByCity("Paris");
   const query = `
-    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', 'Mar/01/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 100, 'Paris', '${lat}', '${lon}', 'now', TRUE);
+    INSERT INTO users (user_id,mail,user_name,last_name,first_name,birthday,password_hash,gender,orientation,presentation,score,city,latitude,longitude,last_connection,validated_account) VALUES ('${userId}', 'matcha.gestion@gmail.com', 'IAmAnAdmin', 'AnAdmin', 'IAm', 'Mar/01/1996', '$2b$10$tdIkGSVR6yK/BOXS.CPrleN7pMgzs/R7o8MtMj.RdlfmZWPrJiQIi', 'Woman', 'Both', 'I think I am an admin user so you do whatever you want and I judge you really hard !\nHello my lovely proofreader (;', 100, 'Paris', '${lat}', '${lon}', '${Math.floor(
+    Date.now()
+  )}', TRUE);
     INSERT INTO profile_picture (user_id, path, date, main) VALUES ('${userId}', 'memecat.jpg', '1563832800', TRUE), ('${userId}', 'tchoupi.jpg', '1563832800', FALSE);
     INSERT INTO user_tag (tag_id, user_id) VALUES ('8', '${userId}'), ('14', '${userId}');
   `;

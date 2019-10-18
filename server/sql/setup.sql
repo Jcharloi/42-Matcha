@@ -81,7 +81,7 @@ CREATE TABLE notification
 (
     receiver_id varchar(250) NOT NULL,
     sender_id varchar(250) NOT NULL,
-    date date NOT NULL,
+    date varchar(250) NOT NULL,
     notif_type varchar(250) NOT NULL,
     seen boolean NOT NULL
 );

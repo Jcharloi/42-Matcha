@@ -19,7 +19,10 @@ import {
   newPassword,
   resetPasswordId
 } from "./helpers/auth/resetPassword.mjs";
-import { disconnect } from "./helpers/auth/disconnect.mjs";
+import {
+  disconnect,
+  checkConnection
+} from "./helpers/auth/updateLastConnection.mjs";
 
 import {
   changePersonalInfos,
@@ -55,7 +58,6 @@ import {
   sendNewMessage
 } from "./helpers/message/message.mjs";
 import ban from "./helpers/admin/ban.mjs";
-import notify from "./helpers/profile/notifications.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -72,6 +74,7 @@ router.get("/reset-password/:id", resetPasswordId);
 router.put("/new-password", newPassword);
 router.post("/connection", connection);
 router.put("/disconnect", disconnect);
+router.put("/admin/verify-connection", checkConnection);
 router.put("/admin/get-reports", getReports);
 
 router.put("/profile/get-user-city", getUserCity);

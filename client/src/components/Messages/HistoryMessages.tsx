@@ -95,7 +95,7 @@ class HistoryMessages extends React.Component<Props, {}> {
                   <div className="name">{senderName}</div>
                   <div
                     className={
-                      findLastSince(lastConnection) === "now"
+                      findLastSince(lastConnection).split(" ")[1] === "seconds"
                         ? "ring ring-color-online"
                         : "ring ring-color-offline"
                     }

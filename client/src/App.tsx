@@ -38,9 +38,7 @@ export function deleteUser() {
 }
 
 export function findLastSince(lastseen: string) {
-  if (lastseen !== "now") {
-    lastseen = new Date(+lastseen).toISOString();
-  }
+  lastseen = new Date(+lastseen).toISOString();
   const dateSeen: any = new Date(lastseen);
   const dateNow: any = new Date();
   let plural: string = "s";
@@ -85,6 +83,9 @@ class App extends React.Component<VerifiedUser, AppState> {
       isLoading: true
     };
   }
+
+  timer!: NodeJS.Timeout;
+  timerConnection!: NodeJS.Timeout;
 
   getUserInfos = async (
     targetName: string | null,
@@ -162,7 +163,7 @@ class App extends React.Component<VerifiedUser, AppState> {
         console.log("Error : ", error.message);
       });
   };
-  timer!: NodeJS.Timeout;
+
   async componentDidMount() {
     if (localStorage.getItem("user_name") && localStorage.getItem("token")) {
       await Axios.put("http://localhost:5000/verify-token", {
@@ -194,6 +195,7 @@ class App extends React.Component<VerifiedUser, AppState> {
     }
     this.setState({ isLoading: false });
   }
+
   componentDidUpdate = () => {
     if (this.state.messageApp && this.timer) {
       clearTimeout(this.timer);
@@ -203,12 +205,29 @@ class App extends React.Component<VerifiedUser, AppState> {
     }
   };
 
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.timerConnection) {
+      clearTimeout(this.timerConnection);
+    }
+  };
+
   render() {
     /*
     Partie front :
+    - Deco when offline
     - margin bas de page
     - center horizontalement profils
     - Infinite scroll (pls no)
+
+    - Last_connection update toutes les 5 minutes, si < 5 minutes -> connecté
+      Sinon déconnecté
+
+    - Fix bug position fixed show profile message
+    - Responsive
+    - Messages en petit
 
     - Fix bug report page
     
@@ -217,18 +236,26 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Ne pas delete si y a encore la photo sur la db !
     - Ne pas degager le compte admin
     */
-    // if (this.props.isAuth) {
-    //   setInterval(() => {
-    //     Axios.put("http://localhost:5000/verify-connection", {
-    //       token: localStorage.getItem("token"),
-    //       userName: localStorage.getItem("user_name")
-    //     })
-    //       .then(() => {})
-    //       .catch(e => {
-    //         console.log(e.message);
-    //       });
-    //   }, 5000);
-    // }
+    console.log("FFFFFFFF" + this.timerConnection);
+    if (!this.timerConnection) {
+      console.log("greiouhgerouhgeo");
+      if (this.props.isAuth) {
+        this.timerConnection = setInterval(() => {
+          Axios.put("http://localhost:5000/admin/verify-connection", {
+            token: localStorage.getItem("token"),
+            userName: localStorage.getItem("user_name")
+          })
+            .then(({ data: validToken }) => {
+              if (validToken === false) {
+                deleteUser();
+              }
+            })
+            .catch(e => {
+              console.log(e.message);
+            });
+        }, 30000);
+      }
+    }
     return (
       <div>
         {this.state.messageApp && (

@@ -76,7 +76,6 @@ const getUserName = async userId => {
   return await client
     .query(`SELECT * FROM users WHERE user_id = '${userId}'`)
     .then(({ rows }) => {
-      console.log(userId);
       const userName = rows[0].user_name;
       return userName;
     })

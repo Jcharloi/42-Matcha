@@ -10,6 +10,7 @@ import {
   getUserPictures,
   getUserTags
 } from "../profile/getUserInfos.mjs";
+import { updateLastConnection } from "./updateLastConnection.mjs";
 
 const connection = async (req, res) => {
   if (req.body.userName && validPassword(req.body.password)) {
@@ -35,22 +36,18 @@ const connection = async (req, res) => {
                 userInfos = await getUserInfos(userId);
                 userInfos.pictures = await getUserPictures(userId);
                 userInfos.tags = await getUserTags(userId);
-                text = `UPDATE users SET last_connection='now' WHERE user_id='${userInfos.user_id}'`;
-                await client
-                  .query(text)
-                  .then(() => {
-                    res.json({
-                      userInfos,
-                      message: "Connected",
-                      token
-                    });
-                  })
-                  .catch(e => {
-                    console.error(e.stack);
-                    res.send({
-                      message: "There was a problem with our database"
-                    });
+                const validated = await updateLastConnection(userInfos.user_id);
+                if (validated) {
+                  res.json({
+                    userInfos,
+                    message: "Connected",
+                    token
                   });
+                } else {
+                  res.send({
+                    message: "There was a problem with our database"
+                  });
+                }
               } else {
                 res.send({ message: "Wrong password" });
               }

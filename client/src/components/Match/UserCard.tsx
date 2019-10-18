@@ -13,7 +13,6 @@ interface Props {
 
 interface CState {
   genderIcon: string;
-  lastSeenSince: number;
 }
 
 class UserCard extends React.Component<Props, CState> {
@@ -25,11 +24,7 @@ class UserCard extends React.Component<Props, CState> {
           ? "venus icon"
           : this.props.userInfo.gender === "Man"
           ? "mars icon"
-          : "mars stroke horizontal icon",
-      lastSeenSince:
-        (+new Date().setHours(0, 0, 0, 0) -
-          +new Date(this.props.userInfo.connection).setHours(0, 0, 0, 0)) /
-        (24 * 60 * 60 * 1000)
+          : "mars stroke horizontal icon"
     };
   }
 
@@ -88,8 +83,9 @@ class UserCard extends React.Component<Props, CState> {
             {this.props.userInfo.age} years old
           </span>
           <span className="right floated">
-            {!this.props.userInfo.connection
-              ? `Online now`
+            {findLastSince(this.props.userInfo.connection).split(" ")[1] ===
+            "seconds"
+              ? "Online now !"
               : `Last seen ${findLastSince(this.props.userInfo.connection)}`}
           </span>
         </div>

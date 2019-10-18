@@ -194,13 +194,20 @@ class ShowMessages extends React.Component<Props, State> {
                   </div>
                   <div
                     className={
-                      findLastSince(this.props.sender.lastConnection) === "now"
+                      findLastSince(this.props.sender.lastConnection).split(
+                        " "
+                      )[1] === "seconds"
                         ? "ring ring-color-online"
                         : "ring ring-color-offline"
                     }
                   ></div>
                   <span className="last-connection">
-                    Online {findLastSince(this.props.sender.lastConnection)}
+                    Online{" "}
+                    {findLastSince(this.props.sender.lastConnection).split(
+                      " "
+                    )[1] === "seconds"
+                      ? "now !"
+                      : findLastSince(this.props.sender.lastConnection)}
                   </span>
                 </div>
               </div>
@@ -215,7 +222,9 @@ class ShowMessages extends React.Component<Props, State> {
                             : "date-value-receiver"
                         }
                       >
-                        {findLastSince(date)}
+                        {findLastSince(date).split(" ")[1] === "seconds"
+                          ? "now"
+                          : findLastSince(date)}
                       </div>
                       <div
                         className={`container-message-${

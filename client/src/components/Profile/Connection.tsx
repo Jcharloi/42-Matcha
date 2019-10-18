@@ -9,18 +9,18 @@ interface Props {
 
 class Connection extends React.Component<Props, {}> {
   public render() {
+    console.log(findLastSince(this.props.connection));
     return (
       <div className="connection-container">
         <div
           className={
-            findLastSince(this.props.connection) === "now" ||
-            !this.props.connection
+            findLastSince(this.props.connection).split(" ")[1] === "seconds"
               ? "ring-profile ring-color-online"
               : "ring-profile ring-color-offline"
           }
         />
         <div className="text">
-          {!this.props.connection
+          {findLastSince(this.props.connection).split(" ")[1] === "seconds"
             ? `Online now`
             : `Last seen ${findLastSince(this.props.connection)}`}
         </div>

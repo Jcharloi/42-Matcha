@@ -54,11 +54,7 @@ class Profile extends React.Component<Props> {
           <Pictures isOther={this.props.isOther} user={this.props.user} />
           <div className="left-container">
             <div className="user-name">{this.props.user.user_name}</div>
-            <Connection
-              connection={
-                this.props.isOther ? this.props.user.connection : "now"
-              }
-            />
+            <Connection connection={this.props.user.connection} />
             <ProgressBar isOther={this.props.isOther} />
             {this.props.isOther && this.props.user.pictures[0].date !== "1" ? (
               <Like otherUser={this.props.user} />
