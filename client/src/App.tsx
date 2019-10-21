@@ -242,12 +242,11 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Messages en petit
 
     - Fix bug report page
+    - Ne pas degager le compte admin
     
     Partie back :
-    - Check l'historique en fonction du match
-    - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
-    - Ne pas degager le compte admin
+    - Changer status res
     - Edit ban function
     */
     return (

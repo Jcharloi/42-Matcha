@@ -65,7 +65,6 @@ const checkAllMessages = async receiverId => {
     .then(async ({ rows, rowCount }) => {
       let usersMessage = [];
       let validated = true;
-      //ou match inexistant
       for (let i = 0; i < rowCount; i++) {
         const { validatedRes, user } = await getSenderInfos(
           rows[i].sender_id === receiverId
@@ -73,16 +72,24 @@ const checkAllMessages = async receiverId => {
             : rows[i].sender_id
         );
         if (validatedRes) {
-          usersMessage.push({
-            message: rows[i].message,
-            messageId: rows[i].message_id,
-            date: rows[i].date,
-            senderId: rows[i].sender_id,
-            receiverId: rows[i].receiver_id,
-            senderRead: rows[i].sender_read,
-            receiverRead: rows[i].receiver_read,
-            ...user
-          });
+          const { validated } = await checkMutualLikes(
+            receiverId,
+            rows[i].sender_id === receiverId
+              ? rows[i].receiver_id
+              : rows[i].sender_id
+          );
+          if (validated) {
+            usersMessage.push({
+              message: rows[i].message,
+              messageId: rows[i].message_id,
+              date: rows[i].date,
+              senderId: rows[i].sender_id,
+              receiverId: rows[i].receiver_id,
+              senderRead: rows[i].sender_read,
+              receiverRead: rows[i].receiver_read,
+              ...user
+            });
+          }
         } else {
           validated = false;
         }
