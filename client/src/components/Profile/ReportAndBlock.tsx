@@ -59,17 +59,20 @@ class ReportAndBlock extends React.Component<Props, State> {
       });
   };
 
+  componentDidUpdate = () => {
+    if (this.state.messageReport && !this.timer) {
+      this.timer = setTimeout(() => this.setState({ messageReport: "" }), 4000);
+    }
+  };
+
   componentWillUnmount = () => {
     clearTimeout(this.timer);
     this.timer = null;
   };
 
   public render() {
-    if (this.state.messageReport && !this.timer) {
-      this.timer = setTimeout(() => this.setState({ messageReport: "" }), 4000);
-    }
     return (
-      <div className="report-container">
+      <div className="setting-container">
         <Modal
           trigger={
             <div

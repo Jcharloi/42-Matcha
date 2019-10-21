@@ -14,6 +14,7 @@ import Preferences from "../components/Profile/Preferences";
 import Password from "../components/Profile/Password";
 import Tags from "../components/Profile/Tags";
 import ReportAndBlock from "../components/Profile/ReportAndBlock";
+import RemoveAccount from "../components/Profile/RemoveAccount";
 
 import "../styles/stylesUserProfile.css";
 
@@ -76,7 +77,10 @@ class Profile extends React.Component<Props> {
                 id={this.props.user.user_id}
               />
             ) : (
-              <Password />
+              <span>
+                <Password />
+                <RemoveAccount />
+              </span>
             )}
             <Tags isOther={this.props.isOther} user={this.props.user} />
           </div>

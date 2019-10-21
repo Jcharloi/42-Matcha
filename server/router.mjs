@@ -57,7 +57,7 @@ import {
   getMessagesPeople,
   sendNewMessage
 } from "./helpers/message/message.mjs";
-import { banUser } from "./helpers/admin/ban.mjs";
+import { deleteUser } from "./helpers/admin/deleteUser.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -76,7 +76,7 @@ router.post("/connection", connection);
 router.put("/disconnect", disconnect);
 router.put("/admin/verify-connection", checkConnection);
 router.put("/admin/get-reports", getReports);
-router.put("/admin/ban-user", banUser);
+router.put("/admin/ban-user", deleteUser);
 
 router.put("/profile/get-user-city", getUserCity);
 router.put("/profile/get-user-pictures", getUserPictures);

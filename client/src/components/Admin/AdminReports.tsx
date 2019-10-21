@@ -76,9 +76,9 @@ class AdminReports extends React.Component<{}, AState> {
         } else {
           if (validated) {
             Axios.put(`http://localhost:5000/admin/ban-user`, {
-              userName: localStorage.getItem("user_name"),
               token: localStorage.getItem("token"),
-              targetUserId: userInfos.user_id
+              userName: localStorage.getItem("user_name"),
+              targetUserName: userInfos.user_name
             })
               .then(() => {
                 this.setState({
