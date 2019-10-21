@@ -94,9 +94,7 @@
 /* PROFILE PART */
 
 .show-profile {
-  position: fixed;
   top: 7rem;
-  width: 49%;
   height: 5rem;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
