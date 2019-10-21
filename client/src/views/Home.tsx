@@ -165,10 +165,12 @@ class Home extends React.Component<User, HState> {
             />
           </ModalFilter>
         </div>
-        {!this.state.isLoading &&
-          this.state.userMatchInfo.map(user => (
-            <UserCard key={user.user_id} userInfo={user} />
-          ))}
+        <div className="container-all-match">
+          {!this.state.isLoading &&
+            this.state.userMatchInfo.map(user => (
+              <UserCard key={user.user_id} userInfo={user} />
+            ))}
+        </div>
         {this.state.messageHome && (
           <div className="toast-message ui floating message">
             <p>{this.state.messageHome}</p>

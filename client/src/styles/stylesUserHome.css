@@ -15,7 +15,7 @@
   display: block;
   position: relative;
   float: left;
-  margin-left: 30px;
+  margin: 1.2rem;
   height: 30rem !important;
 }
 
@@ -66,6 +66,15 @@
 .button-modal {
   display: flex;
   justify-content: space-around;
+}
+
+.container-all-match {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 100%;
+  margin-bottom: 10urem;
 }
 
 /*Inside the modal*/
