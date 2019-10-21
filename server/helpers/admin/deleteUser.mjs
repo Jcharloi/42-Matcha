@@ -11,7 +11,7 @@ const deleteUser = async (req, res) => {
     await client
       .query(text, values)
       .then(async () => {
-        let text = "DELETE FROM user_like WHERE liking_user_id = $1";
+        let text = "DELETE FROM chat WHERE sender_id = $1 OR receiver_id = $1";
         let values = [targetUserId];
         await client
           .query(text, values)
