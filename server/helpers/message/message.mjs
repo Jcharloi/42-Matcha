@@ -65,6 +65,7 @@ const checkAllMessages = async receiverId => {
     .then(async ({ rows, rowCount }) => {
       let usersMessage = [];
       let validated = true;
+      //ou match inexistant
       for (let i = 0; i < rowCount; i++) {
         const { validatedRes, user } = await getSenderInfos(
           rows[i].sender_id === receiverId

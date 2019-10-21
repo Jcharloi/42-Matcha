@@ -42,17 +42,21 @@ const toggleLike = async (userName, targetUser) => {
                 userName,
                 liked_user_id
               );
-              return count === "0"
-                ? {
-                    validated: true,
-                    message: "User loved successfully !",
-                    score
-                  }
-                : {
-                    validated: true,
-                    message: "User disloved successfully !",
-                    score
-                  };
+              if (score === false) {
+                return { validated: false };
+              } else {
+                return count === "0"
+                  ? {
+                      validated: true,
+                      message: "User loved successfully !",
+                      score
+                    }
+                  : {
+                      validated: true,
+                      message: "User disloved successfully !",
+                      score
+                    };
+              }
             })
             .catch(e => {
               console.error(e.stack);

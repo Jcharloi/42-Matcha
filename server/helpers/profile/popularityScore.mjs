@@ -27,14 +27,17 @@ const updatePopularityScore = async (userName, likedUserId) => {
             })
             .catch(e => {
               console.error(e.stack);
+              return false;
             });
         })
         .catch(e => {
           console.error(e.stack);
+          return false;
         });
     })
     .catch(e => {
       console.error(e.stack);
+      return false;
     });
 };
 

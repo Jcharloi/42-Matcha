@@ -222,9 +222,7 @@ class ShowMessages extends React.Component<Props, State> {
                             : "date-value-receiver"
                         }
                       >
-                        {findLastSince(date).split(" ")[1] === "seconds"
-                          ? "now"
-                          : findLastSince(date)}
+                        {findLastSince(date)}
                       </div>
                       <div
                         className={`container-message-${

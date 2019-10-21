@@ -36,22 +36,47 @@ const sanctioningUser = async (req, res) => {
             text = `INSERT INTO user_block (blocking_user_id, blocked_user_id) VALUES ($1, $2)`;
           }
           values = [userId, req.body.targetUserId];
-          await client.query(text, values).then(() => {});
-
-          text = `DELETE FROM user_like WHERE (liking_user_id = $1 OR liking_user_id = $2) AND (liked_user_id = $1 OR liked_user_id = $2)`;
-          values = [userId, req.body.targetUserId];
           await client
             .query(text, values)
             .then(async () => {
-              text = `DELETE FROM user_visit WHERE (visiting_user_id = $1 OR visiting_user_id = $2) AND (visited_user_id = $1 OR visited_user_id = $2)`;
+              text = `DELETE FROM user_like WHERE (liking_user_id = $1 OR liking_user_id = $2) AND (liked_user_id = $1 OR liked_user_id = $2)`;
               values = [userId, req.body.targetUserId];
               await client
                 .query(text, values)
-                .then(() => {
-                  res.send({
-                    validated: true,
-                    message: "user reported and visit/likes deleted"
-                  });
+                .then(async () => {
+                  text = `DELETE FROM user_visit WHERE (visiting_user_id = $1 OR visiting_user_id = $2) AND (visited_user_id = $1 OR visited_user_id = $2)`;
+                  values = [userId, req.body.targetUserId];
+                  await client
+                    .query(text, values)
+                    .then(async () => {
+                      text = `DELETE FROM chat WHERE (sender_id = $1 OR sender_id = $2) AND (receiver_id = $1 OR receiver_id = $2)`;
+                      values = [userId, req.body.targetUserId];
+                      await client
+                        .query(text, values)
+                        .then(() => {
+                          res.send({
+                            validated: true,
+                            message:
+                              "User reported and visit/likes/messages deleted"
+                          });
+                        })
+                        .catch(e => {
+                          console.error(e.stack);
+                          res.send({
+                            validated: false,
+                            message:
+                              "We got a problem with our database, please try again"
+                          });
+                        });
+                    })
+                    .catch(e => {
+                      console.error(e.stack);
+                      res.send({
+                        validated: false,
+                        message:
+                          "We got a problem with our database, please try again"
+                      });
+                    });
                 })
                 .catch(e => {
                   console.error(e.stack);
