@@ -3,7 +3,8 @@ import {
   createRandomId,
   getUserId,
   checkMutualLikes,
-  getSocketId
+  getSocketId,
+  checkBlockedUser
 } from "../../common.mjs";
 import { ioConnection, clients } from "../../app.mjs";
 import { notifyUser } from "../profile/notifications.mjs";
@@ -72,16 +73,24 @@ const checkAllMessages = async receiverId => {
             : rows[i].sender_id
         );
         if (validatedRes) {
-          usersMessage.push({
-            message: rows[i].message,
-            messageId: rows[i].message_id,
-            date: rows[i].date,
-            senderId: rows[i].sender_id,
-            receiverId: rows[i].receiver_id,
-            senderRead: rows[i].sender_read,
-            receiverRead: rows[i].receiver_read,
-            ...user
-          });
+          const { validated } = await checkMutualLikes(
+            receiverId,
+            rows[i].sender_id === receiverId
+              ? rows[i].receiver_id
+              : rows[i].sender_id
+          );
+          if (validated) {
+            usersMessage.push({
+              message: rows[i].message,
+              messageId: rows[i].message_id,
+              date: rows[i].date,
+              senderId: rows[i].sender_id,
+              receiverId: rows[i].receiver_id,
+              senderRead: rows[i].sender_read,
+              receiverRead: rows[i].receiver_read,
+              ...user
+            });
+          }
         } else {
           validated = false;
         }
@@ -147,52 +156,56 @@ const getMessagesPeople = async (req, res) => {
 const sendNewMessage = async (req, res) => {
   const messageId = createRandomId(10);
   const messageDate = Math.floor(Date.now());
-  let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
-  let values = [
-    req.body.receiverId,
-    req.body.senderId,
-    messageDate,
-    req.body.message,
-    messageId
-  ];
-  await client
-    .query(text, values)
-    .then(async () => {
-      let socketId = getSocketId(clients, req.body.userName);
-      let userId = await getUserId(req.body.userName);
-      let history = await checkAllMessages(userId);
-      ioConnection.to(socketId).emit("New message", {
-        message: req.body.message,
-        messageId: messageId,
-        date: messageDate,
-        sentPosition: req.body.receiverId,
-        receiverRead: false,
-        senderRead: true
+  if (await checkBlockedUser(req.body.userName, req.body.senderName)) {
+    let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
+    let values = [
+      req.body.receiverId,
+      req.body.senderId,
+      messageDate,
+      req.body.message,
+      messageId
+    ];
+    await client
+      .query(text, values)
+      .then(async () => {
+        let socketId = getSocketId(clients, req.body.userName);
+        let userId = await getUserId(req.body.userName);
+        let history = await checkAllMessages(userId);
+        ioConnection.to(socketId).emit("New message", {
+          message: req.body.message,
+          messageId: messageId,
+          date: messageDate,
+          sentPosition: req.body.receiverId,
+          receiverRead: false,
+          senderRead: true
+        });
+        if (history.validated) {
+          ioConnection.to(socketId).emit("New history", history.usersMessage);
+        }
+        socketId = getSocketId(clients, req.body.senderName);
+        userId = await getUserId(req.body.senderName);
+        history = await checkAllMessages(userId);
+        ioConnection.to(socketId).emit("New message", {
+          message: req.body.message,
+          messageId: messageId,
+          date: messageDate,
+          sentPosition: req.body.receiverId,
+          receiverRead: false,
+          senderRead: true
+        });
+        notifyUser(req.body.userName, req.body.senderName, "message");
+        if (history.validated) {
+          ioConnection.to(socketId).emit("New history", history.usersMessage);
+        }
+        res.send({ validated: true });
+      })
+      .catch(e => {
+        console.error(e.stack);
+        res.send({ validated: false });
       });
-      if (history.validated) {
-        ioConnection.to(socketId).emit("New history", history.usersMessage);
-      }
-      socketId = getSocketId(clients, req.body.senderName);
-      userId = await getUserId(req.body.senderName);
-      history = await checkAllMessages(userId);
-      ioConnection.to(socketId).emit("New message", {
-        message: req.body.message,
-        messageId: messageId,
-        date: messageDate,
-        sentPosition: req.body.receiverId,
-        receiverRead: false,
-        senderRead: true
-      });
-      notifyUser(req.body.userName, req.body.senderName, "message");
-      if (history.validated) {
-        ioConnection.to(socketId).emit("New history", history.usersMessage);
-      }
-      res.send({ validated: true });
-    })
-    .catch(e => {
-      console.error(e.stack);
-      res.send({ validated: false });
-    });
+  } else {
+    res.send({ validated: false });
+  }
 };
 
 export {

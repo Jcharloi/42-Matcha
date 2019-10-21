@@ -165,25 +165,12 @@ const checkBlockedUser = async (ourName, userName) => {
   if (!ourUserId || !userId) {
     return false;
   } else {
-    let text = `SELECT count(*) FROM user_block WHERE blocking_user_id = '${ourUserId}' AND blocked_user_id = '${userId}'`;
+    let text = `SELECT count(*) FROM user_block WHERE (blocking_user_id = '${ourUserId}' AND blocked_user_id = '${userId}') OR (blocking_user_id = '${userId}' AND blocked_user_id = '${ourUserId}')`;
     return await client
       .query(text)
       .then(async ({ rows: [{ count }] }) => {
         if (count === "0") {
-          text = `SELECT count(*) FROM user_block WHERE blocking_user_id = '${userId}' AND blocked_user_id = '${ourUserId}'`;
-          return await client
-            .query(text)
-            .then(({ rows: [{ count }] }) => {
-              if (count === "0") {
-                return true;
-              } else {
-                return false;
-              }
-            })
-            .catch(e => {
-              console.error(e.stack);
-              return false;
-            });
+          return true;
         } else {
           return false;
         }

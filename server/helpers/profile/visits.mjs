@@ -1,5 +1,5 @@
 import client from "../../sql/sql.mjs";
-import { getUserId, calculateAge } from "../../common.mjs";
+import { getUserId, calculateAge, checkBlockedUser } from "../../common.mjs";
 import { getUserPictures, getUserTags } from "../profile/getUserInfos.mjs";
 import { notifyUser } from "./notifications.mjs";
 
@@ -9,44 +9,51 @@ const logVisit = async (userName, visitedUser) => {
   if (!visiting_user_id || !visited_user_id) {
     return { validated: false };
   } else {
-    let text = `SELECT count(*) FROM user_visit WHERE visiting_user_id = $1 AND visited_user_id = $2`;
-    let values = [visiting_user_id, visited_user_id];
-    return await client
-      .query(text, values)
-      .then(async ({ rows: [{ count }] }) => {
-        var connectionDate = Math.floor(Date.now());
-        text =
-          count === "0"
-            ? `INSERT INTO user_visit (visiting_user_id, visited_user_id, date) VALUES ($1, $2, '${connectionDate}')`
-            : `UPDATE user_visit SET date = '${connectionDate}' WHERE visiting_user_id = $1 AND visited_user_id = $2`;
-        let values = [visiting_user_id, visited_user_id];
-        return await client
-          .query(text, values)
-          .then(() => {
-            count === "0" ? notifyUser(userName, visitedUser, "visit") : null;
-            return {
-              validated: true,
-              message:
-                count === "0"
-                  ? "Visit logged sucessfully !"
-                  : "Visit updated successfully"
-            };
-          })
-          .catch(e => {
-            console.error(e.stack);
-            return {
-              validated: false,
-              message: "We got a problem with our database, please try again"
-            };
-          });
-      })
-      .catch(e => {
-        console.error(e.stack);
-        return {
-          validated: false,
-          message: "We got a problem with our database, please try agadin"
-        };
-      });
+    if (!(await checkBlockedUser(userName, visitedUser))) {
+      return {
+        validated: false,
+        message: "You or this person blocked you, can't log a visit"
+      };
+    } else {
+      let text = `SELECT count(*) FROM user_visit WHERE visiting_user_id = $1 AND visited_user_id = $2`;
+      let values = [visiting_user_id, visited_user_id];
+      return await client
+        .query(text, values)
+        .then(async ({ rows: [{ count }] }) => {
+          var connectionDate = Math.floor(Date.now());
+          text =
+            count === "0"
+              ? `INSERT INTO user_visit (visiting_user_id, visited_user_id, date) VALUES ($1, $2, '${connectionDate}')`
+              : `UPDATE user_visit SET date = '${connectionDate}' WHERE visiting_user_id = $1 AND visited_user_id = $2`;
+          let values = [visiting_user_id, visited_user_id];
+          return await client
+            .query(text, values)
+            .then(() => {
+              count === "0" ? notifyUser(userName, visitedUser, "visit") : null;
+              return {
+                validated: true,
+                message:
+                  count === "0"
+                    ? "Visit logged sucessfully !"
+                    : "Visit updated successfully"
+              };
+            })
+            .catch(e => {
+              console.error(e.stack);
+              return {
+                validated: false,
+                message: "We got a problem with our database, please try again"
+              };
+            });
+        })
+        .catch(e => {
+          console.error(e.stack);
+          return {
+            validated: false,
+            message: "We got a problem with our database, please try agadin"
+          };
+        });
+    }
   }
 };
 

@@ -233,23 +233,17 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - margin bas de page
-    - center horizontalement profils
-    - Infinite scroll (pls no)
-    - CSS notif
-
-    - Fix bug position fixed show profile message
-    - Responsive
     - Messages en petit
-
     - Fix bug report page
     
+    - Infinite scroll (pls no)
+    - CSS notif
+    - Responsive
+    
     Partie back :
-    - Check l'historique en fonction du match
-    - Changer status res
     - Ne pas delete si y a encore la photo sur la db !
+    - Changer status res
     - Ne pas degager le compte admin
-    - Edit ban function
     */
     return (
       <div>

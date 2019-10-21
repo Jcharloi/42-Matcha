@@ -1,12 +1,17 @@
 import client from "../../sql/sql.mjs";
+import { logVisit } from "./visits.mjs";
 
-const updatePopularityScore = async likedUserId => {
+const updatePopularityScore = async (userName, likedUserId) => {
   let text = `SELECT count(*) FROM user_visit WHERE visited_user_id = $1`;
   let values = [likedUserId];
   return await client
     .query(text, values)
     .then(async ({ rows: [{ count }] }) => {
-      const nbOfVisits = parseInt(count);
+      let nbOfVisits = parseInt(count);
+      if (nbOfVisits === 0) {
+        await logVisit(userName, likedUserId);
+        nbOfVisits = 1;
+      }
       text = `SELECT count(*) FROM user_like WHERE liked_user_id = $1`;
       values = [likedUserId];
       return await client
@@ -22,14 +27,17 @@ const updatePopularityScore = async likedUserId => {
             })
             .catch(e => {
               console.error(e.stack);
+              return false;
             });
         })
         .catch(e => {
           console.error(e.stack);
+          return false;
         });
     })
     .catch(e => {
       console.error(e.stack);
+      return false;
     });
 };
 
