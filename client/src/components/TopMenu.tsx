@@ -129,7 +129,16 @@ class TopMenu extends React.Component<Props> {
                   Reports
                 </Link>
               ) : null}
-              <div className="item item-page">Notifications</div>
+              {/* <div className="item item-page">Notifications</div> */}
+              {this.props.current !== "notifications" ? (
+                <Link className="item item-page" to="/notifications">
+                  Notifications
+                </Link>
+              ) : (
+                <Link className="item active item-page" to="/notifications">
+                  Notifications
+                </Link>
+              )}
 
               {this.props.current !== "messages" ? (
                 <Link className="item item-page" to="/messages">

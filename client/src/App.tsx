@@ -24,6 +24,7 @@ import Home from "./views/Home";
 import VisitsAndLikes from "./views/VisitsAndLikes";
 import AdminReports from "./components/Admin/AdminReports";
 import Messages from "./views/Messages";
+import Notification from "./views/Notification";
 
 interface AppState {
   isLoading: boolean;
@@ -327,6 +328,13 @@ class App extends React.Component<VerifiedUser, AppState> {
                 exact={true}
                 path="/messages/:userName"
                 component={Messages}
+                isAuth={this.props.isAuth}
+                isCompleted={this.props.isCompleted}
+              />
+              <CompletedRoutes
+                exact={true}
+                path="/notifications"
+                component={Notification}
                 isAuth={this.props.isAuth}
                 isCompleted={this.props.isCompleted}
               />

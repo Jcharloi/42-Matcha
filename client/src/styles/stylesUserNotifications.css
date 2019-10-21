@@ -1,0 +1,39 @@
+.avatar-notification {
+  display: block;
+  margin-right: 1rem !important;
+  object-fit: contain;
+}
+
+.notification-container {
+  display: flex;
+  justify-content: center;
+}
+
+.notification-user-container-unseen {
+  margin-top: 1.5rem !important;
+  /* border: 2px solid red; */
+  background-color: rgb(201, 201, 201) !important;
+  border-radius: 20px;
+  padding: 0.5em !important;
+  z-index: 400;
+}
+.notification-user-container {
+  margin-top: 1.5rem !important;
+  z-index: 400;
+  padding: 0.5em !important;
+}
+
+.feed-content {
+  margin-top: inherit;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.link-feed {
+  margin-bottom: 1rem !important;
+}
+
+.time-feed {
+  font-size: 1.3rem !important;
+}

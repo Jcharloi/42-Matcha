@@ -1,7 +1,7 @@
 import { getUserId } from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 import updatePopularityScore from "./popularityScore.mjs";
-import notifyUser from "./notifications.mjs";
+import { notifyUser } from "./notifications.mjs";
 
 const toggleLike = async body => {
   const liking_user_id = await getUserId(body.userName);

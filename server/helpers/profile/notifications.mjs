@@ -4,7 +4,7 @@ import { getUserId, getSocketId } from "../../common.mjs";
 import socketIO from "socket.io";
 import { Socket } from "dgram";
 import { ioConnection, clients } from "../../app.mjs";
-
+import { getUserName } from "./getUserInfos.mjs";
 const notifyUser = async (userName, userTonotifyUser, type) => {
   const receiver_id = await getUserId(userTonotifyUser);
   const sender_id = await getUserId(userName);
@@ -60,4 +60,67 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
   }
 };
 
-export default notifyUser;
+const getNotification = async (req, res) => {
+  const user_id = await getUserId(req.body.userName);
+  if (!user_id) {
+    res.send({ validated: false });
+  } else {
+    console.log(user_id);
+    // let text = `SELECT user_name FROM users JOIN notification ON receiver_id = users.user_id WHERE receiver_id = user_id`
+    let text = `SELECT * from notification WHERE receiver_id = $1`;
+    let values = [user_id];
+    let notificationArray = [];
+    await client
+      .query(text, values)
+      .then(async ({ rowCount, rows }) => {
+        console.log(rows);
+
+        let i = 0;
+        while (i < rows.length) {
+          notificationArray[i] = {
+            sender: await getUserName(rows[i].sender_id),
+            date: rows[i].date,
+            notif_type: rows[i].notif_type,
+            seen: rows[i].seen
+          };
+          i++;
+        }
+        await res.send({
+          validated: true,
+          notificationArray
+        });
+      })
+      .catch(e => {
+        console.error(e.stack);
+        res.send({
+          validated: false
+        });
+      });
+  }
+};
+const sawNotification = async (req, res) => {
+  const user_id = await getUserId(req.body.userName);
+  const sender_id = await getUserId(req.body.sender);
+  const date = req.body.date;
+  const notif_type = req.body.notif_type;
+
+  if (!user_id) {
+    res.send({ validated: false });
+  } else {
+    let text = `UPDATE notification SET seen = true WHERE receiver_id=$1 AND sender_id=$2 AND date=$3 AND notif_type=$4`;
+    let values = [user_id, sender_id, date, notif_type];
+    console.log(text);
+    console.log(user_id, sender_id, date, notif_type);
+    await client
+      .query(text, values)
+      .then(async () => {
+        res.send({ validated: true });
+      })
+      .catch(e => {
+        console.error(e.stack);
+        res.send({ validated: false });
+      });
+  }
+};
+
+export { notifyUser, getNotification, sawNotification };

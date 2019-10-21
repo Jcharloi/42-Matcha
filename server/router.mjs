@@ -51,6 +51,10 @@ import { filterByInterval } from "./helpers/home/filter.mjs";
 import { getUsersBySearch } from "./helpers/home/search.mjs";
 import getReports from "./helpers/profile/reports.mjs";
 import {
+  getNotification,
+  sawNotification
+} from "./helpers/profile/notifications.mjs";
+import {
   getAllMessages,
   checkAndGetSender,
   readMessage,
@@ -110,6 +114,8 @@ router.get("/public/profile-pictures/:id", (req, res) => {
   const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
+router.put("/profile/get-notification", getNotification);
+router.put("/profile/saw-notification", sawNotification);
 router.get("/public/fake-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
   const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
