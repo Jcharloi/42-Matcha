@@ -6,6 +6,7 @@ import { Image, Icon } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
 
 interface Props {
+  displayLittle: boolean;
   littleMessages: boolean;
   users: Array<{
     senderId: string;
@@ -47,6 +48,7 @@ class HistoryMessages extends React.Component<Props, {}> {
   };
 
   public render() {
+    console.log(this.props.displayLittle);
     return (
       <div
         className={
@@ -54,6 +56,9 @@ class HistoryMessages extends React.Component<Props, {}> {
             ? "container-history"
             : "container-history-little"
         }
+        style={{
+          display: this.props.displayLittle ? "" : "none"
+        }}
       >
         {this.props.users.map(
           ({

@@ -177,9 +177,6 @@ class Home extends React.Component<User, HState> {
             <p>{this.state.messageHome}</p>
           </div>
         )}
-        <div className="container-little-messages">
-          <Messages littleMessages={true} />
-        </div>
       </div>
     );
   }

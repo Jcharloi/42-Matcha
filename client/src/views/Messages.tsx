@@ -19,6 +19,7 @@ interface Props {
 }
 
 interface MState {
+  displayLittle: boolean;
   isLoading: boolean;
   displayHistory: boolean;
   historyUsers: Array<{
@@ -46,6 +47,7 @@ class Messages extends React.Component<Props, MState> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      displayLittle: false,
       isLoading: true,
       displayHistory: true,
       historyUsers: [],
@@ -155,6 +157,10 @@ class Messages extends React.Component<Props, MState> {
     this.setState({ displayHistory, receiverId, sender });
   };
 
+  handleDisplayLittle = () => {
+    this.setState({ displayLittle: this.state.displayLittle ? false : true });
+  };
+
   public render() {
     return (
       <div>
@@ -163,12 +169,13 @@ class Messages extends React.Component<Props, MState> {
         ) : (
           <div className="container-top-messages">
             <span>Your messages</span>
-            <Icon name="window minimize" />
+            <Icon name="window minimize" onClick={this.handleDisplayLittle} />
             <Icon name="close" />
           </div>
         )}
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
+            displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
             users={this.state.historyUsers}
             receiverId={this.props.user.user_id}
