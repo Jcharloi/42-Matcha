@@ -20,6 +20,7 @@ interface NState {
     date: string;
     notif_type: string;
     seen: boolean;
+    mainPicPath: string;
   }>;
   current: string;
 }
@@ -91,19 +92,20 @@ class Notification extends React.Component<{}, NState> {
           <Feed>
             {this.state.notificationArray.map((notif, index) => (
               <Feed.Event
-                key={notif.sender}
+                key={notif.date}
                 className={
                   notif.seen
                     ? "notification-user-container"
                     : "notification-user-container-unseen"
                 }
               >
-                {/* <Image
+                {console.log(notif.mainPicPath)}
+                <Image
                   className="avatar-visit"
                   avatar
                   size="tiny"
-                  src={`http://localhost:5000/public/profile-pictures/${user.pictures[0].path}`}
-                /> */}
+                  src={`http://localhost:5000/public/profile-pictures/${notif.mainPicPath}`}
+                />
                 <Feed.Content className="feed-content">
                   <div className="link-feed">
                     <span onClick={() => this.selectProfile(notif.sender)}>

@@ -4,7 +4,7 @@ import { getUserId, getSocketId } from "../../common.mjs";
 import socketIO from "socket.io";
 import { Socket } from "dgram";
 import { ioConnection, clients } from "../../app.mjs";
-import { getUserName } from "./getUserInfos.mjs";
+import { getUserName, getUserMainPic } from "./getUserInfos.mjs";
 const notifyUser = async (userName, userTonotifyUser, type) => {
   const receiver_id = await getUserId(userTonotifyUser);
   const sender_id = await getUserId(userName);
@@ -67,24 +67,26 @@ const getNotification = async (req, res) => {
   } else {
     console.log(user_id);
     // let text = `SELECT user_name FROM users JOIN notification ON receiver_id = users.user_id WHERE receiver_id = user_id`
-    let text = `SELECT * from notification WHERE receiver_id = $1`;
+    let text = `SELECT sender_id, notification.date, notif_type, seen, path from notification JOIN profile_picture ON sender_id = user_id WHERE receiver_id = $1 AND main = true ORDER BY seen ASC`;
+    console.log("here");
     let values = [user_id];
     let notificationArray = [];
     await client
       .query(text, values)
       .then(async ({ rowCount, rows }) => {
-        console.log(rows);
-
         let i = 0;
         while (i < rows.length) {
           notificationArray[i] = {
             sender: await getUserName(rows[i].sender_id),
             date: rows[i].date,
             notif_type: rows[i].notif_type,
-            seen: rows[i].seen
+            seen: rows[i].seen,
+
+            mainPicPath: rows[i].path
           };
           i++;
         }
+        console.log(notificationArray);
         await res.send({
           validated: true,
           notificationArray
