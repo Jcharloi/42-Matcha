@@ -11,7 +11,7 @@ import { deleteUser, findLastSince } from "../App";
 
 import TopMenu from "../components/TopMenu";
 
-import { Image, Icon, Feed } from "semantic-ui-react";
+import { Image, Icon, Feed, Button } from "semantic-ui-react";
 import "../styles/stylesUserNotifications.css";
 
 interface NState {
@@ -20,6 +20,7 @@ interface NState {
     date: string;
     notif_type: string;
     seen: boolean;
+    mainPicPath: string;
   }>;
   current: string;
 }
@@ -62,6 +63,27 @@ class Notification extends React.Component<{}, NState> {
       })
       .catch(err => console.error(err));
   };
+  checkNotif = (targetNotif: any) => {
+    Axios.put(`http://localhost:5000/profile/saw-notification`, {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      sender: targetNotif.sender,
+      date: targetNotif.date,
+      notif_type: targetNotif.notif_type
+    }).then(() => {
+      Axios.put(`http://localhost:5000/profile/get-notification`, {
+        userName: localStorage.getItem("user_name"),
+        token: localStorage.getItem("token")
+      })
+        .then(({ data: { notificationArray, validated } }) => {
+          if (validated) {
+            this.setState({ notificationArray });
+          }
+        })
+        .catch(err => console.error(err));
+    });
+  };
+
   public render() {
     return (
       <div>
@@ -70,19 +92,20 @@ class Notification extends React.Component<{}, NState> {
           <Feed>
             {this.state.notificationArray.map((notif, index) => (
               <Feed.Event
-                key={notif.sender}
+                key={notif.date}
                 className={
                   notif.seen
                     ? "notification-user-container"
                     : "notification-user-container-unseen"
                 }
               >
-                {/* <Image
+                {console.log(notif.mainPicPath)}
+                <Image
                   className="avatar-visit"
                   avatar
                   size="tiny"
-                  src={`http://localhost:5000/public/profile-pictures/${user.pictures[0].path}`}
-                /> */}
+                  src={`http://localhost:5000/public/profile-pictures/${notif.mainPicPath}`}
+                />
                 <Feed.Content className="feed-content">
                   <div className="link-feed">
                     <span onClick={() => this.selectProfile(notif.sender)}>
@@ -102,7 +125,17 @@ class Notification extends React.Component<{}, NState> {
                       name={this.state.current === "likes" ? "star" : "eye"}
                       color={this.state.current === "likes" ? "yellow" : "blue"}
                     /> */}
+                    <Button
+                      icon
+                      onClick={() => this.checkNotif(notif)}
+                      // onCLick={() => console.log("test")}
+                      labelPosition="right"
+                    >
+                      OK
+                      <Icon className="checkmark" />
+                    </Button>
                   </div>
+
                   <Feed.Date className="time-feed">
                     {findLastSince(notif.date)}
                   </Feed.Date>

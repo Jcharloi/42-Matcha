@@ -113,6 +113,35 @@ const getUserPictures = async userId => {
     });
 };
 
+const getUserMainPic = async userId => {
+  if (!userId) {
+    return { validated: false };
+  } else {
+    // console.log(userId);
+    let text = `SELECT path, date, main FROM profile_picture INNER JOIN users ON(profile_picture.user_id = users.user_id) WHERE users.user_id = $1 ORDER BY main DESC`;
+    let values = [userId];
+    let ret = await client
+      .query(text, values)
+      .then(({ rows }) => {
+        let userMainPicture = [];
+        // console.log(rows);
+        userMainPicture = rows[0].path;
+        console.log(userMainPicture);
+        return { validated: true, userMainPicture };
+      })
+
+      .catch(e => {
+        console.error(e.stack);
+        return {
+          validated: false
+        };
+      });
+    if (ret.validated) {
+      return ret.userMainPicture;
+    }
+  }
+};
+
 const getUserTags = async userId => {
   return await client
     .query(
@@ -281,5 +310,6 @@ export {
   getUserLatitudeAndLongitude,
   getUserCity,
   getAllTags,
-  getTags
+  getTags,
+  getUserMainPic
 };

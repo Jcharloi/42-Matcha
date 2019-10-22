@@ -9,7 +9,8 @@ import {
   getAllTags,
   getUserCity,
   getTags,
-  getUserPictures
+  getUserPictures,
+  getUserMainPic
 } from "./helpers/profile/getUserInfos.mjs";
 
 import { connection } from "./helpers/auth/signIn.mjs";
@@ -84,6 +85,7 @@ router.put("/admin/ban-user", deleteUser);
 
 router.put("/profile/get-user-city", getUserCity);
 router.put("/profile/get-user-pictures", getUserPictures);
+router.put("/profile/get-user-main-pic", getUserMainPic);
 router.put("/profile/get-all-tags", getAllTags);
 router.post("/profile/get-tags", getTags);
 router.post("/profile/upload-pictures", uploadPictures);
