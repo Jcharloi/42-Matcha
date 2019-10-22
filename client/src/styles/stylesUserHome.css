@@ -148,3 +148,15 @@ h5 {
   width: 100%;
   left: 0;
 }
+
+.container-little-messages {
+  border: 2px solid rgb(212, 218, 212);
+  border-radius: 4px;
+  background-color: white;
+  position: fixed;
+  bottom: 0.5%;
+  right: 0.5%;
+  max-width: 35rem;
+  width: 35rem;
+  overflow: hidden;
+}

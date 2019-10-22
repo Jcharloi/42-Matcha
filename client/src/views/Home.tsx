@@ -10,6 +10,7 @@ import UserCard from "../components/Match/UserCard";
 import SortIndex from "../components/Match/SortIndex";
 import FilterInterval from "../components/Match/FilterInterval";
 import ModalFilter from "../components/Match/ModalFilter";
+import Messages from "./Messages";
 
 import { Divider } from "semantic-ui-react";
 import "../styles/stylesUserHome.css";
@@ -176,6 +177,9 @@ class Home extends React.Component<User, HState> {
             <p>{this.state.messageHome}</p>
           </div>
         )}
+        <div className="container-little-messages">
+          <Messages littleMessages={true} />
+        </div>
       </div>
     );
   }

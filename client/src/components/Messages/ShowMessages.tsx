@@ -13,6 +13,7 @@ import "../../styles/stylesMessages.css";
 const scroll = Scroll.animateScroll;
 
 interface Props {
+  littleMessages: boolean;
   sender: {
     name: string;
     id: string;
