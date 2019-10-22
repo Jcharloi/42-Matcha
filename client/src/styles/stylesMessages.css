@@ -1,5 +1,15 @@
 /* SHOW HISTORY */
 
+.container-top-messages {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 1rem;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom: 1px solid rgb(212, 218, 212);
+}
+
 .container-history {
   display: flex;
   align-items: center;
@@ -7,6 +17,17 @@
   width: 100%;
   height: 60%;
   margin-top: 1rem;
+  padding: 1rem;
+}
+
+.container-history-little {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-height: 40rem;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .container-user {
@@ -19,6 +40,17 @@
   margin: 1.5rem 1.5rem;
 }
 
+.container-user-little {
+  padding: 1rem;
+  border: 2px solid rgba(241, 239, 239, 0.952);
+  cursor: pointer;
+  border-radius: 5px;
+  width: 90%;
+  height: 5rem;
+  display: flex;
+  margin: 1rem;
+}
+
 .ring {
   border-radius: 50%;
   width: 15px;
@@ -26,12 +58,12 @@
 }
 
 .middle-history {
-  width: 75%;
+  width: 100%;
 }
 
 .name-container {
-  position: relative;
   display: flex;
+  align-items: center;
 }
 
 .name {
@@ -39,28 +71,46 @@
   margin-right: 0.5rem;
 }
 
+.container-ring {
+  width: 10%;
+}
+
 .date-history {
-  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
   font-weight: 400;
   font-size: 1em;
   font-style: italic;
   color: rgba(0, 0, 0, 0.4);
-  right: 26%;
-  margin-top: -1.5rem;
+}
+
+.container-text-history {
+  overflow: hidden;
+}
+
+.container-text-history-little {
+  overflow: hidden;
+  max-height: 2rem;
 }
 
 .text-history {
-  display: flex;
-  height: 4rem;
-  overflow: hidden;
-  margin-top: 0.3rem;
-  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  max-height: 1rem;
+  width: 90%;
 }
 
 .icon-history {
-  position: absolute !important;
-  margin-top: -3rem !important;
-  right: 26%;
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-end !important;
+}
+
+.icon-history-little {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-end !important;
+  margin-top: -1rem !important;
 }
 
 /* SHOW MESSAGES */
