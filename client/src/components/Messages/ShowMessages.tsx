@@ -163,56 +163,75 @@ class ShowMessages extends React.Component<Props, State> {
     return (
       <div>
         {!this.state.isLoading && (
-          <div className="container-message">
-            <Icon
-              className="icon-message"
-              size="huge"
-              name="long arrow alternate left"
-              onClick={() =>
-                this.props.displayHistory(true, "", {
-                  name: "",
-                  id: "",
-                  picture: "",
-                  lastConnection: ""
-                })
+          <div
+            className={
+              !this.props.littleMessages
+                ? "container-message"
+                : "container-message-little"
+            }
+          >
+            {!this.props.littleMessages && (
+              <Icon
+                className="icon-message"
+                size="huge"
+                name="long arrow alternate left"
+                onClick={() =>
+                  this.props.displayHistory(true, "", {
+                    name: "",
+                    id: "",
+                    picture: "",
+                    lastConnection: ""
+                  })
+                }
+              />
+            )}
+            <div
+              className={
+                !this.props.littleMessages
+                  ? "container-conv"
+                  : "container-conv-little"
               }
-            />
-            <div className="container-conv">
+            >
               <div className="show-profile">
-                <div className="container-profile">
-                  <Image
-                    className="avatar-message"
-                    avatar
-                    size="tiny"
-                    src={`http://localhost:5000/public/profile-pictures/${this.props.sender.picture}`}
-                    onClick={() => this.showProfileUser(this.props.sender.name)}
-                  />
-                  <div
-                    className="name-profile"
-                    onClick={() => this.showProfileUser(this.props.sender.name)}
-                  >
-                    {this.props.sender.name}
-                  </div>
-                  <div
-                    className={
-                      findLastSince(this.props.sender.lastConnection).split(
-                        " "
-                      )[1] === "seconds"
-                        ? "ring ring-color-online"
-                        : "ring ring-color-offline"
-                    }
-                  ></div>
-                  <span className="last-connection">
-                    Online{" "}
-                    {findLastSince(this.props.sender.lastConnection).split(
+                <Image
+                  className="avatar-message"
+                  avatar
+                  size="tiny"
+                  src={`http://localhost:5000/public/profile-pictures/${this.props.sender.picture}`}
+                  onClick={() => this.showProfileUser(this.props.sender.name)}
+                />
+                <div
+                  className="name-profile"
+                  onClick={() => this.showProfileUser(this.props.sender.name)}
+                >
+                  {this.props.sender.name}
+                </div>
+                <div
+                  className={
+                    findLastSince(this.props.sender.lastConnection).split(
                       " "
                     )[1] === "seconds"
-                      ? "now !"
-                      : findLastSince(this.props.sender.lastConnection)}
-                  </span>
-                </div>
+                      ? "ring ring-color-online"
+                      : "ring ring-color-offline"
+                  }
+                ></div>
+                <span className="last-connection">
+                  Online{" "}
+                  {findLastSince(this.props.sender.lastConnection).split(
+                    " "
+                  )[1] === "seconds"
+                    ? "now !"
+                    : findLastSince(this.props.sender.lastConnection)}
+                </span>
               </div>
-              <div className="show-messages" id="show-message">
+              <div
+                className={
+                  !this.props.littleMessages
+                    ? "show-messages"
+                    : "show-messages-little"
+                }
+                id="show-message"
+              >
                 {this.state.allMessages.map(
                   ({ date, message, messageId, sentPosition }) => (
                     <div key={messageId}>

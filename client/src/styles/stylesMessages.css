@@ -123,6 +123,14 @@
   justify-content: center;
 }
 
+.container-message-little {
+  width: 100%;
+  max-height: 40rem;
+  min-height: 40rem;
+  display: flex;
+  justify-content: center;
+}
+
 .icon-message {
   position: absolute;
   left: 0;
@@ -133,7 +141,6 @@
   max-height: 80rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   width: 50%;
   border: 2px solid rgb(212, 218, 212);
   border-radius: 20px;
@@ -141,21 +148,25 @@
   height: 100%;
 }
 
+.container-conv-little {
+  max-height: 39rem;
+  min-height: 39rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 90%;
+  padding: 0.5rem;
+}
+
 /* PROFILE PART */
 
 .show-profile {
-  top: 7rem;
-  height: 5rem;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom: 1px solid rgb(212, 218, 212);
-}
-
-.container-profile {
   overflow: hidden;
   display: flex;
   align-items: center;
-  height: 100%;
+  margin-bottom: 1rem;
+  height: 5rem;
+  border-bottom: 1px solid rgb(212, 218, 212);
 }
 
 .avatar-message {
@@ -173,12 +184,23 @@
 .last-connection {
   font-style: italic;
   margin-left: 0.5rem;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 /* MESSAGES PART */
 
 .show-messages {
-  max-height: 65rem;
+  max-height: 64rem;
+  min-height: 64rem;
+  overflow: hidden;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding: 1rem;
+}
+
+.show-messages-little {
+  max-height: 24rem;
+  min-height: 24rem;
   overflow: hidden;
   overflow: scroll;
   overflow-x: hidden;
@@ -214,12 +236,12 @@
 }
 
 .message-value {
-  white-space: pre;
+  /* white-space: pre; */
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 1.2rem;
   border-radius: 20px;
   padding: 1.5rem;
-  max-width: 45%;
+  max-width: 70%;
 }
 
 /* TYPING PART */
