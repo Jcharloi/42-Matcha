@@ -48,7 +48,6 @@ class HistoryMessages extends React.Component<Props, {}> {
   };
 
   public render() {
-    console.log(this.props.displayLittle);
     return (
       <div
         className={
@@ -57,7 +56,7 @@ class HistoryMessages extends React.Component<Props, {}> {
             : "container-history-little"
         }
         style={{
-          display: this.props.displayLittle ? "" : "none"
+          display: this.props.displayLittle ? "flex" : "none"
         }}
       >
         {this.props.users.map(
@@ -103,7 +102,7 @@ class HistoryMessages extends React.Component<Props, {}> {
               <Image
                 className="avatar-visit"
                 avatar
-                size="tiny"
+                size={!this.props.littleMessages ? "tiny" : undefined}
                 src={`http://localhost:5000/public/profile-pictures/${mainPicture}`}
               />
               <div className="middle-history">

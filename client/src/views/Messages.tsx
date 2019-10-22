@@ -10,7 +10,6 @@ import { socket } from "../helpers/socket";
 import { User } from "../models/models";
 
 import "../styles/stylesMessages.css";
-import { Icon } from "semantic-ui-react";
 
 interface Props {
   littleMessages: boolean;
@@ -47,7 +46,7 @@ class Messages extends React.Component<Props, MState> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      displayLittle: false,
+      displayLittle: true,
       isLoading: true,
       displayHistory: true,
       historyUsers: [],
@@ -167,10 +166,11 @@ class Messages extends React.Component<Props, MState> {
         {!this.props.littleMessages ? (
           <TopMenu current="messages" />
         ) : (
-          <div className="container-top-messages">
-            <span>Your messages</span>
-            <Icon name="window minimize" onClick={this.handleDisplayLittle} />
-            <Icon name="close" />
+          <div
+            className="container-top-messages"
+            onClick={this.handleDisplayLittle}
+          >
+            <span>Your personal messages</span>
           </div>
         )}
         {!this.state.isLoading && this.state.displayHistory && (
@@ -184,6 +184,7 @@ class Messages extends React.Component<Props, MState> {
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
+            displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
             sender={this.state.sender}
             receiverId={this.props.user.user_id}

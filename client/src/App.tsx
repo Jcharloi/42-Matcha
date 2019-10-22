@@ -233,8 +233,10 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Messages en petit
+    - Degager la bulle quand on est sur la partie messages
     - Fix bug report page
+    - Ne pas degager le compte admin
+    - TOUS LES TESTS ET C'EST FINI !!!
     
     - Infinite scroll (pls no)
     - CSS notif
@@ -243,7 +245,6 @@ class App extends React.Component<VerifiedUser, AppState> {
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
     - Changer status res
-    - Ne pas degager le compte admin
     */
     return (
       <div>
@@ -335,6 +336,11 @@ class App extends React.Component<VerifiedUser, AppState> {
             </Switch>
           )}
         </Router>
+        {this.props.isAuth && (
+          <div className="container-little-messages">
+            <Messages littleMessages={true} />
+          </div>
+        )}
       </div>
     );
   }

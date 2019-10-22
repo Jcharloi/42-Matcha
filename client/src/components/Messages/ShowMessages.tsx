@@ -13,6 +13,7 @@ import "../../styles/stylesMessages.css";
 const scroll = Scroll.animateScroll;
 
 interface Props {
+  displayLittle: boolean;
   littleMessages: boolean;
   sender: {
     name: string;
@@ -169,22 +170,23 @@ class ShowMessages extends React.Component<Props, State> {
                 ? "container-message"
                 : "container-message-little"
             }
+            style={{
+              display: this.props.displayLittle ? "flex" : "none"
+            }}
           >
-            {!this.props.littleMessages && (
-              <Icon
-                className="icon-message"
-                size="huge"
-                name="long arrow alternate left"
-                onClick={() =>
-                  this.props.displayHistory(true, "", {
-                    name: "",
-                    id: "",
-                    picture: "",
-                    lastConnection: ""
-                  })
-                }
-              />
-            )}
+            <Icon
+              className="icon-message"
+              size={!this.props.littleMessages ? "huge" : "large"}
+              name="long arrow alternate left"
+              onClick={() =>
+                this.props.displayHistory(true, "", {
+                  name: "",
+                  id: "",
+                  picture: "",
+                  lastConnection: ""
+                })
+              }
+            />
             <div
               className={
                 !this.props.littleMessages
