@@ -3,6 +3,11 @@ export interface VerifiedUser {
   isCompleted: boolean;
 }
 
+export interface NumberOf {
+  numberMessages: number;
+  numberNotifications: number;
+}
+
 export interface User {
   user_id: string;
   mail: string;

@@ -3,9 +3,11 @@ import {
   INSERT_USER_PROFILE,
   UPDATE_USER_AUTH,
   UpdateAuthAction,
-  INSERT_OTHER_PROFILE
+  UpdateNumberOfAction,
+  INSERT_OTHER_PROFILE,
+  UPDATE_NUMBER_OF
 } from "../types/types";
-import { VerifiedUser, User } from "../../models/models";
+import { VerifiedUser, User, NumberOf } from "../../models/models";
 
 let initialState = {
   user_id: "",
@@ -60,6 +62,22 @@ export const verifiedUserReducer = (
   action: UpdateAuthAction
 ): VerifiedUser => {
   if (action.type === UPDATE_USER_AUTH) {
+    return Object.assign({}, state, action.payload);
+  } else {
+    return state;
+  }
+};
+
+let numberOfState = {
+  numberMessages: 0,
+  numberNotifications: 0
+};
+
+export const updateNumberOfReducer = (
+  state = numberOfState,
+  action: UpdateNumberOfAction
+): NumberOf => {
+  if (action.type === UPDATE_NUMBER_OF) {
     return Object.assign({}, state, action.payload);
   } else {
     return state;

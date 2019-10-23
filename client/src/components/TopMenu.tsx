@@ -1,22 +1,55 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { store } from "../redux/store";
-import { insertOtherProfile } from "../redux/actions/actions";
+import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 import { State } from "../redux/types/types";
 import Axios from "axios";
 import { connect } from "react-redux";
-import { User } from "../models/models";
+import { User, NumberOf } from "../models/models";
 import { socket } from "../helpers/socket";
 import { deleteUser } from "../App";
+import { Label } from "semantic-ui-react";
 
 import "../styles/stylesTopMenu.css";
 
 interface Props {
   current?: string;
   user: User;
+  numberOf: NumberOf;
 }
 
-class TopMenu extends React.Component<Props> {
+class TopMenu extends React.Component<Props, {}> {
+  componentDidMount = () => {
+    Axios.put(`http://localhost:5000/profile/get-notification`, {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token")
+    })
+      .then(({ data: { notificationArray, validated } }) => {
+        if (validated) {
+          console.log(notificationArray);
+          let i = 0;
+          // while (notificationArray[i]) {
+          //   if (notificationArray[i].seen == false)
+          //     this.setState({ notifnb: this.state.notifnb + 1 });
+          //   console.log(notificationArray[i]);
+          //   i++;
+          // }
+          // console.log(notificationArray);
+          notificationArray.forEach((notif: { seen: boolean }) => {
+            if (notif.seen == false) {
+              store.dispatch(
+                updateNumberOf({
+                  numberMessages: this.props.numberOf.numberMessages,
+                  numberNotifications:
+                    this.props.numberOf.numberNotifications + 1
+                })
+              );
+            }
+          });
+        }
+      })
+      .catch(err => console.error(err));
+  };
   handleDisconnect = async () => {
     await Axios.put("http://localhost:5000/disconnect", {
       userName: localStorage.getItem("user_name")
@@ -133,10 +166,16 @@ class TopMenu extends React.Component<Props> {
               {this.props.current !== "notifications" ? (
                 <Link className="item item-page" to="/notifications">
                   Notifications
+                  <Label className="label-notif" color="red">
+                    {this.props.numberOf.numberNotifications}
+                  </Label>
                 </Link>
               ) : (
                 <Link className="item active item-page" to="/notifications">
                   Notifications
+                  <Label className="label-notif" color="red">
+                    {this.props.numberOf.numberNotifications}
+                  </Label>
                 </Link>
               )}
 
@@ -167,7 +206,7 @@ class TopMenu extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: State) => {
-  return { user: state.user };
+  return { user: state.user, numberOf: state.numberOf };
 };
 
 export default connect(mapStateToProps)(TopMenu);

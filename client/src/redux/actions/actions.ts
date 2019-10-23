@@ -3,9 +3,11 @@ import {
   UPDATE_USER_AUTH,
   INSERT_OTHER_PROFILE,
   InsertProfileAction,
-  UpdateAuthAction
+  UpdateAuthAction,
+  UpdateNumberOfAction,
+  UPDATE_NUMBER_OF
 } from "../types/types";
-import { User, VerifiedUser } from "../../models/models";
+import { User, VerifiedUser, NumberOf } from "../../models/models";
 
 export function insertUserProfile(data: User): InsertProfileAction {
   return {
@@ -24,6 +26,13 @@ export function insertOtherProfile(data: User): InsertProfileAction {
 export function updateUserAuth(data: VerifiedUser): UpdateAuthAction {
   return {
     type: UPDATE_USER_AUTH,
+    payload: data
+  };
+}
+
+export function updateNumberOf(data: NumberOf): UpdateNumberOfAction {
+  return {
+    type: UPDATE_NUMBER_OF,
     payload: data
   };
 }
