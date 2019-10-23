@@ -57,7 +57,6 @@ import {
 } from "./helpers/profile/notifications.mjs";
 import {
   getAllMessages,
-  checkAndGetSender,
   readMessage,
   getMessagesPeople,
   sendNewMessage
@@ -106,7 +105,6 @@ router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);
 router.put("/message/get-all-messages", getAllMessages);
-router.put("/message/get-sender-infos", checkAndGetSender);
 router.put("/message/read-message", readMessage);
 router.put("/message/get-messages-people", getMessagesPeople);
 router.post("/message/send-new-message", sendNewMessage);

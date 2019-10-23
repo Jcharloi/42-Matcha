@@ -1,17 +1,20 @@
+.label-notif {
+  position: absolute !important;
+  right: 1rem;
+  top: -1rem;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+
 /* SHOW HISTORY */
 
 .container-top-messages {
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  height: 100%;
   padding: 1rem;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   border-bottom: 1px solid rgb(212, 218, 212);
   font-size: 1.2rem;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-style: italic;
+  /* position: relative; */
 }
 
 .container-history {

@@ -233,6 +233,7 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
+    - Read messages quand tu vas direct sur la page
     - Degager la bulle quand on est sur la partie messages
     - Fix bug report page
     - Ne pas degager le compte admin
@@ -336,9 +337,11 @@ class App extends React.Component<VerifiedUser, AppState> {
             </Switch>
           )}
         </Router>
-        {this.props.isAuth && (
-          <div className="container-little-messages">
-            <Messages littleMessages={true} />
+        {this.props.isAuth && this.props.isCompleted && (
+          <div>
+            <div className="container-little-messages">
+              <Messages littleMessages={true} />
+            </div>
           </div>
         )}
       </div>

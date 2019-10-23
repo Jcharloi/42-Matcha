@@ -18,14 +18,10 @@ interface Props {
     messageId: string;
     senderRead: boolean;
     receiverRead: boolean;
-    mainPicture: string;
+    picture: string;
   }>;
-  displayHistory: (
-    displayHistory: boolean,
-    receiverId: string,
-    user: { name: string; id: string; picture: string; lastConnection: string }
-  ) => void;
   receiverId: string;
+  getMessagesPeople: (senderId: string, receiverId: string | null) => void;
 }
 
 class HistoryMessages extends React.Component<Props, {}> {
@@ -70,7 +66,7 @@ class HistoryMessages extends React.Component<Props, {}> {
             senderRead,
             receiverRead,
             lastConnection,
-            mainPicture
+            picture
           }) => (
             <div
               className={
@@ -90,20 +86,17 @@ class HistoryMessages extends React.Component<Props, {}> {
                 if (!receiverRead) {
                   this.readMessage(senderId, receiverId, messageId);
                 }
-                this.props.displayHistory(false, receiverId, {
-                  name: senderName,
-                  id:
-                    senderId === this.props.receiverId ? receiverId : senderId,
-                  picture: mainPicture,
-                  lastConnection
-                });
+                this.props.getMessagesPeople(
+                  senderName,
+                  localStorage.getItem("user_name")
+                );
               }}
             >
               <Image
                 className="avatar-visit"
                 avatar
                 size={!this.props.littleMessages ? "tiny" : undefined}
-                src={`http://localhost:5000/public/profile-pictures/${mainPicture}`}
+                src={`http://localhost:5000/public/profile-pictures/${picture}`}
               />
               <div className="middle-history">
                 <div className="name-container">

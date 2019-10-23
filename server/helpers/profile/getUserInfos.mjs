@@ -76,8 +76,7 @@ const getUserName = async userId => {
   return await client
     .query(`SELECT * FROM users WHERE user_id = '${userId}'`)
     .then(({ rows }) => {
-      const userName = rows[0].user_name;
-      return userName;
+      return rows[0].user_name;
     })
     .catch(e => {
       console.error(e);
@@ -117,16 +116,12 @@ const getUserMainPic = async userId => {
   if (!userId) {
     return { validated: false };
   } else {
-    // console.log(userId);
     let text = `SELECT path, date, main FROM profile_picture INNER JOIN users ON(profile_picture.user_id = users.user_id) WHERE users.user_id = $1 ORDER BY main DESC`;
     let values = [userId];
     let ret = await client
       .query(text, values)
       .then(({ rows }) => {
-        let userMainPicture = [];
-        // console.log(rows);
-        userMainPicture = rows[0].path;
-        console.log(userMainPicture);
+        let userMainPicture = rows[0].path;
         return { validated: true, userMainPicture };
       })
 

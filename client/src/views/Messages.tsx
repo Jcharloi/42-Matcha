@@ -10,6 +10,7 @@ import { socket } from "../helpers/socket";
 import { User } from "../models/models";
 
 import "../styles/stylesMessages.css";
+import { Label, Icon } from "semantic-ui-react";
 
 interface Props {
   littleMessages: boolean;
@@ -31,10 +32,19 @@ interface MState {
     messageId: string;
     senderRead: boolean;
     receiverRead: boolean;
-    mainPicture: string;
+    picture: string;
+  }>;
+  unreadMessages: number;
+  allMessages: Array<{
+    message: string;
+    messageId: string;
+    date: string;
+    sentPosition: string;
+    receiverRead: boolean;
+    senderRead: boolean;
   }>;
   sender: {
-    name: string;
+    senderName: string;
     id: string;
     picture: string;
     lastConnection: string;
@@ -50,8 +60,10 @@ class Messages extends React.Component<Props, MState> {
       isLoading: true,
       displayHistory: true,
       historyUsers: [],
+      unreadMessages: 0,
+      allMessages: [],
       receiverId: "",
-      sender: { name: "", id: "", picture: "", lastConnection: "" }
+      sender: { senderName: "", id: "", picture: "", lastConnection: "" }
     };
   }
 
@@ -60,34 +72,10 @@ class Messages extends React.Component<Props, MState> {
       window.location.pathname &&
       window.location.pathname.search("/messages/") !== -1
     ) {
-      Axios.put("http://localhost:5000/message/get-sender-infos", {
-        token: localStorage.getItem("token"),
-        userName: localStorage.getItem("user_name"),
-        senderName: decodeURIComponent(window.location.pathname.split("/")[2])
-      })
-        .then(({ data: { validToken, validated, user } }) => {
-          if (validToken === false) {
-            deleteUser();
-          } else {
-            if (validated) {
-              this.setState({
-                isLoading: false,
-                displayHistory: false,
-                sender: {
-                  name: user.senderName,
-                  id: user.id,
-                  picture: user.mainPicture,
-                  lastConnection: user.lastConnection
-                }
-              });
-            } else {
-              this.getAllMessages();
-            }
-          }
-        })
-        .catch(e => {
-          console.error(e.message);
-        });
+      this.getMessagesPeople(
+        decodeURIComponent(window.location.pathname.split("/")[2]),
+        localStorage.getItem("user_name")
+      );
     } else {
       this.getAllMessages();
     }
@@ -104,13 +92,51 @@ class Messages extends React.Component<Props, MState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ historyUsers: usersMessage, isLoading: false });
+            this.setState({
+              isLoading: false,
+              displayHistory: true,
+              historyUsers: usersMessage
+            });
+            this.state.historyUsers.map(history => {
+              if (!history.receiverRead) {
+                this.setState({
+                  unreadMessages: this.state.unreadMessages + 1
+                });
+              }
+              return;
+            });
             this.receiveAllMessages();
           }
         }
       })
       .catch(e => {
         console.error(e.message);
+      });
+  };
+
+  getMessagesPeople = (senderName: string, receiverName: string | null) => {
+    Axios.put("http://localhost:5000/message/get-messages-people", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      senderName,
+      receiverName
+    })
+      .then(({ data: { validToken, validated, allMessages, user } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({
+              isLoading: false,
+              displayHistory: false,
+              allMessages,
+              sender: user
+            });
+          }
+        }
+      })
+      .catch(e => {
+        console.log(e.message);
       });
   };
 
@@ -125,12 +151,20 @@ class Messages extends React.Component<Props, MState> {
       messageId: string;
       senderRead: boolean;
       receiverRead: boolean;
-      mainPicture: string;
+      picture: string;
     }>
   ) => {
     if (this.state.historyUsers !== historyReceived) {
       this.setState({
         historyUsers: historyReceived
+      });
+      this.state.historyUsers.map(history => {
+        if (!history.receiverRead) {
+          this.setState({
+            unreadMessages: this.state.unreadMessages + 1
+          });
+        }
+        return;
       });
     }
   };
@@ -141,19 +175,6 @@ class Messages extends React.Component<Props, MState> {
 
   componentWillUnmount = () => {
     socket.removeListener("New history", this.initNewHistory);
-  };
-
-  displayHistory = (
-    displayHistory: boolean,
-    receiverId: string,
-    sender: {
-      name: string;
-      id: string;
-      picture: string;
-      lastConnection: string;
-    }
-  ): void => {
-    this.setState({ displayHistory, receiverId, sender });
   };
 
   handleDisplayLittle = () => {
@@ -170,25 +191,31 @@ class Messages extends React.Component<Props, MState> {
             className="container-top-messages"
             onClick={this.handleDisplayLittle}
           >
-            <span>Your personal messages</span>
+            <Icon name="mail" /> Your personal messages
+            {this.state.unreadMessages > 0 && (
+              <Label className="label-notif" color="red">
+                {this.state.unreadMessages}
+              </Label>
+            )}
           </div>
         )}
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
+            users={this.state.historyUsers}
             displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
-            users={this.state.historyUsers}
             receiverId={this.props.user.user_id}
-            displayHistory={this.displayHistory}
+            getMessagesPeople={this.getMessagesPeople}
           />
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
+            sender={this.state.sender}
+            allMessages={this.state.allMessages}
             displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
-            sender={this.state.sender}
             receiverId={this.props.user.user_id}
-            displayHistory={this.displayHistory}
+            getAllMessages={this.getAllMessages}
           />
         )}
       </div>

@@ -9,9 +9,9 @@ import {
 import { ioConnection, clients } from "../../app.mjs";
 import { notifyUser } from "../profile/notifications.mjs";
 
-const getSenderInfos = async sender => {
-  let text = `SELECT user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
-  let values = [sender];
+const getSenderInfos = async senderId => {
+  let text = `SELECT users.user_id, user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
+  let values = [senderId];
   return await client
     .query(text, values)
     .then(async ({ rows, rowCount }) => {
@@ -19,9 +19,10 @@ const getSenderInfos = async sender => {
         return {
           validatedRes: true,
           user: {
+            id: rows[0].user_id,
             senderName: rows[0].user_name,
             lastConnection: rows[0].last_connection,
-            mainPicture: rows[0].path
+            picture: rows[0].path
           }
         };
       } else {
@@ -32,27 +33,6 @@ const getSenderInfos = async sender => {
       console.error(e.stack);
       return { validatedRes: false };
     });
-};
-
-const checkAndGetSender = async (req, res) => {
-  const senderId = await getUserId(req.body.senderName);
-  const userId = await getUserId(req.body.userName);
-  if (!senderId) {
-    res.send({ validated: false });
-  } else {
-    const { validatedRes, user } = await getSenderInfos(senderId);
-    if (validatedRes) {
-      user.id = senderId;
-      const { validated } = await checkMutualLikes(senderId, userId);
-      if (validated) {
-        res.send({ validated: true, user });
-      } else {
-        res.send({ validated: false });
-      }
-    } else {
-      res.send({ validated: false });
-    }
-  }
 };
 
 const checkAllMessages = async receiverId => {
@@ -114,6 +94,45 @@ const getAllMessages = async (req, res) => {
   }
 };
 
+const getMessagesPeople = async (req, res) => {
+  const senderId = await getUserId(req.body.senderName);
+  const receiverId = await getUserId(req.body.receiverName);
+  if (senderId) {
+    let text = `SELECT message, message_id, chat.date, sender_read, sender_id, receiver_read FROM chat WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 and receiver_id = $1) ORDER BY date ASC`;
+    let values = [senderId, receiverId];
+    await client
+      .query(text, values)
+      .then(async ({ rows, rowCount }) => {
+        let allMessages = [];
+        for (let i = 0; i < rowCount; i++) {
+          allMessages.push({
+            message: rows[i].message,
+            messageId: rows[i].message_id,
+            date: rows[i].date,
+            sentPosition: rows[i].sender_id,
+            receiverRead: rows[i].receiver_read,
+            senderRead: rows[i].sender_read
+          });
+        }
+        const { validatedRes, user } = await getSenderInfos(senderId); //ou receiverId..
+        const { validated } = await checkMutualLikes(senderId, receiverId);
+        if (validatedRes && validated) {
+          res.send({
+            validated: true,
+            allMessages,
+            user
+          });
+        } else {
+          res.send({ validated: false, allMessages });
+        }
+      })
+      .catch(e => {
+        console.error(e.stack);
+        res.send({ validated: false });
+      });
+  }
+};
+
 const readMessage = async (req, res) => {
   let text = `UPDATE chat SET receiver_read = TRUE WHERE sender_id = $1 AND receiver_id = $2 AND message_id = $3`;
   let values = [req.body.senderId, req.body.receiverId, req.body.messageId];
@@ -121,31 +140,6 @@ const readMessage = async (req, res) => {
     .query(text, values)
     .then(() => {
       res.send({ validated: true });
-    })
-    .catch(e => {
-      console.error(e.stack);
-      res.send({ validated: false });
-    });
-};
-
-const getMessagesPeople = async (req, res) => {
-  let text = `SELECT message, message_id, date, sender_read, sender_id, receiver_read FROM chat WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 and receiver_id = $1) ORDER BY date ASC`;
-  let values = [req.body.senderId, req.body.receiverId];
-  await client
-    .query(text, values)
-    .then(({ rows, rowCount }) => {
-      let allMessages = [];
-      for (let i = 0; i < rowCount; i++) {
-        allMessages.push({
-          message: rows[i].message,
-          messageId: rows[i].message_id,
-          date: rows[i].date,
-          sentPosition: rows[i].sender_id,
-          receiverRead: rows[i].receiver_read,
-          senderRead: rows[i].sender_read
-        });
-      }
-      res.send({ validated: true, allMessages });
     })
     .catch(e => {
       console.error(e.stack);
@@ -208,10 +202,4 @@ const sendNewMessage = async (req, res) => {
   }
 };
 
-export {
-  checkAndGetSender,
-  getAllMessages,
-  readMessage,
-  getMessagesPeople,
-  sendNewMessage
-};
+export { getAllMessages, readMessage, getMessagesPeople, sendNewMessage };
