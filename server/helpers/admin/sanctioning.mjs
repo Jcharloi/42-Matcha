@@ -7,7 +7,8 @@ const sanctioningUser = async (req, res) => {
   if (
     !userId ||
     (req.body.action !== "Report" && req.body.action !== "Block") ||
-    !req.body.targetUserId
+    !req.body.targetUserId ||
+    req.body.targetUserId == getUserId("IAmAnAdmin")
   ) {
     res.send({
       validated: false,

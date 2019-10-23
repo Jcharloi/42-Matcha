@@ -5,7 +5,11 @@ const deleteUser = async (req, res) => {
   const adminId = await getUserId("IAmAnAdmin");
   const userId = await getUserId(req.body.userName);
   const targetUserId = await getUserId(req.body.targetUserName);
-  if ((userId === adminId || userId === targetUserId) && targetUserId) {
+  if (
+    (userId === adminId || userId === targetUserId) &&
+    targetUserId &&
+    targetUserId !== adminId
+  ) {
     let text = "DELETE FROM users WHERE user_id = $1";
     let values = [targetUserId];
     await client
