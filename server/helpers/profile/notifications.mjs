@@ -76,18 +76,17 @@ const getNotification = async (req, res) => {
       .then(async ({ rowCount, rows }) => {
         let i = 0;
         while (i < rows.length) {
-          notificationArray[i] = {
+          notificationArray.push({
             sender: await getUserName(rows[i].sender_id),
             date: rows[i].date,
             notif_type: rows[i].notif_type,
             seen: rows[i].seen,
-
             mainPicPath: rows[i].path
-          };
+          });
           i++;
         }
         console.log(notificationArray);
-        await res.send({
+        res.send({
           validated: true,
           notificationArray
         });

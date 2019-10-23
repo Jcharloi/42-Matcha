@@ -3,16 +3,18 @@ import Axios from "axios";
 import history from "../helpers/history";
 import { store } from "../redux/store";
 
-import { insertOtherProfile } from "../redux/actions/actions";
+import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 
 import { Link } from "react-router-dom";
-import { User } from "../models/models";
+import { State } from "../redux/types/types";
+import { User, NumberOf } from "../models/models";
 import { deleteUser, findLastSince } from "../App";
 
 import TopMenu from "../components/TopMenu";
 
 import { Image, Icon, Feed, Button } from "semantic-ui-react";
 import "../styles/stylesUserNotifications.css";
+import { connect } from "react-redux";
 
 interface NState {
   notificationArray: Array<{
@@ -25,8 +27,8 @@ interface NState {
   current: string;
 }
 
-class Notification extends React.Component<{}, NState> {
-  constructor(props: {}) {
+class Notification extends React.Component<NumberOf, NState> {
+  constructor(props: NumberOf) {
     super(props);
     this.state = {
       notificationArray: [],
@@ -77,6 +79,12 @@ class Notification extends React.Component<{}, NState> {
       })
         .then(({ data: { notificationArray, validated } }) => {
           if (validated) {
+            store.dispatch(
+              updateNumberOf({
+                numberMessages: this.props.numberMessages,
+                numberNotifications: this.props.numberNotifications - 1
+              })
+            );
             this.setState({ notificationArray });
           }
         })
@@ -125,15 +133,16 @@ class Notification extends React.Component<{}, NState> {
                       name={this.state.current === "likes" ? "star" : "eye"}
                       color={this.state.current === "likes" ? "yellow" : "blue"}
                     /> */}
-                    <Button
-                      icon
-                      onClick={() => this.checkNotif(notif)}
-                      // onCLick={() => console.log("test")}
-                      labelPosition="right"
-                    >
-                      OK
-                      <Icon className="checkmark" />
-                    </Button>
+                    {notif.seen === false ? (
+                      <Button
+                        icon
+                        onClick={() => this.checkNotif(notif)}
+                        labelPosition="right"
+                      >
+                        OK
+                        <Icon className="checkmark" />
+                      </Button>
+                    ) : null}
                   </div>
 
                   <Feed.Date className="time-feed">
@@ -149,4 +158,8 @@ class Notification extends React.Component<{}, NState> {
   }
 }
 
-export default Notification;
+const mapStateToProps = (state: State): NumberOf => {
+  return state.numberOf;
+};
+
+export default connect(mapStateToProps)(Notification);
