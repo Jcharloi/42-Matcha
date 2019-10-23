@@ -53,12 +53,26 @@ const sanctioningUser = async (req, res) => {
                       values = [userId, req.body.targetUserId];
                       await client
                         .query(text, values)
-                        .then(() => {
-                          res.send({
-                            validated: true,
-                            message:
-                              "User reported and visit/likes/messages deleted"
-                          });
+                        .then(async () => {
+                          text = `DELETE FROM notification WHERE (sender_id = $1 OR receiver_id = $2) AND (receiver_id = $1 OR sender_id = $2)`;
+                          values = [userId, req.body.targetUserId];
+                          await client
+                            .query(text, values)
+                            .then(() => {
+                              res.send({
+                                validated: true,
+                                message:
+                                  "User reported and visit/likes/messages deleted"
+                              });
+                            })
+                            .catch(e => {
+                              console.error(e.stack);
+                              res.send({
+                                validated: false,
+                                message:
+                                  "We got a problem with our database, please try again"
+                              });
+                            });
                         })
                         .catch(e => {
                           console.error(e.stack);
