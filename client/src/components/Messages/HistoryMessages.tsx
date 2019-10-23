@@ -1,6 +1,9 @@
 import * as React from "react";
 import Axios from "axios";
 import { deleteUser, findLastSince } from "../../App";
+import { store } from "../../redux/store";
+import { updateNumberOf } from "../../redux/actions/actions";
+import { NumberOf } from "../../models/models";
 
 import { Image, Icon } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
@@ -20,6 +23,7 @@ interface Props {
     receiverRead: boolean;
     picture: string;
   }>;
+  numberOf: NumberOf;
   receiverId: string;
   getMessagesPeople: (senderId: string, receiverId: string | null) => void;
 }
@@ -36,6 +40,13 @@ class HistoryMessages extends React.Component<Props, {}> {
       .then(({ data: { validToken } }) => {
         if (validToken === false) {
           deleteUser();
+        } else {
+          store.dispatch(
+            updateNumberOf({
+              numberNotifications: this.props.numberOf.numberNotifications,
+              numberMessages: this.props.numberOf.numberMessages - 1
+            })
+          );
         }
       })
       .catch(e => {

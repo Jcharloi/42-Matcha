@@ -24,32 +24,28 @@ class TopMenu extends React.Component<Props, {}> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
-      .then(({ data: { notificationArray, validated } }) => {
-        if (validated) {
-          console.log(notificationArray);
-          let i = 0;
-          // while (notificationArray[i]) {
-          //   if (notificationArray[i].seen == false)
-          //     this.setState({ notifnb: this.state.notifnb + 1 });
-          //   console.log(notificationArray[i]);
-          //   i++;
-          // }
-          // console.log(notificationArray);
-          notificationArray.forEach((notif: { seen: boolean }) => {
-            if (notif.seen == false) {
-              store.dispatch(
-                updateNumberOf({
-                  numberMessages: this.props.numberOf.numberMessages,
-                  numberNotifications:
-                    this.props.numberOf.numberNotifications + 1
-                })
-              );
-            }
-          });
+      .then(({ data: { validToken, notificationArray, validated } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            notificationArray.forEach((notif: { seen: boolean }) => {
+              if (!notif.seen) {
+                store.dispatch(
+                  updateNumberOf({
+                    numberMessages: this.props.numberOf.numberMessages,
+                    numberNotifications:
+                      this.props.numberOf.numberNotifications + 1
+                  })
+                );
+              }
+            });
+          }
         }
       })
       .catch(err => console.error(err));
   };
+
   handleDisconnect = async () => {
     await Axios.put("http://localhost:5000/disconnect", {
       userName: localStorage.getItem("user_name")

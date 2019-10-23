@@ -114,7 +114,7 @@ const getMessagesPeople = async (req, res) => {
             senderRead: rows[i].sender_read
           });
         }
-        const { validatedRes, user } = await getSenderInfos(senderId); //ou receiverId..
+        const { validatedRes, user } = await getSenderInfos(senderId);
         const { validated } = await checkMutualLikes(senderId, receiverId);
         if (validatedRes && validated) {
           res.send({

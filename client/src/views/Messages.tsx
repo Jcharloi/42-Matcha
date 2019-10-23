@@ -7,7 +7,9 @@ import TopMenu from "../components/TopMenu";
 import HistoryMessages from "../components/Messages/HistoryMessages";
 import ShowMessage from "../components/Messages/ShowMessages";
 import { socket } from "../helpers/socket";
-import { User } from "../models/models";
+import { User, NumberOf } from "../models/models";
+import { store } from "../redux/store";
+import { updateNumberOf } from "../redux/actions/actions";
 
 import "../styles/stylesMessages.css";
 import { Label, Icon } from "semantic-ui-react";
@@ -16,6 +18,7 @@ interface Props {
   littleMessages: boolean;
   user: User;
   otherUser: User;
+  numberOf: NumberOf;
 }
 
 interface MState {
@@ -34,7 +37,6 @@ interface MState {
     receiverRead: boolean;
     picture: string;
   }>;
-  unreadMessages: number;
   allMessages: Array<{
     message: string;
     messageId: string;
@@ -60,7 +62,6 @@ class Messages extends React.Component<Props, MState> {
       isLoading: true,
       displayHistory: true,
       historyUsers: [],
-      unreadMessages: 0,
       allMessages: [],
       receiverId: "",
       sender: { senderName: "", id: "", picture: "", lastConnection: "" }
@@ -97,14 +98,6 @@ class Messages extends React.Component<Props, MState> {
               displayHistory: true,
               historyUsers: usersMessage
             });
-            this.state.historyUsers.map(history => {
-              if (!history.receiverRead) {
-                this.setState({
-                  unreadMessages: this.state.unreadMessages + 1
-                });
-              }
-              return;
-            });
             this.receiveAllMessages();
           }
         }
@@ -132,6 +125,8 @@ class Messages extends React.Component<Props, MState> {
               allMessages,
               sender: user
             });
+          } else {
+            this.getAllMessages();
           }
         }
       })
@@ -158,19 +153,35 @@ class Messages extends React.Component<Props, MState> {
       this.setState({
         historyUsers: historyReceived
       });
-      this.state.historyUsers.map(history => {
-        if (!history.receiverRead) {
-          this.setState({
-            unreadMessages: this.state.unreadMessages + 1
-          });
-        }
-        return;
-      });
     }
   };
 
   receiveAllMessages = () => {
     socket.on("New history", this.initNewHistory);
+  };
+
+  componentDidUpdate = (_: any, prevState: MState) => {
+    if (
+      !this.state.isLoading &&
+      prevState.historyUsers !== this.state.historyUsers
+    ) {
+      let i = 0;
+      this.state.historyUsers.map(history => {
+        if (
+          !history.receiverRead &&
+          history.senderId !== this.props.user.user_id
+        ) {
+          console.log("dispatch !");
+          store.dispatch(
+            updateNumberOf({
+              numberNotifications: this.props.numberOf.numberNotifications,
+              numberMessages: ++i
+            })
+          );
+        }
+        return;
+      });
+    }
   };
 
   componentWillUnmount = () => {
@@ -192,9 +203,9 @@ class Messages extends React.Component<Props, MState> {
             onClick={this.handleDisplayLittle}
           >
             <Icon name="mail" /> Your personal messages
-            {this.state.unreadMessages > 0 && (
+            {this.props.numberOf.numberMessages > 0 && (
               <Label className="label-notif" color="red">
-                {this.state.unreadMessages}
+                {this.props.numberOf.numberMessages}
               </Label>
             )}
           </div>
@@ -202,6 +213,7 @@ class Messages extends React.Component<Props, MState> {
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
             users={this.state.historyUsers}
+            numberOf={this.props.numberOf}
             displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
             receiverId={this.props.user.user_id}
@@ -224,7 +236,11 @@ class Messages extends React.Component<Props, MState> {
 }
 
 const mapStateToProps = (state: State) => {
-  return { user: state.user, otherUser: state.otherUser };
+  return {
+    user: state.user,
+    otherUser: state.otherUser,
+    numberOf: state.numberOf
+  };
 };
 
 export default connect(mapStateToProps)(Messages);
