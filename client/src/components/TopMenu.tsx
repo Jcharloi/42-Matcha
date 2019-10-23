@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { User } from "../models/models";
 import { socket } from "../helpers/socket";
 import { deleteUser } from "../App";
+import { Label } from "semantic-ui-react";
 
 import "../styles/stylesTopMenu.css";
 
@@ -15,8 +16,36 @@ interface Props {
   current?: string;
   user: User;
 }
+interface TState {
+  notifnb: number;
+}
 
-class TopMenu extends React.Component<Props> {
+class TopMenu extends React.Component<Props, TState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      notifnb: 0
+    };
+  }
+  componentDidMount = () => {
+    Axios.put(`http://localhost:5000/profile/get-notification`, {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token")
+    })
+      .then(({ data: { notificationArray, validated } }) => {
+        if (validated) {
+          console.log(notificationArray);
+          let i = 0;
+          while (notificationArray[i]) {
+            if (notificationArray[i].seen == false)
+              this.setState({ notifnb: this.state.notifnb + 1 });
+            console.log(notificationArray[i]);
+            i++;
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  };
   handleDisconnect = async () => {
     await Axios.put("http://localhost:5000/disconnect", {
       userName: localStorage.getItem("user_name")
@@ -133,10 +162,16 @@ class TopMenu extends React.Component<Props> {
               {this.props.current !== "notifications" ? (
                 <Link className="item item-page" to="/notifications">
                   Notifications
+                  <Label className="label-notif" color="red">
+                    {this.state.notifnb}
+                  </Label>
                 </Link>
               ) : (
                 <Link className="item active item-page" to="/notifications">
                   Notifications
+                  <Label className="label-notif" color="red">
+                    {this.state.notifnb}
+                  </Label>
                 </Link>
               )}
 
