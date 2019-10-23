@@ -1,7 +1,7 @@
 .setting-container {
   position: fixed;
   bottom: 0;
-  right: 0;
+  left: 1rem;
   margin: 0 2rem 2rem 0;
 }
 
