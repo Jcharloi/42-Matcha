@@ -38,8 +38,23 @@ const deleteUser = async (req, res) => {
                         let values = [targetUserId];
                         await client
                           .query(text, values)
-                          .then(() => {
-                            res.send({ validated: true });
+                          .then(async () => {
+                            let text =
+                              "DELETE FROM notification WHERE sender_id = $1 OR receiver_id = $1";
+                            let values = [targetUserId];
+                            await client
+                              .query(text, values)
+                              .then(() => {
+                                res.send({ validated: true });
+                              })
+                              .catch(e => {
+                                console.error(e);
+                                res.send({
+                                  validated: false,
+                                  message:
+                                    "We got a problem with our database, please try again"
+                                });
+                              });
                           })
                           .catch(e => {
                             console.error(e);

@@ -39,11 +39,11 @@ const getUsersBySearch = async (req, res) => {
       selectGender(req.body.preference) +
       ` score >= $1 AND score <= $2`;
     let values = [startPop, endPop];
-
     await client
       .query(text, values)
       .then(async ({ rows, rowCount }) => {
         let userMatchInfo = [];
+
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
             scoreDistance: 0,
@@ -67,6 +67,7 @@ const getUsersBySearch = async (req, res) => {
             liked: true
           });
         }
+
         userMatchInfo = userMatchInfo.filter(user => {
           return user.age >= startAge && user.age <= endAge;
         });
@@ -77,9 +78,11 @@ const getUsersBySearch = async (req, res) => {
         const myTags = await getUserTags(userId);
         userMatchInfo = await calculateDistance(myCoordinates, userMatchInfo);
         userMatchInfo = await calculateCommonTags(myTags, userMatchInfo);
+        console.log(userMatchInfo);
         userMatchInfo = userMatchInfo.filter(user => {
           return user.distance >= startLoc && user.distance <= endLoc;
         });
+
         if (req.body.tagsName.length > 0) {
           userMatchInfo = userMatchInfo.filter(user => {
             let hasToDelete = false;
@@ -91,16 +94,20 @@ const getUsersBySearch = async (req, res) => {
             return hasToDelete;
           });
         }
+
         const indexYourself = userMatchInfo.findIndex(user => {
           return user.user_id === userId;
         });
+
         if (indexYourself != -1) {
           userMatchInfo.splice(indexYourself, 1);
         }
+
         userMatchInfo.forEach(user => {
           delete user["longitude"];
           delete user["latitude"];
         });
+
         res.send({ validated: true, userMatchInfo });
       })
       .catch(e => {
