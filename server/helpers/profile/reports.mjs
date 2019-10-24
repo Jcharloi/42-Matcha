@@ -9,31 +9,28 @@ import {
 import {
   getUserLatitudeAndLongitude,
   getUserPictures,
-  getUserTags
+  getUserTags,
+  getUserName
 } from "../profile/getUserInfos.mjs";
 
 const getReports = async (req, res) => {
   const user = req.body.userName;
   if (user === "IAmAnAdmin") {
-    let text = `SELECT user_name FROM users JOIN user_report ON reporting_user_id = users.user_id 
-    OR reported_user_id = users.user_id`;
+    // let text = `SELECT user_name FROM users JOIN user_report ON reporting_user_id = users.user_id
+    // OR reported_user_id = users.user_id`;
+    let text = `SELECT * FROM user_report`;
     let reportArray = [];
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
         let i = 0;
-        let j = 0;
-        while (i < rows.length / 2) {
-          // console.log(rows);
+        while (i < rows.length) {
           reportArray[i] = {
-            reporting_user: rows[j + 1].user_name,
-            reported_user: rows[j].user_name
+            reporting_user: await getUserName(rows[i].reporting_user_id),
+            reported_user: await getUserName(rows[i].reported_user_id)
           };
-
-          j = j + 2;
           i++;
         }
-        // console.log(reportArray);
 
         await res.send({
           validated: true,
