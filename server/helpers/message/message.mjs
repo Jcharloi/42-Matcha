@@ -187,7 +187,7 @@ const sendNewMessage = async (req, res) => {
           receiverRead: false,
           senderRead: true
         });
-        notifyUser(req.body.userName, req.body.senderName, "message");
+        await notifyUser(req.body.userName, req.body.senderName, "message");
         if (history.validated) {
           ioConnection.to(socketId).emit("New history", history.usersMessage);
         }
