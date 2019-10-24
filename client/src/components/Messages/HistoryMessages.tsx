@@ -1,8 +1,5 @@
 import * as React from "react";
-import Axios from "axios";
-import { deleteUser, findLastSince } from "../../App";
-import { store } from "../../redux/store";
-import { updateNumberOf } from "../../redux/actions/actions";
+import { findLastSince } from "../../App";
 import { NumberOf } from "../../models/models";
 
 import { Image, Icon } from "semantic-ui-react";
@@ -25,35 +22,10 @@ interface Props {
   }>;
   numberOf: NumberOf;
   receiverId: string;
-  getMessagesPeople: (senderId: string, receiverId: string | null) => void;
+  getMessagesPeople: (senderName: string, receiverName: string | null) => void;
 }
 
 class HistoryMessages extends React.Component<Props, {}> {
-  readMessage = (senderId: string, receiverId: string, messageId: string) => {
-    Axios.put("http://localhost:5000/message/read-message", {
-      token: localStorage.getItem("token"),
-      userName: localStorage.getItem("user_name"),
-      senderId,
-      receiverId,
-      messageId
-    })
-      .then(({ data: { validToken } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          store.dispatch(
-            updateNumberOf({
-              numberNotifications: this.props.numberOf.numberNotifications,
-              numberMessages: this.props.numberOf.numberMessages - 1
-            })
-          );
-        }
-      })
-      .catch(e => {
-        console.log(e.message);
-      });
-  };
-
   public render() {
     return (
       <div
@@ -94,9 +66,6 @@ class HistoryMessages extends React.Component<Props, {}> {
                     : "white"
               }}
               onClick={() => {
-                if (!receiverRead) {
-                  this.readMessage(senderId, receiverId, messageId);
-                }
                 this.props.getMessagesPeople(
                   senderName,
                   localStorage.getItem("user_name")

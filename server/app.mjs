@@ -53,6 +53,13 @@ io.on("connection", socket => {
     clients.push({ userName, socketId: socket.id });
     console.log("finished pushing -> ", clients);
   });
+
+  socket.on("create-room", room => {
+    console.log("Created room : ", room);
+    socket.join(room);
+  });
+
+  //leave room when leaving
 });
 
 app.use(router);

@@ -233,11 +233,7 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Degager la bulle quand on est sur la partie messages
-    - Read messages quand tu vas direct sur la page
     - Socket room T_T
-    - Fix bug report page
-    - Ne pas degager le compte admin
     - TOUS LES TESTS ET C'EST FINI !!!
     
     - Infinite scroll (pls no)
@@ -339,10 +335,8 @@ class App extends React.Component<VerifiedUser, AppState> {
           )}
         </Router>
         {this.props.isAuth && this.props.isCompleted && (
-          <div>
-            <div className="container-little-messages">
-              <Messages littleMessages={true} />
-            </div>
+          <div className="container-little-messages">
+            <Messages littleMessages={true} />
           </div>
         )}
       </div>

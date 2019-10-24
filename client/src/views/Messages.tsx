@@ -75,7 +75,7 @@ class Messages extends React.Component<Props, MState> {
     ) {
       this.getMessagesPeople(
         decodeURIComponent(window.location.pathname.split("/")[2]),
-        localStorage.getItem("user_name")
+        this.props.user.user_name
       );
     } else {
       this.getAllMessages();
@@ -107,6 +107,37 @@ class Messages extends React.Component<Props, MState> {
       });
   };
 
+  readMessage = (
+    senderName: string,
+    receiverName: string | null,
+    unReadMessages: Array<string>
+  ) => {
+    Axios.put("http://localhost:5000/message/read-message", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      senderName,
+      receiverName,
+      unReadMessages
+    })
+      .then(({ data: { validToken, validated } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            store.dispatch(
+              updateNumberOf({
+                numberNotifications: this.props.numberOf.numberNotifications,
+                numberMessages: this.props.numberOf.numberMessages - 1
+              })
+            );
+          }
+        }
+      })
+      .catch(e => {
+        console.log(e.message);
+      });
+  };
+
   getMessagesPeople = (senderName: string, receiverName: string | null) => {
     Axios.put("http://localhost:5000/message/get-messages-people", {
       token: localStorage.getItem("token"),
@@ -125,6 +156,38 @@ class Messages extends React.Component<Props, MState> {
               allMessages,
               sender: user
             });
+            let unReadMessages: Array<string> = [];
+            this.state.allMessages.map(
+              ({ messageId, sentPosition, receiverRead }) => {
+                if (!receiverRead && sentPosition !== this.props.user.user_id) {
+                  unReadMessages.push(messageId);
+                }
+              }
+            );
+            if (unReadMessages.length > 0) {
+              this.readMessage(
+                senderName,
+                this.props.user.user_name,
+                unReadMessages
+              );
+            }
+            let key = "";
+            for (
+              let i = 0;
+              i <
+              (senderName.length <= (receiverName ? receiverName.length : 0)
+                ? senderName.length
+                : receiverName
+                ? receiverName.length
+                : 0);
+              i++
+            ) {
+              key += String.fromCharCode(
+                (receiverName ? receiverName.charCodeAt(i) : 0) ^
+                  senderName.charCodeAt(i)
+              );
+            }
+            socket.emit("create-room", key);
           } else {
             this.getAllMessages();
           }
@@ -165,8 +228,7 @@ class Messages extends React.Component<Props, MState> {
       !this.state.isLoading &&
       prevState.historyUsers !== this.state.historyUsers
     ) {
-      let i = 0;
-      this.state.historyUsers.map(history => {
+      this.state.historyUsers.map((history, index) => {
         if (
           !history.receiverRead &&
           history.senderId !== this.props.user.user_id
@@ -175,7 +237,7 @@ class Messages extends React.Component<Props, MState> {
           store.dispatch(
             updateNumberOf({
               numberNotifications: this.props.numberOf.numberNotifications,
-              numberMessages: ++i
+              numberMessages: ++index
             })
           );
         }

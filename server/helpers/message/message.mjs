@@ -134,8 +134,20 @@ const getMessagesPeople = async (req, res) => {
 };
 
 const readMessage = async (req, res) => {
-  let text = `UPDATE chat SET receiver_read = TRUE WHERE sender_id = $1 AND receiver_id = $2 AND message_id = $3`;
-  let values = [req.body.senderId, req.body.receiverId, req.body.messageId];
+  const senderId = await getUserId(req.body.senderName);
+  const receiverId = await getUserId(req.body.receiverName);
+  let text = `UPDATE chat SET receiver_read = TRUE WHERE sender_id = $1 AND receiver_id = $2 AND message_id IN (`;
+  let values = [senderId, receiverId];
+  let i = 3;
+  req.body.unReadMessages.forEach((message, index) => {
+    text = text + `$${i++}`;
+    values.push(message);
+    if (index === req.body.unReadMessages.length - 1) {
+      text = text + `)`;
+    } else {
+      text = text + `, `;
+    }
+  });
   await client
     .query(text, values)
     .then(() => {
@@ -165,7 +177,21 @@ const sendNewMessage = async (req, res) => {
         let socketId = getSocketId(clients, req.body.userName);
         let userId = await getUserId(req.body.userName);
         let history = await checkAllMessages(userId);
-        ioConnection.to(socketId).emit("New message", {
+        let key = "";
+        for (
+          let i = 0;
+          i <
+          (req.body.senderName.length <= req.body.userName.length
+            ? req.body.senderName.length
+            : req.body.userName.length);
+          i++
+        ) {
+          key += String.fromCharCode(
+            req.body.userName.charCodeAt(i) ^ req.body.senderName.charCodeAt(i)
+          );
+        }
+        console.log("room key", key);
+        ioConnection.sockets.in(key).emit("New message", {
           message: req.body.message,
           messageId: messageId,
           date: messageDate,
@@ -179,14 +205,6 @@ const sendNewMessage = async (req, res) => {
         socketId = getSocketId(clients, req.body.senderName);
         userId = await getUserId(req.body.senderName);
         history = await checkAllMessages(userId);
-        ioConnection.to(socketId).emit("New message", {
-          message: req.body.message,
-          messageId: messageId,
-          date: messageDate,
-          sentPosition: req.body.receiverId,
-          receiverRead: false,
-          senderRead: true
-        });
         notifyUser(req.body.userName, req.body.senderName, "message");
         if (history.validated) {
           ioConnection.to(socketId).emit("New history", history.usersMessage);
