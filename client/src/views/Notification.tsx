@@ -7,7 +7,7 @@ import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 
 import { Link } from "react-router-dom";
 import { State } from "../redux/types/types";
-import { User, NumberOf } from "../models/models";
+import { NumberOf } from "../models/models";
 import { deleteUser, findLastSince } from "../App";
 
 import TopMenu from "../components/TopMenu";

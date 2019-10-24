@@ -28,19 +28,7 @@ class TopMenu extends React.Component<Props, {}> {
         if (validated) {
           console.log(notificationArray);
           let i = 0;
-          // while (notificationArray[i]) {
-          //   if (notificationArray[i].seen == false)
-          //     this.setState({ notifnb: this.state.notifnb + 1 });
-          //   console.log(notificationArray[i]);
-          //   i++;
-          // }
-          // console.log(notificationArray);
-          // store.dispatch(
-          //   updateNumberOf({
-          //     numberMessages: this.props.numberOf.numberMessages,
-          //     numberNotifications: 0
-          //   })
-          // );
+
           notificationArray.forEach((notif: { seen: boolean }) => {
             if (notif.seen == false) {
               store.dispatch(
@@ -55,6 +43,7 @@ class TopMenu extends React.Component<Props, {}> {
       })
       .catch(err => console.error(err));
   };
+
   handleDisconnect = async () => {
     await Axios.put("http://localhost:5000/disconnect", {
       userName: localStorage.getItem("user_name")

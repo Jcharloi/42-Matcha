@@ -1,6 +1,9 @@
 import * as React from "react";
 import Axios from "axios";
 import { deleteUser, findLastSince } from "../../App";
+import { store } from "../../redux/store";
+import { updateNumberOf } from "../../redux/actions/actions";
+import { NumberOf } from "../../models/models";
 
 import { Image, Icon } from "semantic-ui-react";
 import "../../styles/stylesMessages.css";
@@ -18,14 +21,11 @@ interface Props {
     messageId: string;
     senderRead: boolean;
     receiverRead: boolean;
-    mainPicture: string;
+    picture: string;
   }>;
-  displayHistory: (
-    displayHistory: boolean,
-    receiverId: string,
-    user: { name: string; id: string; picture: string; lastConnection: string }
-  ) => void;
+  numberOf: NumberOf;
   receiverId: string;
+  getMessagesPeople: (senderId: string, receiverId: string | null) => void;
 }
 
 class HistoryMessages extends React.Component<Props, {}> {
@@ -40,6 +40,13 @@ class HistoryMessages extends React.Component<Props, {}> {
       .then(({ data: { validToken } }) => {
         if (validToken === false) {
           deleteUser();
+        } else {
+          store.dispatch(
+            updateNumberOf({
+              numberNotifications: this.props.numberOf.numberNotifications,
+              numberMessages: this.props.numberOf.numberMessages - 1
+            })
+          );
         }
       })
       .catch(e => {
@@ -70,7 +77,7 @@ class HistoryMessages extends React.Component<Props, {}> {
             senderRead,
             receiverRead,
             lastConnection,
-            mainPicture
+            picture
           }) => (
             <div
               className={
@@ -90,20 +97,17 @@ class HistoryMessages extends React.Component<Props, {}> {
                 if (!receiverRead) {
                   this.readMessage(senderId, receiverId, messageId);
                 }
-                this.props.displayHistory(false, receiverId, {
-                  name: senderName,
-                  id:
-                    senderId === this.props.receiverId ? receiverId : senderId,
-                  picture: mainPicture,
-                  lastConnection
-                });
+                this.props.getMessagesPeople(
+                  senderName,
+                  localStorage.getItem("user_name")
+                );
               }}
             >
               <Image
                 className="avatar-visit"
                 avatar
                 size={!this.props.littleMessages ? "tiny" : undefined}
-                src={`http://localhost:5000/public/profile-pictures/${mainPicture}`}
+                src={`http://localhost:5000/public/profile-pictures/${picture}`}
               />
               <div className="middle-history">
                 <div className="name-container">

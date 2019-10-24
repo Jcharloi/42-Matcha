@@ -7,14 +7,18 @@ import TopMenu from "../components/TopMenu";
 import HistoryMessages from "../components/Messages/HistoryMessages";
 import ShowMessage from "../components/Messages/ShowMessages";
 import { socket } from "../helpers/socket";
-import { User } from "../models/models";
+import { User, NumberOf } from "../models/models";
+import { store } from "../redux/store";
+import { updateNumberOf } from "../redux/actions/actions";
 
 import "../styles/stylesMessages.css";
+import { Label, Icon } from "semantic-ui-react";
 
 interface Props {
   littleMessages: boolean;
   user: User;
   otherUser: User;
+  numberOf: NumberOf;
 }
 
 interface MState {
@@ -31,10 +35,18 @@ interface MState {
     messageId: string;
     senderRead: boolean;
     receiverRead: boolean;
-    mainPicture: string;
+    picture: string;
+  }>;
+  allMessages: Array<{
+    message: string;
+    messageId: string;
+    date: string;
+    sentPosition: string;
+    receiverRead: boolean;
+    senderRead: boolean;
   }>;
   sender: {
-    name: string;
+    senderName: string;
     id: string;
     picture: string;
     lastConnection: string;
@@ -50,8 +62,9 @@ class Messages extends React.Component<Props, MState> {
       isLoading: true,
       displayHistory: true,
       historyUsers: [],
+      allMessages: [],
       receiverId: "",
-      sender: { name: "", id: "", picture: "", lastConnection: "" }
+      sender: { senderName: "", id: "", picture: "", lastConnection: "" }
     };
   }
 
@@ -60,34 +73,10 @@ class Messages extends React.Component<Props, MState> {
       window.location.pathname &&
       window.location.pathname.search("/messages/") !== -1
     ) {
-      Axios.put("http://localhost:5000/message/get-sender-infos", {
-        token: localStorage.getItem("token"),
-        userName: localStorage.getItem("user_name"),
-        senderName: decodeURIComponent(window.location.pathname.split("/")[2])
-      })
-        .then(({ data: { validToken, validated, user } }) => {
-          if (validToken === false) {
-            deleteUser();
-          } else {
-            if (validated) {
-              this.setState({
-                isLoading: false,
-                displayHistory: false,
-                sender: {
-                  name: user.senderName,
-                  id: user.id,
-                  picture: user.mainPicture,
-                  lastConnection: user.lastConnection
-                }
-              });
-            } else {
-              this.getAllMessages();
-            }
-          }
-        })
-        .catch(e => {
-          console.error(e.message);
-        });
+      this.getMessagesPeople(
+        decodeURIComponent(window.location.pathname.split("/")[2]),
+        localStorage.getItem("user_name")
+      );
     } else {
       this.getAllMessages();
     }
@@ -104,13 +93,45 @@ class Messages extends React.Component<Props, MState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ historyUsers: usersMessage, isLoading: false });
+            this.setState({
+              isLoading: false,
+              displayHistory: true,
+              historyUsers: usersMessage
+            });
             this.receiveAllMessages();
           }
         }
       })
       .catch(e => {
         console.error(e.message);
+      });
+  };
+
+  getMessagesPeople = (senderName: string, receiverName: string | null) => {
+    Axios.put("http://localhost:5000/message/get-messages-people", {
+      token: localStorage.getItem("token"),
+      userName: localStorage.getItem("user_name"),
+      senderName,
+      receiverName
+    })
+      .then(({ data: { validToken, validated, allMessages, user } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          if (validated) {
+            this.setState({
+              isLoading: false,
+              displayHistory: false,
+              allMessages,
+              sender: user
+            });
+          } else {
+            this.getAllMessages();
+          }
+        }
+      })
+      .catch(e => {
+        console.log(e.message);
       });
   };
 
@@ -125,7 +146,7 @@ class Messages extends React.Component<Props, MState> {
       messageId: string;
       senderRead: boolean;
       receiverRead: boolean;
-      mainPicture: string;
+      picture: string;
     }>
   ) => {
     if (this.state.historyUsers !== historyReceived) {
@@ -139,21 +160,32 @@ class Messages extends React.Component<Props, MState> {
     socket.on("New history", this.initNewHistory);
   };
 
-  componentWillUnmount = () => {
-    socket.removeListener("New history", this.initNewHistory);
+  componentDidUpdate = (_: any, prevState: MState) => {
+    if (
+      !this.state.isLoading &&
+      prevState.historyUsers !== this.state.historyUsers
+    ) {
+      let i = 0;
+      this.state.historyUsers.map(history => {
+        if (
+          !history.receiverRead &&
+          history.senderId !== this.props.user.user_id
+        ) {
+          console.log("dispatch !");
+          store.dispatch(
+            updateNumberOf({
+              numberNotifications: this.props.numberOf.numberNotifications,
+              numberMessages: ++i
+            })
+          );
+        }
+        return;
+      });
+    }
   };
 
-  displayHistory = (
-    displayHistory: boolean,
-    receiverId: string,
-    sender: {
-      name: string;
-      id: string;
-      picture: string;
-      lastConnection: string;
-    }
-  ): void => {
-    this.setState({ displayHistory, receiverId, sender });
+  componentWillUnmount = () => {
+    socket.removeListener("New history", this.initNewHistory);
   };
 
   handleDisplayLittle = () => {
@@ -170,25 +202,32 @@ class Messages extends React.Component<Props, MState> {
             className="container-top-messages"
             onClick={this.handleDisplayLittle}
           >
-            <span>Your personal messages</span>
+            <Icon name="mail" /> Your personal messages
+            {this.props.numberOf.numberMessages > 0 && (
+              <Label className="label-notif" color="red">
+                {this.props.numberOf.numberMessages}
+              </Label>
+            )}
           </div>
         )}
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
+            users={this.state.historyUsers}
+            numberOf={this.props.numberOf}
             displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
-            users={this.state.historyUsers}
             receiverId={this.props.user.user_id}
-            displayHistory={this.displayHistory}
+            getMessagesPeople={this.getMessagesPeople}
           />
         )}
         {!this.state.isLoading && !this.state.displayHistory && (
           <ShowMessage
+            sender={this.state.sender}
+            allMessages={this.state.allMessages}
             displayLittle={this.state.displayLittle}
             littleMessages={this.props.littleMessages}
-            sender={this.state.sender}
             receiverId={this.props.user.user_id}
-            displayHistory={this.displayHistory}
+            getAllMessages={this.getAllMessages}
           />
         )}
       </div>
@@ -197,7 +236,11 @@ class Messages extends React.Component<Props, MState> {
 }
 
 const mapStateToProps = (state: State) => {
-  return { user: state.user, otherUser: state.otherUser };
+  return {
+    user: state.user,
+    otherUser: state.otherUser,
+    numberOf: state.numberOf
+  };
 };
 
 export default connect(mapStateToProps)(Messages);

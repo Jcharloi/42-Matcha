@@ -32,7 +32,7 @@ const getReports = async (req, res) => {
           i++;
         }
 
-        await res.send({
+        res.send({
           validated: true,
           reportArray
         });

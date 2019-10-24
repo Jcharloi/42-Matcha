@@ -106,7 +106,6 @@ class SearchMatch extends React.Component<User, HState> {
           deleteUser();
         } else {
           if (validated) {
-            console.log(userMatchInfo);
             this.setState({ userMatchInfo });
           }
           this.setState({ messageHome: message, isLoading: false });

@@ -132,7 +132,6 @@ const calculateDistance = (myCoordinates, userMatchInfo) => {
     user.distance = geodist(myCoordinates, potentialMatchCoordinates, {
       unit: "km"
     });
-    console.log(user.distance);
     if (user.distance < 100) {
       user.scoreDistance = 10;
     } else if (user.distance < 200) {
