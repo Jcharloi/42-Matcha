@@ -66,13 +66,7 @@ const getNotification = async (req, res) => {
   if (!user_id) {
     res.send({ validated: false });
   } else {
-<<<<<<< HEAD
-    // let text = `SELECT user_name FROM users JOIN notification ON receiver_id = users.user_id WHERE receiver_id = user_id`
     let text = `SELECT sender_id, notification.date, notif_type, seen, path from notification JOIN profile_picture ON sender_id = user_id WHERE receiver_id = $1 AND main = true ORDER BY seen ASC`;
-
-=======
-    let text = `SELECT sender_id, notification.date, notif_type, seen, path from notification JOIN profile_picture ON sender_id = user_id WHERE receiver_id = $1 AND main = true ORDER BY seen ASC`;
->>>>>>> 5218f26fffc5e87f3d00b83020021564c891b529
     let values = [user_id];
     let notificationArray = [];
     await client
@@ -89,10 +83,6 @@ const getNotification = async (req, res) => {
           });
           i++;
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 5218f26fffc5e87f3d00b83020021564c891b529
         res.send({
           validated: true,
           notificationArray

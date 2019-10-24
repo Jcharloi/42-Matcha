@@ -27,18 +27,18 @@ class TopMenu extends React.Component<Props, {}> {
       .then(({ data: { notificationArray, validated } }) => {
         if (validated) {
           console.log(notificationArray);
-          let i = 0;
-
-          notificationArray.forEach((notif: { seen: boolean }) => {
-            if (notif.seen == false) {
-              store.dispatch(
-                updateNumberOf({
-                  numberMessages: this.props.numberOf.numberMessages,
-                  numberNotifications: ++i
-                })
-              );
+          notificationArray.forEach(
+            (notif: { seen: boolean }, index: number) => {
+              if (notif.seen == false) {
+                store.dispatch(
+                  updateNumberOf({
+                    numberMessages: this.props.numberOf.numberMessages,
+                    numberNotifications: ++index
+                  })
+                );
+              }
             }
-          });
+          );
         }
       })
       .catch(err => console.error(err));

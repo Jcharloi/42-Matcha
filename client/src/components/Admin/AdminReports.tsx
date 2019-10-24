@@ -8,13 +8,13 @@ import history from "../../helpers/history";
 import { deleteUser } from "../../App";
 import { insertOtherProfile } from "../../redux/actions/actions";
 
-import { Button, Feed } from "semantic-ui-react";
+import { Button, Feed, Popup, Icon } from "semantic-ui-react";
 
 import "../../styles/stylesAdminReports.css";
 
 interface AState {
-  reportArray: Array<{ reporting_user: string; reported_user: string }>;
-  newReportArray: Array<{ reporting_user: string; reported_user: string }>;
+  reportArray: Array<{ reporting_users: []; reported_user: string }>;
+  newReportArray: Array<{ reporting_users: []; reported_user: string }>;
   redirect: string;
 }
 
@@ -81,12 +81,13 @@ class AdminReports extends React.Component<{}, AState> {
               targetUserName: userInfos.user_name
             })
               .then(() => {
-                this.setState({
-                  reportArray: this.state.reportArray.filter(reports => {
-                    if (reports.reported_user !== targetUser) return true;
-                    return false;
-                  })
-                });
+                if (targetUser !== "IAmAnAdmin")
+                  this.setState({
+                    reportArray: this.state.reportArray.filter(reports => {
+                      if (reports.reported_user !== targetUser) return true;
+                      return false;
+                    })
+                  });
               })
               .catch(err => console.error(err));
           }
@@ -116,17 +117,6 @@ class AdminReports extends React.Component<{}, AState> {
                     <div
                       className="link-feed"
                       onClick={() => {
-                        this.selectProfile(report.reporting_user);
-                      }}
-                    >
-                      <Link to={`/profile/` + report.reporting_user}>
-                        {report.reporting_user}
-                      </Link>
-                      &nbsp;reported&nbsp;
-                    </div>
-                    <div
-                      className="link-feed"
-                      onClick={() => {
                         this.selectProfile(report.reported_user);
                       }}
                     >
@@ -134,8 +124,15 @@ class AdminReports extends React.Component<{}, AState> {
                         <span className="reported_user_name">
                           {report.reported_user}
                         </span>
-                        &nbsp;(reported : {this.reportNb(report.reported_user)})
+                        &nbsp;(has been reported {report.reporting_users.length}{" "}
+                        times)
                       </Link>
+                      <Popup
+                        content={report.reporting_users + " "}
+                        key={report.reported_user}
+                        header={"Reporters"}
+                        trigger={<Icon className="clipboard list" />}
+                      />
                     </div>
                   </Feed.Content>
                   <Button
