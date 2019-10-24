@@ -133,7 +133,7 @@ class App extends React.Component<VerifiedUser, AppState> {
             }
           }
           socket.on("notification", (data: any) => {
-            if (data.type === "like" || data.type === "message") {
+            if (data.type === "like") {
               this.setState({
                 messageApp: data.sender + " just " + data.type + "d you !"
               });

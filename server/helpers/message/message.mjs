@@ -7,7 +7,6 @@ import {
   checkBlockedUser
 } from "../../common.mjs";
 import { ioConnection, clients } from "../../app.mjs";
-import { notifyUser } from "../profile/notifications.mjs";
 
 const getSenderInfos = async senderId => {
   let text = `SELECT users.user_id, user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;

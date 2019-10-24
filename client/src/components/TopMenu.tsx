@@ -24,23 +24,21 @@ class TopMenu extends React.Component<Props, {}> {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
-      .then(({ data: { validToken, notificationArray, validated } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          if (validated) {
-            notificationArray.forEach((notif: { seen: boolean }) => {
-              if (!notif.seen) {
+      .then(({ data: { notificationArray, validated } }) => {
+        if (validated) {
+          console.log(notificationArray);
+          notificationArray.forEach(
+            (notif: { seen: boolean }, index: number) => {
+              if (notif.seen == false) {
                 store.dispatch(
                   updateNumberOf({
                     numberMessages: this.props.numberOf.numberMessages,
-                    numberNotifications:
-                      this.props.numberOf.numberNotifications + 1
+                    numberNotifications: ++index
                   })
                 );
               }
-            });
-          }
+            }
+          );
         }
       })
       .catch(err => console.error(err));
