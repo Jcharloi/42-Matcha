@@ -12,8 +12,9 @@
 .notification-user-container-unseen {
   margin-top: 1.5rem !important;
   /* border: 2px solid red; */
-  background-color: rgb(201, 201, 201) !important;
+  background-color: rgba(241, 239, 239, 0.952) !important;
   border-radius: 20px;
+  border: 1px solid rgb(202, 200, 200) !important;
   padding: 0.5em !important;
   z-index: 400;
 }
