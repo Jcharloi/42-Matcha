@@ -31,7 +31,7 @@ class Connection extends React.Component<Props, {}> {
           {this.props.otherUser.user_id
             ? findLastSince(this.props.connection).split(" ")[1] === "seconds"
               ? `Online now`
-              : `Last fffseen ${findLastSince(this.props.connection)}`
+              : `Last seen ${findLastSince(this.props.connection)}`
             : null}
         </div>
       </div>
