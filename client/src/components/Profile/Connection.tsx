@@ -15,7 +15,6 @@ interface Props {
 
 class Connection extends React.Component<Props, {}> {
   public render() {
-    if (!this.props.otherUser.user_id) console.log("TTTTTTTTT");
     return (
       <div className="connection-container">
         <div

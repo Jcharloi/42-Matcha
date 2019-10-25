@@ -40,7 +40,7 @@ class Pictures extends React.Component<Props, PicturesState> {
 
   uploadPicture = async ({ target }: any) => {
     if (target.files && target.files.length > 0) {
-      const valid = validFile(target.files[0]);
+      const valid = this.validFile(target.files[0]);
       if (!valid.valid) {
         if (this.timer) clearTimeout(this.timer);
         this.setState({ messagePictures: valid.message });
@@ -240,6 +240,39 @@ class Pictures extends React.Component<Props, PicturesState> {
     this.timer = null;
   };
 
+  validFile = (file: File): { valid: boolean; message?: string } => {
+    let picExist = false;
+    this.props.user.pictures.forEach(picture => {
+      if (picture.path === file.name) picExist = true;
+    });
+    if (picExist) {
+      return {
+        valid: false,
+        message: "You already uploaded a picture with this name"
+      };
+    }
+    if (
+      file.type !== "image/png" &&
+      file.type !== "image/jpeg" &&
+      file.type !== "image/jpg"
+    ) {
+      return {
+        valid: false,
+        message: "File type accepted : png, jpeg and jpeg"
+      };
+    }
+    if (this.props.user.pictures)
+      if (file.size > 1000000) {
+        return {
+          valid: false,
+          message: "File size max accepted : 1Mb"
+        };
+      }
+    return {
+      valid: true
+    };
+  };
+
   componentDidUpdate = (previousProps: Props) => {
     if (this.state.messagePictures && this.timer) {
       clearTimeout(this.timer);
@@ -356,28 +389,6 @@ class Pictures extends React.Component<Props, PicturesState> {
       </div>
     );
   }
-}
-
-function validFile(file: File): { valid: boolean; message?: string } {
-  if (
-    file.type !== "image/png" &&
-    file.type !== "image/jpeg" &&
-    file.type !== "image/jpg"
-  ) {
-    return {
-      valid: false,
-      message: "File type accepted : png, jpeg and jpeg"
-    };
-  }
-  if (file.size > 1000000) {
-    return {
-      valid: false,
-      message: "File size max accepted : 1Mb"
-    };
-  }
-  return {
-    valid: true
-  };
 }
 
 export default Pictures;
