@@ -205,7 +205,6 @@ const sendNewMessage = async (req, res) => {
         socketId = getSocketId(clients, req.body.senderName);
         userId = await getUserId(req.body.senderName);
         history = await checkAllMessages(userId);
-        notifyUser(req.body.userName, req.body.senderName, "message");
         if (history.validated) {
           ioConnection.to(socketId).emit("New history", history.usersMessage);
         }
