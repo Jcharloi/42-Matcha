@@ -44,7 +44,6 @@ class HistoryMessages extends React.Component<Props, {}> {
             senderName,
             receiverId,
             message,
-            messageId,
             date,
             senderRead,
             receiverRead,
@@ -105,8 +104,9 @@ class HistoryMessages extends React.Component<Props, {}> {
                   }
                 >
                   <div className="text-history">
-                    {senderId === this.props.receiverId ? "You : " : ""}
-                    {message}
+                    {senderId === this.props.receiverId
+                      ? "You : " + message
+                      : message}
                   </div>
                   <Icon
                     className={

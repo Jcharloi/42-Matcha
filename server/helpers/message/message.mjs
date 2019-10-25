@@ -7,6 +7,7 @@ import {
   checkBlockedUser
 } from "../../common.mjs";
 import { ioConnection, clients } from "../../app.mjs";
+import { notifyUser } from "../profile/notifications.mjs";
 
 const getSenderInfos = async senderId => {
   let text = `SELECT users.user_id, user_name, last_connection, path FROM users JOIN profile_picture ON users.user_id = profile_picture.user_id WHERE users.user_id = $1 AND main = true`;
@@ -189,14 +190,14 @@ const sendNewMessage = async (req, res) => {
             req.body.userName.charCodeAt(i) ^ req.body.senderName.charCodeAt(i)
           );
         }
-        console.log("room key", key);
         ioConnection.sockets.in(key).emit("New message", {
           message: req.body.message,
           messageId: messageId,
           date: messageDate,
           sentPosition: req.body.receiverId,
           receiverRead: false,
-          senderRead: true
+          senderRead: true,
+          key
         });
         if (history.validated) {
           ioConnection.to(socketId).emit("New history", history.usersMessage);

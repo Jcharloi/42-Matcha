@@ -59,7 +59,10 @@ io.on("connection", socket => {
     socket.join(room);
   });
 
-  //leave room when leaving
+  socket.on("leave-room", room => {
+    console.log("Leaving room : ", room);
+    socket.leave(room);
+  });
 });
 
 app.use(router);

@@ -233,16 +233,15 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Socket room T_T
+    - Changer status res
+    - Responsive
     - TOUS LES TESTS ET C'EST FINI !!!
     
     - Infinite scroll (pls no)
     - CSS notif
-    - Responsive
     
     Partie back :
     - Ne pas delete si y a encore la photo sur la db !
-    - Changer status res
     */
     return (
       <div>

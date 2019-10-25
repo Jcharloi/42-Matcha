@@ -233,7 +233,6 @@ class Messages extends React.Component<Props, MState> {
           !history.receiverRead &&
           history.senderId !== this.props.user.user_id
         ) {
-          console.log("dispatch !");
           store.dispatch(
             updateNumberOf({
               numberNotifications: this.props.numberOf.numberNotifications,
