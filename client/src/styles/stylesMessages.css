@@ -66,6 +66,7 @@
 
 .middle-history {
   width: 100%;
+  max-width: 90%;
 }
 
 .name-container {
@@ -98,13 +99,13 @@
 
 .container-text-history-little {
   overflow: hidden;
-  max-height: 2rem;
 }
 
 .text-history {
   margin-top: 0.5rem;
-  max-height: 1rem;
   width: 90%;
+  max-width: 95%;
+  overflow: hidden;
 }
 
 .icon-history {
@@ -117,7 +118,7 @@
   display: flex !important;
   width: 100% !important;
   justify-content: flex-end !important;
-  margin-top: -1rem !important;
+  margin-top: -1.5rem !important;
 }
 
 /* SHOW MESSAGES */
@@ -242,11 +243,12 @@
 }
 
 .message-value {
-  /* white-space: pre; */
+  white-space: pre-line;
+  overflow-wrap: break-word;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 1.2rem;
   border-radius: 20px;
-  padding: 1.5rem;
+  padding: 1.4rem;
   max-width: 70%;
 }
 
