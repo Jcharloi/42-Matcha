@@ -19,12 +19,12 @@ const uploadPictures = async (req, res) => {
         await client
           .query(text, values)
           .then(async ({ rows }) => {
-            if (rows[0].count == 0) {
+            if (rows[0].count === "0") {
               text = `SELECT COUNT(*) FROM profile_picture WHERE user_id = '${userId}'`;
               await client
                 .query(text)
                 .then(async ({ rows }) => {
-                  if (rows[0].count < 5) {
+                  if (rows[0].count < "5") {
                     let file = req.files.file;
                     let date = moment().format("X");
                     file.mv(`public/profile-pictures/${name}`, err => {
