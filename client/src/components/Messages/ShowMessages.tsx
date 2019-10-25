@@ -73,6 +73,29 @@ class ShowMessages extends React.Component<Props, State> {
     });
   }
 
+  createRoomName = (
+    senderName: string,
+    receiverName: string | null
+  ): string => {
+    let key = "";
+    for (
+      let i = 0;
+      i <
+      (senderName.length <= (receiverName ? receiverName.length : 0)
+        ? senderName.length
+        : receiverName
+        ? receiverName.length
+        : 0);
+      i++
+    ) {
+      key += String.fromCharCode(
+        (receiverName ? receiverName.charCodeAt(i) : 0) ^
+          senderName.charCodeAt(i)
+      );
+    }
+    return key;
+  };
+
   initNewMessage = (messageReceived: {
     message: string;
     messageId: string;
@@ -80,9 +103,17 @@ class ShowMessages extends React.Component<Props, State> {
     sentPosition: string;
     receiverRead: boolean;
     senderRead: boolean;
+    key: string;
   }) => {
     const newMessages = [...this.state.allMessages, messageReceived];
-    if (this.state.allMessages.length !== newMessages.length) {
+    if (
+      this.state.allMessages.length !== newMessages.length &&
+      messageReceived.key ===
+        this.createRoomName(
+          this.props.sender.senderName,
+          localStorage.getItem("user_name")
+        )
+    ) {
       this.setState({
         allMessages: newMessages
       });
@@ -157,7 +188,16 @@ class ShowMessages extends React.Component<Props, State> {
           className="icon-message"
           size={!this.props.littleMessages ? "huge" : "large"}
           name="long arrow alternate left"
-          onClick={() => this.props.getAllMessages()}
+          onClick={() => {
+            socket.emit(
+              "leave-room",
+              this.createRoomName(
+                this.props.sender.senderName,
+                localStorage.getItem("user_name")
+              )
+            );
+            this.props.getAllMessages();
+          }}
         />
         <div
           className={
