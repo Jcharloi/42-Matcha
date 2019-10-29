@@ -108,20 +108,25 @@ class SearchMatch extends React.Component<User, HState> {
           if (validated) {
             this.setState({ userMatchInfo });
           }
-          this.setState({ messageHome: message, isLoading: false });
+          this.setState({
+            messageHome: message,
+            isLoading: false,
+            startAge,
+            endAge,
+            startLoc,
+            endLoc,
+            startPop,
+            endPop,
+            preference,
+            tagsName
+          });
         }
       })
       .catch(err => console.error(err));
-    this.setState({
-      startAge,
-      endAge,
-      startLoc,
-      endLoc,
-      startPop,
-      endPop,
-      preference,
-      tagsName
-    });
+  };
+
+  setLoading = () => {
+    this.setState({ isLoading: true });
   };
 
   clearMatch = () => {
@@ -145,7 +150,11 @@ class SearchMatch extends React.Component<User, HState> {
         <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
           <Divider className="divider-match" />
-          <ModalFilter disableInfoText={false} clearMatch={this.clearMatch}>
+          <ModalFilter
+            isLoading={this.state.isLoading}
+            disableInfoText={false}
+            clearMatch={this.clearMatch}
+          >
             <FilterInterval
               startAge={this.state.startAge}
               endAge={this.state.endAge}
@@ -158,6 +167,7 @@ class SearchMatch extends React.Component<User, HState> {
               isSearch={true}
               byInterval={this.searchByInterval}
               clearMatch={this.clearMatch}
+              setLoading={this.setLoading}
             />
           </ModalFilter>
         </div>

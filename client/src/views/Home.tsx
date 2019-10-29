@@ -95,6 +95,7 @@ class Home extends React.Component<User, HState> {
     endPop: number,
     tagsName: Array<string>
   ) => {
+    this.setState({ isLoading: true });
     Axios.put("http://localhost:5000/home/filter-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -114,19 +115,20 @@ class Home extends React.Component<User, HState> {
           if (validated) {
             this.setState({ userMatchInfo });
           }
-          this.setState({ messageHome: message, isLoading: false });
+          this.setState({
+            messageHome: message,
+            isLoading: false,
+            startAge,
+            endAge,
+            startLoc,
+            endLoc,
+            startPop,
+            endPop,
+            tagsName
+          });
         }
       })
       .catch(err => console.error(err));
-    this.setState({
-      startAge,
-      endAge,
-      startLoc,
-      endLoc,
-      startPop,
-      endPop,
-      tagsName
-    });
   };
 
   clearMatch = () => {
@@ -142,6 +144,10 @@ class Home extends React.Component<User, HState> {
     });
   };
 
+  setLoading = () => {
+    this.setState({ isLoading: true });
+  };
+
   public render() {
     return (
       <div>
@@ -149,7 +155,11 @@ class Home extends React.Component<User, HState> {
         <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
           <Divider className="divider-match" />
-          <ModalFilter disableInfoText={true} clearMatch={this.clearMatch}>
+          <ModalFilter
+            isLoading={this.state.isLoading}
+            disableInfoText={true}
+            clearMatch={this.clearMatch}
+          >
             <FilterInterval
               startAge={this.state.startAge}
               endAge={this.state.endAge}
@@ -162,6 +172,7 @@ class Home extends React.Component<User, HState> {
               isSearch={false}
               byInterval={this.filterByInterval}
               clearMatch={this.clearMatch}
+              setLoading={this.setLoading}
             />
           </ModalFilter>
         </div>

@@ -4,6 +4,7 @@ import { Button, Modal, Transition } from "semantic-ui-react";
 import "../../styles/stylesUserHome.css";
 
 interface Props {
+  isLoading: boolean;
   disableInfoText: boolean;
   clearMatch(): void;
 }
@@ -23,7 +24,9 @@ class ModalFilter extends React.Component<Props, State> {
     this.setState({ visible: true, openedOnce: true });
   };
 
-  closeModal = () => this.setState({ visible: false });
+  closeModal = () => {
+    if (!this.props.isLoading) this.setState({ visible: false });
+  };
 
   clearEverything = () => {
     this.setState({

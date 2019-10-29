@@ -233,15 +233,16 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Changer status res
+    - Ne pas visiter si profil incomplet
+    - Envoyer message via Postman
+    - Fix bug notif like
+    - Double key notif
     - Responsive
     - TOUS LES TESTS ET C'EST FINI !!!
     
-    - Infinite scroll (pls no)
     - CSS notif
     
     Partie back :
-    - Ne pas delete si y a encore la photo sur la db !
     */
     return (
       <div>

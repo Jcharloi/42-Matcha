@@ -28,6 +28,7 @@ interface Props {
     preference?: string
   ): void;
   clearMatch(): void;
+  setLoading(): void;
 }
 
 interface State {
@@ -58,8 +59,9 @@ class FilterInterval extends React.Component<Props, State> {
       tags: []
     };
   }
+  timer!: any;
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     Axios.put("http://localhost:5000/profile/get-all-tags", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
@@ -151,10 +153,23 @@ class FilterInterval extends React.Component<Props, State> {
     );
   };
 
-  public render() {
-    if (this.state.messageTags) {
-      setTimeout(() => this.setState({ messageTags: "" }), 4000);
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
     }
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.messageTags && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messageTags) {
+      this.timer = setTimeout(() => this.setState({ messageTags: "" }), 4000);
+    }
+  };
+
+  public render() {
     return (
       <div>
         <div className="container-range">
@@ -188,9 +203,12 @@ class FilterInterval extends React.Component<Props, State> {
               min={18}
               max={100}
               defaultValue={[this.state.startAge, this.state.endAge]}
-              onChange={debounce(500, value => {
-                this.setAgeInterval(value[0], value[1]);
-              })}
+              onChange={value => {
+                this.props.setLoading();
+                debounce(500, value => {
+                  this.setAgeInterval(value[0], value[1]);
+                })(value);
+              }}
             />
             <span>
               <h5>100&nbsp;yo</h5>
@@ -208,9 +226,12 @@ class FilterInterval extends React.Component<Props, State> {
               min={0}
               max={1000}
               defaultValue={[this.state.startLoc, this.state.endLoc]}
-              onChange={debounce(500, value => {
-                this.setLocInterval(value[0], value[1]);
-              })}
+              onChange={value => {
+                this.props.setLoading();
+                debounce(500, value => {
+                  this.setLocInterval(value[0], value[1]);
+                })(value);
+              }}
             />
             <span>
               <h5>1 000 km</h5>
@@ -228,9 +249,12 @@ class FilterInterval extends React.Component<Props, State> {
               min={0}
               max={100}
               defaultValue={[this.state.startPop, this.state.endPop]}
-              onChange={debounce(500, value => {
-                this.setPopInterval(value[0], value[1]);
-              })}
+              onChange={value => {
+                this.props.setLoading();
+                debounce(500, value => {
+                  this.setPopInterval(value[0], value[1]);
+                })(value);
+              }}
             />
             <span>
               <h5>100&nbsp;%</h5>
