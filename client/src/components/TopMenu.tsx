@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { store } from "../redux/store";
 import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 import { State } from "../redux/types/types";
@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { User, NumberOf } from "../models/models";
 import { socket } from "../helpers/socket";
 import { deleteUser } from "../App";
-import { Label } from "semantic-ui-react";
+import { Label, Dropdown } from "semantic-ui-react";
 
 import "../styles/stylesTopMenu.css";
 
@@ -81,17 +81,41 @@ class TopMenu extends React.Component<Props, {}> {
       })
     );
   };
+  // redirect = () => {
+  //   <Redirect to="/profile" />;
+  // };
+
+  onChange = (e: any, data: any) => {
+    // return (
+    // data.value === "Profile" ? this.emptyOtherProfile : null,
+    return <Redirect to="/profile" />;
+  };
 
   public render() {
+    const options = [
+      { key: 1, text: "Profile", value: "Profile" },
+      { key: 2, text: "Home", value: "Home" },
+      { key: 3, text: "Search", value: "Search" },
+      { key: 4, text: "Visits", value: "Visits" },
+      { key: 5, text: "Likes", value: "Likes" },
+      {
+        key: 6,
+        text: "Notifications",
+        value: "Notifications"
+      },
+      { key: 7, text: "Messages", value: "Messages" },
+      { key: 8, text: "Disconnect", value: "Disconnect" }
+    ];
     return (
       <div>
         <div className="ui secondary big menu">
+          <img
+            className="item logo"
+            src="http://localhost:5000/public/profile-pictures/logo.png"
+            alt="Logo top menu"
+          />
+
           <div className="left menu">
-            <img
-              className="item logo"
-              src="http://localhost:5000/public/profile-pictures/logo.png"
-              alt="Logo top menu"
-            />
             {this.props.current !== "profile" ? (
               <Link
                 className="item item-page"
@@ -147,7 +171,15 @@ class TopMenu extends React.Component<Props, {}> {
               </Link>
             )}
           </div>
-
+          <div className="right menu mobile">
+            <Dropdown
+              icon="list ul"
+              options={options}
+              onChange={this.onChange}
+              simple
+              item
+            />
+          </div>
           <div className="right menu">
             <div className="item">
               {this.props.user.user_id ===
