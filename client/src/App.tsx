@@ -15,6 +15,7 @@ import { Pictures, UserTags, VerifiedUser } from "./models/models";
 
 import PublicRoutes from "./components/Routes/PublicRoutes";
 import PrivateRoutes from "./components/Routes/PrivateRoutes";
+import IsNotAuthRoutes from "./components/Routes/IsNotAuthRoutes";
 import CompletedRoutes from "./components/Routes/CompletedRoutes";
 import SearchMatch from "./components/Match/SearchMatch";
 
@@ -254,15 +255,31 @@ class App extends React.Component<VerifiedUser, AppState> {
         <Router history={history}>
           {!this.state.isLoading && (
             <Switch>
-              <Route path="/sign-in" component={Authentication} />
-              <Route path="/sign-up" component={Authentication} />
-              <Route path="/reset-password" component={Authentication} />
+              <IsNotAuthRoutes
+                exact={true}
+                path="/sign-in"
+                component={Authentication}
+                isAuth={this.props.isAuth}
+              />
+              <IsNotAuthRoutes
+                exact={true}
+                path="/sign-up"
+                component={Authentication}
+                isAuth={this.props.isAuth}
+              />
+              <IsNotAuthRoutes
+                exact={true}
+                path="/reset-password"
+                component={Authentication}
+                isAuth={this.props.isAuth}
+              />
               <PublicRoutes
                 exact={true}
                 path="/"
                 component={Authentication}
                 isAuth={this.props.isAuth}
               />
+              {console.log(this.props.isAuth)}
               <PrivateRoutes
                 exact={true}
                 path="/profile/:userName"

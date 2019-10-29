@@ -2,8 +2,9 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  width: 155%;
+  width: 100%;
   height: 20rem;
+  border: 2px solid red;
 }
 
 .image-container {
@@ -27,6 +28,7 @@
 .picture-upload-container {
   display: flex;
   justify-content: center;
+
   flex-direction: column;
   align-items: center;
 }
@@ -39,6 +41,7 @@
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
+
   overflow: hidden;
   position: absolute;
   z-index: -1;
