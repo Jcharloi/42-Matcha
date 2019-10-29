@@ -266,7 +266,12 @@ class App extends React.Component<VerifiedUser, AppState> {
                 component={Authentication}
                 isAuth={this.props.isAuth}
               />
-              <Route path="/reset-password" component={Authentication} />
+              <IsNotAuthRoutes
+                exact={true}
+                path="/reset-password"
+                component={Authentication}
+                isAuth={this.props.isAuth}
+              />
               <PublicRoutes
                 exact={true}
                 path="/"
