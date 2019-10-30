@@ -27,17 +27,23 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
             .to(getSocketId(clients, userTonotifyUser))
             .emit("notification", { type: notif_type, sender: notif_sender });
         }
-        text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND seen = $4`;
-        values = [receiver_id, sender_id, type, toMinutes <= 1 ? true : false];
+        text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3`;
+        values = [receiver_id, sender_id, type];
         // console.log("here");
         await client
           .query(text, values)
           .then(async ({ rows: [{ count }] }) => {
             let connectionDate = Math.floor(Date.now());
+            values = [
+              receiver_id,
+              sender_id,
+              type,
+              toMinutes <= 30 ? true : false
+            ];
             text =
               count === "0"
                 ? `INSERT INTO notification (receiver_id, sender_id, date, notif_type, seen) VALUES ($1, $2, ${connectionDate}, $3, $4)`
-                : `UPDATE notification SET date = '${connectionDate}' WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND seen = $4`;
+                : `UPDATE notification SET date = '${connectionDate}', seen = $4 WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND (seen = $4 OR seen != $4)`;
             await client
               .query(text, values)
               .then(() => {
