@@ -1,11 +1,10 @@
 import * as React from "react";
 import { findLastSince } from "../../App";
+import { State } from "../../redux/types/types";
+import { connect } from "react-redux";
+import { User } from "../../models/models";
 
 import "../../styles/stylesUserConnection.css";
-import { connect } from "react-redux";
-import { store } from "../../redux/store";
-import { State } from "../../redux/types/types";
-import { User } from "../../models/models";
 
 interface Props {
   connection: string;

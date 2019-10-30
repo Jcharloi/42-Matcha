@@ -1,6 +1,6 @@
 import * as React from "react";
 import Axios from "axios";
-import { Router, Switch, Route } from "react-router-dom";
+import { Router, Switch } from "react-router-dom";
 import history from "./helpers/history";
 import { socket } from "./helpers/socket";
 import { connect } from "react-redux";
@@ -122,15 +122,17 @@ class App extends React.Component<VerifiedUser, AppState> {
               store.dispatch(updateUserAuth({ isAuth, isCompleted }));
               socket.emit("send-user-name", localStorage.getItem("user_name"));
             } else {
-              store.dispatch(
-                insertOtherProfile({
-                  ...userInfos,
-                  pictures:
-                    userInfos.pictures && userInfos.pictures.length > 0
-                      ? userInfos.pictures
-                      : [{ date: "1", path: "unknown.png", main: false }]
-                })
-              );
+              if (this.props.isCompleted) {
+                store.dispatch(
+                  insertOtherProfile({
+                    ...userInfos,
+                    pictures:
+                      userInfos.pictures && userInfos.pictures.length > 0
+                        ? userInfos.pictures
+                        : [{ date: "1", path: "unknown.png", main: false }]
+                  })
+                );
+              }
             }
           }
           socket.on("notification", (data: any) => {
@@ -234,7 +236,6 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Ne pas visiter si profil incomplet
     - Envoyer message via Postman
     - Fix bug notif like
     - Double key notif
@@ -279,7 +280,6 @@ class App extends React.Component<VerifiedUser, AppState> {
                 component={Authentication}
                 isAuth={this.props.isAuth}
               />
-              {console.log(this.props.isAuth)}
               <PrivateRoutes
                 exact={true}
                 path="/profile/:userName"

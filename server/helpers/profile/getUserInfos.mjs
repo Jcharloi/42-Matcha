@@ -1,47 +1,38 @@
 import client from "../../sql/sql.mjs";
 import keys from "../../keys.json";
 
-import { getUserId } from "../../common.mjs";
+import {
+  getUserId,
+  getUserCityByCoordinates,
+  getUserCoordinatesByCity,
+  checkBlockedUser
+} from "../../common.mjs";
 import { compareTag } from "../validInfos.mjs";
-
-import { getUserCoordinatesByCity } from "../../common.mjs";
-import { getUserCityByCoordinates } from "../../common.mjs";
-import { checkBlockedUser } from "../../common.mjs";
 const { ip_city } = keys;
 
 const getUserAll = async (req, res) => {
-  let text = `SELECT user_id FROM users WHERE user_name = $1`;
-  let values = [req.body.targetName];
-  await client
-    .query(text, values)
-    .then(async ({ rowCount, rows }) => {
-      if (rowCount > 0) {
-        const userId = rows[0].user_id;
-        let userInfos = {};
-        userInfos = await getUserInfos(userId);
-        userInfos.pictures = await getUserPictures(userId);
-        userInfos.tags = await getUserTags(userId);
-        if (req.body.isOther) {
-          const validated = await checkBlockedUser(
-            req.body.userName,
-            req.body.targetName
-          );
-          if (validated) {
-            res.send({ validated: true, userInfos });
-          } else {
-            res.send({ validated: false });
-          }
-        } else {
-          res.send({ validated: true, userInfos });
-        }
+  const userId = await getUserId(req.body.targetName);
+  if (userId) {
+    let userInfos = {};
+    userInfos = await getUserInfos(userId);
+    userInfos.pictures = await getUserPictures(userId);
+    userInfos.tags = await getUserTags(userId);
+    if (req.body.isOther) {
+      const validated = await checkBlockedUser(
+        req.body.userName,
+        req.body.targetName
+      );
+      if (validated) {
+        res.send({ validated: true, userInfos });
       } else {
         res.send({ validated: false });
       }
-    })
-    .catch(e => {
-      console.error(e);
-      res.send("We got a problem with our database, please try again");
-    });
+    } else {
+      res.send({ validated: true, userInfos });
+    }
+  } else {
+    res.send({ validated: false });
+  }
 };
 
 const getUserInfos = async userId => {
