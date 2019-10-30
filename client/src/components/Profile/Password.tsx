@@ -29,17 +29,23 @@ class Password extends React.Component<{}, State> {
     this.setState({ newPassword });
   };
 
-  componentWillUnmount = () => {
-    clearTimeout(this.timer);
-  };
-
-  public render() {
+  componentDidUpdate = () => {
+    if (this.state.messagePassword && this.timer) {
+      clearTimeout(this.timer);
+    }
     if (this.state.messagePassword) {
       this.timer = setTimeout(
         () => this.setState({ messagePassword: null }),
         4000
       );
     }
+  };
+
+  componentWillUnmount = () => {
+    clearTimeout(this.timer);
+  };
+
+  public render() {
     return (
       <div className="media-container-password">
         <div className="title-container">

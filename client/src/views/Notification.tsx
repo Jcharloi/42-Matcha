@@ -47,6 +47,7 @@ class Notification extends React.Component<NumberOf, NState> {
       })
       .catch(err => console.error(err));
   };
+
   selectProfile = (otherUser: string) => {
     Axios.put(`http://localhost:5000/profile/get-user-infos`, {
       token: localStorage.getItem("token"),
@@ -65,6 +66,7 @@ class Notification extends React.Component<NumberOf, NState> {
       })
       .catch(err => console.error(err));
   };
+
   checkNotif = (targetNotif: any) => {
     Axios.put(`http://localhost:5000/profile/saw-notification`, {
       token: localStorage.getItem("token"),
@@ -131,10 +133,6 @@ class Notification extends React.Component<NumberOf, NState> {
                       : "visited"}
                     {` your profile`}
                     &nbsp;
-                    {/* <Icon
-                      name={this.state.current === "likes" ? "star" : "eye"}
-                      color={this.state.current === "likes" ? "yellow" : "blue"}
-                    /> */}
                     {notif.seen === false ? (
                       <Button
                         icon
@@ -146,7 +144,6 @@ class Notification extends React.Component<NumberOf, NState> {
                       </Button>
                     ) : null}
                   </div>
-
                   <Feed.Date className="time-feed">
                     {findLastSince(notif.date)}
                   </Feed.Date>

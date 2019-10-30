@@ -82,8 +82,8 @@ class Personal extends React.Component<Props, PState> {
         .then(async ({ coords: { latitude, longitude } }: any) => {
           this.setState({ latitude, longitude });
         })
-        .catch(async () => {
-          await Axios("http://api.ipify.org?format=jsonp&callback=?")
+        .catch(() => {
+          Axios("http://api.ipify.org?format=jsonp&callback=?")
             .then(async data => {
               const dataSplit = data.data.split('"');
               this.setState({ ip: dataSplit[3] });
@@ -93,7 +93,7 @@ class Personal extends React.Component<Props, PState> {
             });
         });
 
-      await Axios.put("http://localhost:5000/profile/get-user-city", {
+      Axios.put("http://localhost:5000/profile/get-user-city", {
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         ip: this.state.ip,
