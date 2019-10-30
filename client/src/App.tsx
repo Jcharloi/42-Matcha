@@ -18,7 +18,6 @@ import PrivateRoutes from "./components/Routes/PrivateRoutes";
 import IsNotAuthRoutes from "./components/Routes/IsNotAuthRoutes";
 import CompletedRoutes from "./components/Routes/CompletedRoutes";
 import SearchMatch from "./components/Match/SearchMatch";
-import ShowNotifications from "./components/ShowNotifications";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
@@ -27,10 +26,14 @@ import VisitsAndLikes from "./views/VisitsAndLikes";
 import AdminReports from "./components/Admin/AdminReports";
 import Messages from "./views/Messages";
 import Notification from "./views/Notification";
+import { Feed, Icon } from "semantic-ui-react";
 
 interface AppState {
   isLoading: boolean;
-  messageApp?: string | null;
+  showNotif: boolean;
+  notifSender: string;
+  notifType: string;
+  notifEnd: string;
 }
 
 export function deleteUser() {
@@ -83,7 +86,11 @@ class App extends React.Component<VerifiedUser, AppState> {
   constructor(props: VerifiedUser) {
     super(props);
     this.state = {
-      isLoading: true
+      isLoading: true,
+      showNotif: false,
+      notifSender: "",
+      notifType: "",
+      notifEnd: ""
     };
   }
 
@@ -139,32 +146,22 @@ class App extends React.Component<VerifiedUser, AppState> {
           socket.on(
             "notification",
             (data: { type: string; sender: string }) => {
-              console.log("test");
-              return <ShowNotifications />;
+              this.setState({
+                notifSender: data.sender,
+                notifType: data.type,
+                showNotif: true,
+                notifEnd:
+                  data.type === "like"
+                    ? "just loved you !"
+                    : data.type === "match"
+                    ? "loved you ! It's a match ! ❤️"
+                    : data.type === "dislike"
+                    ? "disloved you, what have you done ? 💔"
+                    : data.type === "visit"
+                    ? "just visited your profile !"
+                    : ""
+              });
             }
-            // if (data.type === "like") {
-            //   this.setState({
-            //     messageApp: data.sender + " just " + data.type + "d you !"
-            //   });
-            // }
-            // if (data.type === "visit") {
-            //   this.setState({
-            //     messageApp: data.sender + " just visited your profile."
-            //   });
-            // }
-            // if (data.type === "match") {
-            //   this.setState({
-            //     messageApp:
-            //       "This is a Match ! " +
-            //       data.sender +
-            //       " just liked you back !"
-            //   });
-            // }
-            // if (data.type === "dislike") {
-            //   this.setState({
-            //     messageApp: "Ouch ! " + data.sender + " disloved you :("
-            //   });
-            // }
           );
         }
       })
@@ -206,11 +203,11 @@ class App extends React.Component<VerifiedUser, AppState> {
   }
 
   componentDidUpdate = () => {
-    if (this.state.messageApp && this.timer) {
+    if (this.state.showNotif && this.timer) {
       clearTimeout(this.timer);
     }
-    if (this.state.messageApp) {
-      this.timer = setTimeout(() => this.setState({ messageApp: "" }), 4000);
+    if (this.state.showNotif) {
+      this.timer = setTimeout(() => this.setState({ showNotif: false }), 4000);
     }
     if (!this.timerConnection) {
       if (this.props.isAuth) {
@@ -249,31 +246,27 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Responsive
     - TOUS LES TESTS ET C'EST FINI !!!
     
-    - CSS notif
-    
     Partie back :
     */
     return (
       <div>
-        {this.state.messageApp && (
-          //   <Feed.Event>
-          //   <Feed.Label>
-          //     <img src='/images/avatar/small/elliot.jpg' />
-          //   </Feed.Label>
-          //   <Feed.Content>
-          //     <Feed.Summary>
-          //       <Feed.User>Elliot Fu</Feed.User> added you as a friend
-          //       <Feed.Date>1 Hour Ago</Feed.Date>
-          //     </Feed.Summary>
-          //     <Feed.Meta>
-          //       <Feed.Like>
-          //         <Icon name='like' />4 Likes
-          //       </Feed.Like>
-          //     </Feed.Meta>
-          //   </Feed.Content>
-          // </Feed.Event>
-          <div className="toast-message ui floating message">
-            <p>{this.state.messageApp}</p>
+        {this.state.showNotif && (
+          <div className="container-notif">
+            <Feed>
+              <Feed.Event>
+                <Feed.Content>
+                  <Feed.Summary>
+                    <Feed.User>{this.state.notifSender}</Feed.User>{" "}
+                    {this.state.notifEnd}
+                  </Feed.Summary>
+                  <Feed.Meta>
+                    <Feed.Like>
+                      <Feed.Date>Just now !</Feed.Date>
+                    </Feed.Like>
+                  </Feed.Meta>
+                </Feed.Content>
+              </Feed.Event>
+            </Feed>
           </div>
         )}
         <Router history={history}>
