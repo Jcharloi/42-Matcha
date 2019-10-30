@@ -193,20 +193,23 @@ class TopMenu extends React.Component<Props, {}> {
                   Reports
                 </Link>
               ) : null}
-              {/* <div className="item item-page">Notifications</div> */}
               {this.props.current !== "notifications" ? (
                 <Link className="item item-page" to="/notifications">
                   Notifications
-                  <Label className="label-notif" color="red">
-                    {this.props.numberOf.numberNotifications}
-                  </Label>
+                  {this.props.numberOf.numberNotifications > 0 && (
+                    <Label color="red">
+                      {this.props.numberOf.numberNotifications}
+                    </Label>
+                  )}
                 </Link>
               ) : (
                 <Link className="item active item-page" to="/notifications">
                   Notifications
-                  <Label className="label-notif" color="red">
-                    {this.props.numberOf.numberNotifications}
-                  </Label>
+                  {this.props.numberOf.numberNotifications > 0 && (
+                    <Label color="red">
+                      {this.props.numberOf.numberNotifications}
+                    </Label>
+                  )}
                 </Link>
               )}
 

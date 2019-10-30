@@ -246,6 +246,7 @@ class App extends React.Component<VerifiedUser, AppState> {
     - Fix bug notif like
     - Double key notif
     - Responsive
+    - vh auth
     - TOUS LES TESTS ET C'EST FINI !!!
     
     Partie back :
