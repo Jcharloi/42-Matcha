@@ -18,6 +18,7 @@ import PrivateRoutes from "./components/Routes/PrivateRoutes";
 import IsNotAuthRoutes from "./components/Routes/IsNotAuthRoutes";
 import CompletedRoutes from "./components/Routes/CompletedRoutes";
 import SearchMatch from "./components/Match/SearchMatch";
+import ShowNotifications from "./components/ShowNotifications";
 
 import Authentication from "./views/Authentification";
 import Profile from "./views/Profile";
@@ -135,29 +136,36 @@ class App extends React.Component<VerifiedUser, AppState> {
               }
             }
           }
-          socket.on("notification", (data: any) => {
-            if (data.type === "like") {
-              this.setState({
-                messageApp: data.sender + " just " + data.type + "d you !"
-              });
+          socket.on(
+            "notification",
+            (data: { type: string; sender: string }) => {
+              console.log("test");
+              return <ShowNotifications />;
             }
-            if (data.type === "visit") {
-              this.setState({
-                messageApp: data.sender + " just visited your profile."
-              });
-            }
-            if (data.type === "match") {
-              this.setState({
-                messageApp:
-                  "This is a Match ! " + data.sender + " just liked you back !"
-              });
-            }
-            if (data.type === "dislike") {
-              this.setState({
-                messageApp: "Ouch ! " + data.sender + " disloved you :("
-              });
-            }
-          });
+            // if (data.type === "like") {
+            //   this.setState({
+            //     messageApp: data.sender + " just " + data.type + "d you !"
+            //   });
+            // }
+            // if (data.type === "visit") {
+            //   this.setState({
+            //     messageApp: data.sender + " just visited your profile."
+            //   });
+            // }
+            // if (data.type === "match") {
+            //   this.setState({
+            //     messageApp:
+            //       "This is a Match ! " +
+            //       data.sender +
+            //       " just liked you back !"
+            //   });
+            // }
+            // if (data.type === "dislike") {
+            //   this.setState({
+            //     messageApp: "Ouch ! " + data.sender + " disloved you :("
+            //   });
+            // }
+          );
         }
       })
       .catch(error => {
@@ -236,7 +244,6 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Envoyer message via Postman
     - Fix bug notif like
     - Double key notif
     - Responsive
@@ -249,6 +256,22 @@ class App extends React.Component<VerifiedUser, AppState> {
     return (
       <div>
         {this.state.messageApp && (
+          //   <Feed.Event>
+          //   <Feed.Label>
+          //     <img src='/images/avatar/small/elliot.jpg' />
+          //   </Feed.Label>
+          //   <Feed.Content>
+          //     <Feed.Summary>
+          //       <Feed.User>Elliot Fu</Feed.User> added you as a friend
+          //       <Feed.Date>1 Hour Ago</Feed.Date>
+          //     </Feed.Summary>
+          //     <Feed.Meta>
+          //       <Feed.Like>
+          //         <Icon name='like' />4 Likes
+          //       </Feed.Like>
+          //     </Feed.Meta>
+          //   </Feed.Content>
+          // </Feed.Event>
           <div className="toast-message ui floating message">
             <p>{this.state.messageApp}</p>
           </div>
