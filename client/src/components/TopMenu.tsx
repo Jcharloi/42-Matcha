@@ -9,6 +9,7 @@ import { User, NumberOf } from "../models/models";
 import { socket } from "../helpers/socket";
 import { deleteUser } from "../App";
 import { Label, Dropdown } from "semantic-ui-react";
+import history from "../helpers/history";
 
 import "../styles/stylesTopMenu.css";
 
@@ -88,7 +89,11 @@ class TopMenu extends React.Component<Props, {}> {
   onChange = (e: any, data: any) => {
     // return (
     // data.value === "Profile" ? this.emptyOtherProfile : null,
-    return <Redirect to="/profile" />;
+    if (data.value === "Disconnect") {
+      this.handleDisconnect();
+      this.emptyOtherProfile();
+    }
+    return history.push(`/${data.value.toLowerCase()}`);
   };
 
   public render() {
