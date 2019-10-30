@@ -102,7 +102,7 @@ class Notification extends React.Component<NumberOf, NState> {
           <Feed>
             {this.state.notificationArray.map((notif, index) => (
               <Feed.Event
-                key={index}
+                key={notif.date}
                 className={
                   notif.seen
                     ? "notification-user-container"
