@@ -52,14 +52,21 @@ class Profile extends React.Component<Props> {
           alt="Profile background"
         />
         <div className="top-container">
-          <Pictures isOther={this.props.isOther} user={this.props.user} />
           <div className="left-container">
-            <div className="user-name">{this.props.user.user_name}</div>
-            <Connection connection={this.props.user.connection} />
-            <ProgressBar isOther={this.props.isOther} />
-            {this.props.isOther && this.props.user.pictures[0].date !== "1" ? (
-              <Like otherUser={this.props.user} />
-            ) : null}
+            <div className="left-container-child">
+              <Pictures isOther={this.props.isOther} user={this.props.user} />
+              <div className="user-name">{this.props.user.user_name}</div>
+              <Connection connection={this.props.user.connection} />
+            </div>
+          </div>
+          <div className="right-container">
+            <div className="right-container-child">
+              <ProgressBar isOther={this.props.isOther} />
+              {this.props.isOther &&
+              this.props.user.pictures[0].date !== "1" ? (
+                <Like otherUser={this.props.user} />
+              ) : null}
+            </div>
           </div>
         </div>
         <div className="block-container">

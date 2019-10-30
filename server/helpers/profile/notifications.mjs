@@ -25,7 +25,6 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
         }
         text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3`;
         values = [receiver_id, sender_id, type];
-        // console.log("here");
         await client
           .query(text, values)
           .then(async ({ rows: [{ count }] }) => {

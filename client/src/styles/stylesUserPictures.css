@@ -4,7 +4,6 @@
   flex-direction: column;
   width: 100%;
   height: 20rem;
-  border: 2px solid red;
 }
 
 .image-container {
@@ -28,7 +27,6 @@
 .picture-upload-container {
   display: flex;
   justify-content: center;
-
   flex-direction: column;
   align-items: center;
 }
@@ -86,6 +84,7 @@
 .managing-picture {
   display: flex;
   align-items: flex-start;
+  width: 50%;
 }
 
 .trash-icon {

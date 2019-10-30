@@ -1,11 +1,9 @@
 .bar-progress {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
   height: 10%;
-  /* min-width: 30rem !important; */
-  margin-left: 5rem;
-  /* border: 2px solid red; */
+  min-width: 30rem !important;
+  max-width: 30rem !important;
 }
 
 .progressing {

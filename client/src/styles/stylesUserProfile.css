@@ -1,7 +1,6 @@
 .body-container {
   display: flex;
   justify-content: center;
-  padding-right: 15rem;
 }
 
 .profile-background {
@@ -13,21 +12,23 @@
 .top-container {
   display: flex;
   justify-content: center;
-  /* border: 2px solid red; */
+  margin-bottom: 1rem;
 }
 
 .left-container {
   display: flex;
-
   width: 50%;
 }
 
+.left-container-child {
+  margin-left: 50%;
+}
+
 .user-name {
-  /* margin-left: -5rem; */
-  position: relative;
-  top: 5rem;
+  margin-left: 19rem;
+  margin-top: -15rem;
+  position: absolute;
   font-size: 2.5rem;
-  border: 2px solid green;
 }
 
 .block-container {
@@ -35,7 +36,42 @@
   justify-content: center;
 }
 
+.right-container {
+  width: 50%;
+}
+
+.right-container-child {
+  margin-left: 25%;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 1300px) {
+  .left-container-child {
+    margin-left: 25%;
+  }
+
+  .user-name {
+    margin-left: 2rem;
+    margin-top: -5rem;
+    position: absolute;
+    font-size: 2.5rem;
+  }
+
+  .top-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .right-container {
+    margin-top: 1.5rem;
+  }
+
   .middle-container,
   .end-container {
     display: flex;

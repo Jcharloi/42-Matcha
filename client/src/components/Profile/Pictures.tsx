@@ -295,40 +295,38 @@ class Pictures extends React.Component<Props, PicturesState> {
 
   public render() {
     return (
-      <div>
-        <div className="body-container">
-          <span
-            className={`image-container ${this.props.isOther ? "ic-o" : ""}`}
-            key={this.state.pictures[this.state.pictureIndex].date}
-          >
-            <Image
-              className="photo"
-              circular
-              src={`http://localhost:5000/public/profile-pictures/${this.state.pictures[0].path}`}
-              onClick={this.setDisplayPictures}
-            />
-          </span>
-          {this.state.picturesNb < 5 && !this.props.isOther && (
-            <div className="picture-upload-container">
-              <label className="ui primary button">
-                <Icon name="upload" />
-                <input
-                  className="file-upload"
-                  type="file"
-                  name="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={this.uploadPicture}
-                />
-                Upload a picture
-              </label>
-              {this.state.messagePictures && (
-                <div className="toast-message ui floating message">
-                  <p>{this.state.messagePictures}</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+      <div className="body-container">
+        <span
+          className={`image-container ${this.props.isOther ? "ic-o" : ""}`}
+          key={this.state.pictures[this.state.pictureIndex].date}
+        >
+          <Image
+            className="photo"
+            circular
+            src={`http://localhost:5000/public/profile-pictures/${this.state.pictures[0].path}`}
+            onClick={this.setDisplayPictures}
+          />
+        </span>
+        {this.state.picturesNb < 5 && !this.props.isOther && (
+          <div className="picture-upload-container">
+            <label className="ui primary button">
+              <Icon name="upload" />
+              <input
+                className="file-upload"
+                type="file"
+                name="file"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={this.uploadPicture}
+              />
+              Upload a picture
+            </label>
+            {this.state.messagePictures && (
+              <div className="toast-message ui floating message">
+                <p>{this.state.messagePictures}</p>
+              </div>
+            )}
+          </div>
+        )}
         {this.state.displayPictures && (
           <div
             className="hidden-container"

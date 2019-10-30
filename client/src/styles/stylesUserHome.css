@@ -158,7 +158,6 @@ h5 {
   right: 0.5%;
   max-width: 35rem;
   width: 35rem;
-  /* overflow: hidden; */
 }
 
 .container-notif {
@@ -172,4 +171,10 @@ h5 {
   justify-content: center;
   background-color: white;
   padding: 0.5rem 2rem;
+}
+
+@media screen and (max-width: 1000px) {
+  .container-little-messages {
+    display: none;
+  }
 }
