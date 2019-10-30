@@ -1,4 +1,8 @@
-import { getUserId, checkBlockedUser } from "../../common.mjs";
+import {
+  getUserId,
+  checkBlockedUser,
+  checkMutualLikes
+} from "../../common.mjs";
 import client from "../../sql/sql.mjs";
 import updatePopularityScore from "./popularityScore.mjs";
 import { notifyUser } from "./notifications.mjs";
@@ -30,7 +34,11 @@ const toggleLike = async (userName, targetUser) => {
             .query(text, values)
             .then(async () => {
               if (count === "0") {
-                if (checkMatch(liking_user_id, liked_user_id)) {
+                const { validated } = await checkMutualLikes(
+                  liking_user_id,
+                  liked_user_id
+                );
+                if (validated) {
                   notifyUser(userName, targetUser, "match");
                 } else {
                   notifyUser(userName, targetUser, "like");
