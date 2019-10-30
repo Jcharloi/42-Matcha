@@ -146,21 +146,23 @@ class App extends React.Component<VerifiedUser, AppState> {
           socket.on(
             "notification",
             (data: { type: string; sender: string }) => {
-              this.setState({
-                notifSender: data.sender,
-                notifType: data.type,
-                showNotif: true,
-                notifEnd:
-                  data.type === "like"
-                    ? "just loved you !"
-                    : data.type === "match"
-                    ? "loved you ! It's a match ! ❤️"
-                    : data.type === "dislike"
-                    ? "disloved you, what have you done ? 💔"
-                    : data.type === "visit"
-                    ? "just visited your profile !"
-                    : ""
-              });
+              if (this.props.isAuth) {
+                this.setState({
+                  notifSender: data.sender,
+                  notifType: data.type,
+                  showNotif: true,
+                  notifEnd:
+                    data.type === "like"
+                      ? "just loved you !"
+                      : data.type === "match"
+                      ? "loved you ! It's a match ! ❤️"
+                      : data.type === "dislike"
+                      ? "disloved you, what have you done ? 💔"
+                      : data.type === "visit"
+                      ? "just visited your profile !"
+                      : ""
+                });
+              }
             }
           );
         }

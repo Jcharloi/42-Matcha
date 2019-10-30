@@ -23,14 +23,9 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
             .to(getSocketId(clients, userTonotifyUser))
             .emit("notification", { type: notif_type, sender: notif_sender });
         }
-<<<<<<< HEAD
         text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3`;
         values = [receiver_id, sender_id, type];
         // console.log("here");
-=======
-        text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND seen = $4`;
-        values = [receiver_id, sender_id, type, toMinutes <= 1 ? true : false];
->>>>>>> 3255bffdbb28ed48894b762edbfeb203fe16493f
         await client
           .query(text, values)
           .then(async ({ rows: [{ count }] }) => {
