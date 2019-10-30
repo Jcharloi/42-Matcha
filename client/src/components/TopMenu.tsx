@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { store } from "../redux/store";
 import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 import { State } from "../redux/types/types";
@@ -27,7 +27,6 @@ class TopMenu extends React.Component<Props, {}> {
     })
       .then(({ data: { notificationArray, validated } }) => {
         if (validated) {
-          // console.log(notificationArray);
           notificationArray.forEach(
             (notif: { seen: boolean }, index: number) => {
               if (!notif.seen) {
@@ -82,13 +81,7 @@ class TopMenu extends React.Component<Props, {}> {
       })
     );
   };
-  // redirect = () => {
-  //   <Redirect to="/profile" />;
-  // };
-
   onChange = (e: any, data: any) => {
-    // return (
-    // data.value === "Profile" ? this.emptyOtherProfile : null,
     if (data.value === "Disconnect") {
       this.handleDisconnect();
       this.emptyOtherProfile();

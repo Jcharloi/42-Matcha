@@ -6,6 +6,16 @@
   margin-top: -10rem;
 }
 
+@media screen and (max-width: 1300px) {
+  .connection-container {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    margin-left: 0rem;
+    margin-top: -2rem;
+  }
+}
+
 .ring-profile {
   border-radius: 50%;
   width: 35px;

@@ -26,7 +26,7 @@ import VisitsAndLikes from "./views/VisitsAndLikes";
 import AdminReports from "./components/Admin/AdminReports";
 import Messages from "./views/Messages";
 import Notification from "./views/Notification";
-import { Feed, Icon } from "semantic-ui-react";
+import { Feed } from "semantic-ui-react";
 
 interface AppState {
   isLoading: boolean;
@@ -244,6 +244,7 @@ class App extends React.Component<VerifiedUser, AppState> {
     /*
     Partie front :
     - Responsive
+    - Debordement semantic menu
     - vh auth
     - TOUS LES TESTS ET C'EST FINI !!!
     
