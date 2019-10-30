@@ -162,7 +162,13 @@ const readMessage = async (req, res) => {
 const sendNewMessage = async (req, res) => {
   const messageId = createRandomId(10);
   const messageDate = Math.floor(Date.now());
-  if (await checkBlockedUser(req.body.userName, req.body.senderName)) {
+  const userId = await getUserId(req.body.senderName);
+  const senderId = await getUserId(req.body.userName);
+  const { validated } = await checkMutualLikes(userId, senderId);
+  if (
+    (await checkBlockedUser(req.body.userName, req.body.senderName)) &&
+    validated
+  ) {
     let text = `INSERT INTO chat (sender_id, receiver_id, date, message, message_id, sender_read, receiver_read) VALUES ($1, $2, $3, $4, $5, TRUE, FALSE)`;
     let values = [
       req.body.receiverId,
@@ -175,8 +181,7 @@ const sendNewMessage = async (req, res) => {
       .query(text, values)
       .then(async () => {
         let socketId = getSocketId(clients, req.body.userName);
-        let userId = await getUserId(req.body.userName);
-        let history = await checkAllMessages(userId);
+        let history = await checkAllMessages(senderId);
         let key = "";
         for (
           let i = 0;
@@ -203,7 +208,6 @@ const sendNewMessage = async (req, res) => {
           ioConnection.to(socketId).emit("New history", history.usersMessage);
         }
         socketId = getSocketId(clients, req.body.senderName);
-        userId = await getUserId(req.body.senderName);
         history = await checkAllMessages(userId);
         if (history.validated) {
           ioConnection.to(socketId).emit("New history", history.usersMessage);
