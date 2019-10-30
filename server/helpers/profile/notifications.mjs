@@ -34,7 +34,7 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
               receiver_id,
               sender_id,
               type,
-              toMinutes <= 30 ? true : false
+              toMinutes <= 1 ? true : false
             ];
             text =
               count === "0"
