@@ -160,3 +160,16 @@ h5 {
   width: 35rem;
   /* overflow: hidden; */
 }
+
+.container-notif {
+  z-index: 4;
+  border: 2px solid rgb(240, 240, 240);
+  border-radius: 4px;
+  position: fixed;
+  top: 10rem;
+  right: 2rem;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  padding: 0.5rem 2rem;
+}

@@ -1,17 +1,13 @@
 import client from "../../sql/sql.mjs";
-import { getUserVisitsAndLikes } from "./visits.mjs";
 import { getUserId, getSocketId } from "../../common.mjs";
-import socketIO from "socket.io";
-import { Socket } from "dgram";
 import { ioConnection, clients } from "../../app.mjs";
-import { getUserName, getUserMainPic } from "./getUserInfos.mjs";
+import { getUserName } from "./getUserInfos.mjs";
 
 const notifyUser = async (userName, userTonotifyUser, type) => {
   const receiver_id = await getUserId(userTonotifyUser);
   const sender_id = await getUserId(userName);
   const notif_type = type;
   const notif_sender = userName;
-
   if (!receiver_id || !sender_id) {
     return { validated: false };
   } else {
@@ -27,9 +23,14 @@ const notifyUser = async (userName, userTonotifyUser, type) => {
             .to(getSocketId(clients, userTonotifyUser))
             .emit("notification", { type: notif_type, sender: notif_sender });
         }
+<<<<<<< HEAD
         text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3`;
         values = [receiver_id, sender_id, type];
         // console.log("here");
+=======
+        text = `SELECT count(*) FROM notification WHERE receiver_id = $1 AND sender_id = $2 AND notif_type = $3 AND seen = $4`;
+        values = [receiver_id, sender_id, type, toMinutes <= 1 ? true : false];
+>>>>>>> 3255bffdbb28ed48894b762edbfeb203fe16493f
         await client
           .query(text, values)
           .then(async ({ rows: [{ count }] }) => {
@@ -109,14 +110,11 @@ const sawNotification = async (req, res) => {
   const sender_id = await getUserId(req.body.sender);
   const date = req.body.date;
   const notif_type = req.body.notif_type;
-
   if (!user_id) {
     res.send({ validated: false });
   } else {
     let text = `UPDATE notification SET seen = true WHERE receiver_id=$1 AND sender_id=$2 AND date=$3 AND notif_type=$4`;
     let values = [user_id, sender_id, date, notif_type];
-    console.log(text);
-    console.log(user_id, sender_id, date, notif_type);
     await client
       .query(text, values)
       .then(async () => {

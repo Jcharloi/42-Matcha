@@ -109,7 +109,6 @@ class Notification extends React.Component<NumberOf, NState> {
                     : "notification-user-container-unseen"
                 }
               >
-                {console.log(notif.mainPicPath)}
                 <Image
                   className="avatar-visit"
                   avatar
