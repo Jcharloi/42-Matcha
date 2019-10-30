@@ -2,8 +2,6 @@
   position: absolute !important;
   right: 1rem;
   top: -1rem;
-  overflow: visible !important;
-  z-index: 1 !important;
 }
 
 /* SHOW HISTORY */
