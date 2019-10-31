@@ -38,7 +38,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   }
   timer!: any;
 
-  uploadPicture =  ({ target }: any) => {
+  uploadPicture = ({ target }: any) => {
     if (target.files && target.files.length > 0) {
       const valid = this.validFile(target.files[0]);
       if (!valid.valid) {
@@ -55,54 +55,60 @@ class Pictures extends React.Component<Props, PicturesState> {
           "main",
           this.state.pictures[0].date === "1" ? "true" : "false"
         );
-         Axios.post("http://localhost:5000/profile/upload-pictures/", data)
-          .then(async ({ data: { validToken, fileName, date, message } }) => {
-            if (validToken === false) {
-              deleteUser();
-            } else {
-              let newPictures = [{ date: "", path: "", main: false }];
-              if (!isUnknownPicture) {
-                newPictures = [
-                  ...this.state.pictures,
-                  {
-                    path: fileName,
-                    date,
-                    main: false
-                  }
-                ];
+        Axios.post("http://localhost:5000/profile/upload-pictures/", data)
+          .then(
+            async ({
+              data: { validToken, validated, fileName, date, message }
+            }) => {
+              if (validToken === false) {
+                deleteUser();
               } else {
-                newPictures[0] = {
-                  path: fileName,
-                  date,
-                  main: true
-                };
+                if (validated) {
+                  let newPictures = [{ date: "", path: "", main: false }];
+                  if (!isUnknownPicture) {
+                    newPictures = [
+                      ...this.state.pictures,
+                      {
+                        path: fileName,
+                        date,
+                        main: false
+                      }
+                    ];
+                  } else {
+                    newPictures[0] = {
+                      path: fileName,
+                      date,
+                      main: true
+                    };
+                  }
+                  const newData = {
+                    ...this.props.user,
+                    pictures: newPictures
+                  };
+                  store.dispatch(insertUserProfile(newData));
+                  let isCompleted = isProfileCompleted(
+                    this.props.user.city,
+                    this.props.user.gender,
+                    this.props.user.presentation,
+                    this.state.pictures,
+                    this.props.user.tags
+                  );
+                  store.dispatch(updateUserAuth({ isAuth: true, isCompleted }));
+                  if (this.timer) {
+                    clearTimeout(this.timer);
+                    this.timer = null;
+                  }
+                  this.setState({
+                    pictures: newData.pictures,
+                    picturesNb: isUnknownPicture
+                      ? this.state.picturesNb
+                      : this.state.picturesNb + 1
+                  });
+                }
+                this.setState({ messagePictures: message });
               }
-              const newData = {
-                ...this.props.user,
-                pictures: newPictures
-              };
-              store.dispatch(insertUserProfile(newData));
-              let isCompleted = isProfileCompleted(
-                this.props.user.city,
-                this.props.user.gender,
-                this.props.user.presentation,
-                this.state.pictures,
-                this.props.user.tags
-              );
-              store.dispatch(updateUserAuth({ isAuth: true, isCompleted }));
-              if (this.timer) {
-                clearTimeout(this.timer);
-                this.timer = null;
-              }
-              this.setState({
-                pictures: newData.pictures,
-                picturesNb: isUnknownPicture
-                  ? this.state.picturesNb
-                  : this.state.picturesNb + 1,
-                messagePictures: message
-              });
             }
-          })
+          )
           .catch(error => console.error(error));
       }
     }
