@@ -25,7 +25,7 @@ import Home from "./views/Home";
 import VisitsAndLikes from "./views/VisitsAndLikes";
 import AdminReports from "./components/Admin/AdminReports";
 import Messages from "./views/Messages";
-import Notification from "./views/Notification";
+import Notification from "./views/Notifications";
 import { Feed } from "semantic-ui-react";
 
 interface AppState {

@@ -2,7 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import history from "../helpers/history";
 import { store } from "../redux/store";
-
+import { connect } from "react-redux";
 import { insertOtherProfile, updateNumberOf } from "../redux/actions/actions";
 
 import { Link } from "react-router-dom";
@@ -11,10 +11,8 @@ import { NumberOf } from "../models/models";
 import { deleteUser, findLastSince } from "../App";
 
 import TopMenu from "../components/TopMenu";
-
 import { Image, Icon, Feed, Button } from "semantic-ui-react";
 import "../styles/stylesUserNotifications.css";
-import { connect } from "react-redux";
 
 interface NState {
   notificationArray: Array<{
@@ -35,6 +33,7 @@ class Notification extends React.Component<NumberOf, NState> {
       current: "notifications"
     };
   }
+
   componentDidMount = () => {
     Axios.put(`http://localhost:5000/profile/get-notification`, {
       userName: localStorage.getItem("user_name"),
@@ -132,21 +131,24 @@ class Notification extends React.Component<NumberOf, NState> {
                       : "visited"}
                     {` your profile`}
                     &nbsp;
-                    {notif.seen === false ? (
-                      <Button
-                        icon
-                        onClick={() => this.checkNotif(notif)}
-                        labelPosition="right"
-                      >
-                        OK
-                        <Icon className="checkmark" />
-                      </Button>
-                    ) : null}
                   </div>
                   <Feed.Date className="time-feed">
                     {findLastSince(notif.date)}
                   </Feed.Date>
                 </Feed.Content>
+                {notif.seen === false ? (
+                  <Button
+                    className="button-seen-notif"
+                    basic
+                    icon
+                    color="black"
+                    onClick={() => this.checkNotif(notif)}
+                    labelPosition="right"
+                  >
+                    OK
+                    <Icon className="checkmark" />
+                  </Button>
+                ) : null}
               </Feed.Event>
             ))}
           </Feed>
