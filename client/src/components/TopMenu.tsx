@@ -13,13 +13,23 @@ import history from "../helpers/history";
 
 import "../styles/stylesTopMenu.css";
 
+interface TState {
+  showCounter: boolean;
+}
 interface Props {
   current?: string;
   user: User;
   numberOf: NumberOf;
 }
 
-class TopMenu extends React.Component<Props, {}> {
+class TopMenu extends React.Component<Props, TState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      showCounter: false
+    };
+  }
+
   componentDidMount = () => {
     Axios.put(`http://localhost:5000/profile/get-notification`, {
       userName: localStorage.getItem("user_name"),
@@ -88,9 +98,21 @@ class TopMenu extends React.Component<Props, {}> {
     }
     return history.push(`/${data.value.toLowerCase()}`);
   };
+  toggleCounter = async () => {
+    console.log("TESTESTSE");
+    if (this.state.showCounter == true) {
+      console.log(this.state.showCounter);
+      await this.setState({ showCounter: false });
+      console.log(this.state.showCounter);
+    } else {
+      console.log(this.state.showCounter);
+      await this.setState({ showCounter: true });
+      console.log(this.state.showCounter);
+    }
+  };
 
   public render() {
-    const options = [
+    var options = [
       { key: 1, text: "Profile", value: "Profile" },
       { key: 2, text: "Home", value: "Home" },
       { key: 3, text: "Search", value: "Search" },
@@ -102,8 +124,12 @@ class TopMenu extends React.Component<Props, {}> {
         value: "Notifications"
       },
       { key: 7, text: "Messages", value: "Messages" },
-      { key: 8, text: "Disconnect", value: "Disconnect" }
+      { key: 8, text: "Reports", value: "admin-reports" },
+      { key: 9, text: "Disconnect", value: "Disconnect" }
     ];
+    if (this.props.user.user_id !== "eef7d602-045f-4db3-92e2-afd6131f5a41") {
+      options.splice(7, 1);
+    }
     return (
       <div>
         <div className="ui secondary big menu">
@@ -169,15 +195,27 @@ class TopMenu extends React.Component<Props, {}> {
               </Link>
             )}
           </div>
+
           <div className="right menu mobile">
+            <Label className="mobile counter" color="red" size="mini">
+              {this.props.numberOf.numberNotifications}
+            </Label>
+            {this.state.showCounter ? (
+              <Label className="mobile counter open" color="red" size="mini">
+                {this.props.numberOf.numberNotifications}
+              </Label>
+            ) : null}
             <Dropdown
               icon="list ul"
               options={options}
+              onClick={this.toggleCounter}
               onChange={this.onChange}
+              onHover={this.toggleCounter}
               simple
               item
             />
           </div>
+
           <div className="right menu">
             <div className="item">
               {this.props.user.user_id ===
