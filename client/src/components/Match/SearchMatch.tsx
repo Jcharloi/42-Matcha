@@ -42,7 +42,7 @@ class SearchMatch extends React.Component<User, HState> {
       endPop: 100,
       preference: "Man",
       tagsName: [],
-      isLoading: true,
+      isLoading: false,
       clearList: false,
       userMatchInfo: [],
       copyUserMatch: []
