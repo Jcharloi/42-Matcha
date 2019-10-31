@@ -98,17 +98,9 @@ class TopMenu extends React.Component<Props, TState> {
     }
     return history.push(`/${data.value.toLowerCase()}`);
   };
+
   toggleCounter = async () => {
-    console.log("TESTESTSE");
-    if (this.state.showCounter == true) {
-      console.log(this.state.showCounter);
-      await this.setState({ showCounter: false });
-      console.log(this.state.showCounter);
-    } else {
-      console.log(this.state.showCounter);
-      await this.setState({ showCounter: true });
-      console.log(this.state.showCounter);
-    }
+    this.setState({ showCounter: !this.state.showCounter });
   };
 
   public render() {
@@ -210,7 +202,6 @@ class TopMenu extends React.Component<Props, TState> {
               options={options}
               onClick={this.toggleCounter}
               onChange={this.onChange}
-              onHover={this.toggleCounter}
               simple
               item
             />
