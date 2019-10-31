@@ -72,10 +72,9 @@ const uploadPictures = async (req, res) => {
                   });
                 });
             } else {
-              console.log("lmao");
               res.send({
                 validated: false,
-                message: "We got a problem with our database, please try again"
+                message: "This picture is already uploaded"
               });
             }
           })

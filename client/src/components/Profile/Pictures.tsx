@@ -38,7 +38,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   }
   timer!: any;
 
-  uploadPicture = async ({ target }: any) => {
+  uploadPicture =  ({ target }: any) => {
     if (target.files && target.files.length > 0) {
       const valid = this.validFile(target.files[0]);
       if (!valid.valid) {
@@ -55,7 +55,7 @@ class Pictures extends React.Component<Props, PicturesState> {
           "main",
           this.state.pictures[0].date === "1" ? "true" : "false"
         );
-        await Axios.post("http://localhost:5000/profile/upload-pictures/", data)
+         Axios.post("http://localhost:5000/profile/upload-pictures/", data)
           .then(async ({ data: { validToken, fileName, date, message } }) => {
             if (validToken === false) {
               deleteUser();
