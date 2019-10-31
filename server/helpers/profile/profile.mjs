@@ -5,6 +5,7 @@ import {
   validCurrentPassword,
   validPassword,
   validMail,
+  checkMailAlreadyExisted,
   validBirthday,
   validGender,
   validOrientation
@@ -18,7 +19,8 @@ const changePersonalInfos = async (req, res) => {
     req.body.lastName &&
     req.body.city &&
     validMail(req.body.mail) &&
-    validBirthday(req.body.day, req.body.month, req.body.year)
+    validBirthday(req.body.day, req.body.month, req.body.year) &&
+    (await checkMailAlreadyExisted(req.body.mail, req.body.userName))
   ) {
     let { lat, lon } = await getUserCoordinatesByCity(req.body.city);
     if (!lat || !lon) {
@@ -57,7 +59,8 @@ const changePersonalInfos = async (req, res) => {
   } else {
     res.send({
       validated: false,
-      message: "You need to provide all the fields correctly"
+      message:
+        "You need to provide all the fields correctly or maybe this mail is already taken !"
     });
   }
 };

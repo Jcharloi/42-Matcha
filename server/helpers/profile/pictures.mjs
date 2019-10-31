@@ -14,7 +14,7 @@ const uploadPictures = async (req, res) => {
       if (!userId) {
         res.send({ validated: false });
       } else {
-        let text = `SELECT COUNT(*) FROM profile_picture WHERE path = $1`;
+        let text = `SELECT COUNT(*) FROM profile_picture WHERE path = $1 AND user_id = '${userId}'`;
         let values = [name];
         await client
           .query(text, values)
@@ -43,6 +43,7 @@ const uploadPictures = async (req, res) => {
                       .query(text, values)
                       .then(() => {
                         res.send({
+                          validated: true,
                           date,
                           fileName: name,
                           message: "Picture uploaded successfully !"
@@ -72,10 +73,9 @@ const uploadPictures = async (req, res) => {
                   });
                 });
             } else {
-              console.log("lmao");
               res.send({
                 validated: false,
-                message: "We got a problem with our database, please try again"
+                message: "This picture is already uploaded"
               });
             }
           })
