@@ -36,6 +36,23 @@ const validMail = mail => {
   return true;
 };
 
+const checkMailAlreadyExisted = async (mail, userName) => {
+  let text = `SELECT user_name FROM users WHERE mail = $1`;
+  let values = [mail];
+  return await client
+    .query(text, values)
+    .then(({ rows }) => {
+      if (rows.length === 0 || rows[0].user_name === userName) {
+        return true;
+      }
+      return false;
+    })
+    .catch(e => {
+      console.error(e.stack);
+      return false;
+    });
+};
+
 const validCurrentPassword = async (userName, currentPassword) => {
   let answer;
   const text = `SELECT password_hash FROM users WHERE user_name = $1`;
@@ -131,6 +148,7 @@ export {
   compareTag,
   validFile,
   validMail,
+  checkMailAlreadyExisted,
   validCurrentPassword,
   validPassword,
   validBirthday,
