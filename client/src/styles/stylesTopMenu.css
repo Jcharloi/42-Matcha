@@ -35,4 +35,21 @@
     margin-top: 5px !important;
     display: block !important;
   }
+  .mobile.counter {
+    position: absolute;
+    display: block !important;
+    overflow: hidden !important;
+    top: 15px;
+    right: 40px !important;
+    /* border: 0px solid blue !important; */
+  }
+  .mobile.counter.open {
+    position: absolute;
+    display: block !important;
+    overflow: hidden !important;
+    top: 270px;
+    right: 0px !important;
+    z-index: 40;
+    /* border: 0px solid blue !important; */
+  }
 }
