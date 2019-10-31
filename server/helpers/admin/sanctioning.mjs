@@ -7,8 +7,7 @@ const sanctioningUser = async (req, res) => {
   if (
     !userId ||
     (req.body.action !== "Report" && req.body.action !== "Block") ||
-    !req.body.targetUserId ||
-    req.body.targetUserId === (await getUserId("IAmAnAdmin"))
+    !req.body.targetUserId
   ) {
     res.send({
       validated: false,
@@ -55,7 +54,7 @@ const sanctioningUser = async (req, res) => {
                       await client
                         .query(text, values)
                         .then(async () => {
-                          text = `DELETE FROM notification WHERE (sender_id = $1 OR receiver_id = $2) AND (receiver_id = $1 OR sender_id = $2)`;
+                          text = `DELETE FROM notification WHERE (sender_id = $1 OR sender_id = $2) AND (receiver_id = $1 OR receiver_id = $2)`;
                           values = [userId, req.body.targetUserId];
                           await client
                             .query(text, values)
