@@ -81,7 +81,7 @@ const getUserId = async userName => {
       }
     })
     .catch(e => {
-      console.error(e);
+      console.error(e.stack);
       return false;
     });
 };

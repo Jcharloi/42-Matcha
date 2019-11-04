@@ -4,65 +4,49 @@ import path from "path";
 
 import client from "../../sql/sql.mjs";
 import { validFile } from "../validInfos.mjs";
-import { getUserId } from "../../common.mjs";
+import { getUserId, createRandomId } from "../../common.mjs";
 
 const uploadPictures = async (req, res) => {
   if (req.files && Object.keys(req.files).length > 0 && req.body.main) {
-    const { name, size, mimetype: type } = req.files.file;
-    if (validFile(name, size, type)) {
+    const { name, size, data, mimetype: type } = req.files.file;
+    if (validFile(name, size, data, type)) {
       const userId = await getUserId(req.body.userName);
       if (!userId) {
         res.send({ validated: false });
       } else {
-        let text = `SELECT COUNT(*) FROM profile_picture WHERE path = $1 AND user_id = '${userId}'`;
-        let values = [name];
+        let text = `SELECT COUNT(*) FROM profile_picture WHERE user_id = '${userId}'`;
         await client
-          .query(text, values)
+          .query(text)
           .then(async ({ rows }) => {
-            if (rows[0].count === "0") {
-              text = `SELECT COUNT(*) FROM profile_picture WHERE user_id = '${userId}'`;
+            if (rows[0].count < "5") {
+              let nameChanged =
+                name.split(".")[0] +
+                createRandomId(5) +
+                "." +
+                type.split("/")[1];
+              let file = req.files.file;
+              let date = moment().format("X");
+              file.mv(`public/profile-pictures/${nameChanged}`, err => {
+                if (err) {
+                  return res.status(500).send(err);
+                }
+              });
+              let text = `INSERT INTO profile_picture (user_id, path, date, main) VALUES ($1, $2, $3, $4)`;
+              let values = [
+                userId,
+                nameChanged,
+                date,
+                req.body.main === "true" ? true : false
+              ];
               await client
-                .query(text)
-                .then(async ({ rows }) => {
-                  if (rows[0].count < "5") {
-                    let file = req.files.file;
-                    let date = moment().format("X");
-                    file.mv(`public/profile-pictures/${name}`, err => {
-                      if (err) {
-                        return res.status(500).send(err);
-                      }
-                    });
-                    let text = `INSERT INTO profile_picture (user_id, path, date, main) VALUES ($1, $2, $3, $4)`;
-                    let values = [
-                      userId,
-                      name,
-                      date,
-                      req.body.main === "true" ? true : false
-                    ];
-                    await client
-                      .query(text, values)
-                      .then(() => {
-                        res.send({
-                          validated: true,
-                          date,
-                          fileName: name,
-                          message: "Picture uploaded successfully !"
-                        });
-                      })
-                      .catch(e => {
-                        console.error(e.stack);
-                        res.send({
-                          validated: false,
-                          message:
-                            "We got a problem with our database, please try again"
-                        });
-                      });
-                  } else {
-                    res.send({
-                      validated: false,
-                      message: "You already have at least 5 pictures uploaded !"
-                    });
-                  }
+                .query(text, values)
+                .then(() => {
+                  res.send({
+                    validated: true,
+                    date,
+                    fileName: nameChanged,
+                    message: "Picture uploaded successfully !"
+                  });
                 })
                 .catch(e => {
                   console.error(e.stack);
@@ -75,7 +59,7 @@ const uploadPictures = async (req, res) => {
             } else {
               res.send({
                 validated: false,
-                message: "This picture is already uploaded"
+                message: "You already have at least 5 pictures uploaded !"
               });
             }
           })
