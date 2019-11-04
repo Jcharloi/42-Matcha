@@ -244,8 +244,6 @@ class App extends React.Component<VerifiedUser, AppState> {
     /*
     Partie front :
     - Responsive
-    - Debordement semantic menu
-    - vh auth
     - TOUS LES TESTS ET C'EST FINI !!!
     
     Partie back :
