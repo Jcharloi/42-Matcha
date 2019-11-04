@@ -16,7 +16,8 @@ CREATE TABLE users
     longitude varchar(250),
     last_connection varchar(250),
     validated_account boolean NOT NULL,
-    unique_link_id varchar(250)
+    unique_link_id varchar(250),
+    token varchar(250)
 );
 
 CREATE TABLE tag
