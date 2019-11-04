@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import client from "./sql/sql.mjs";
 import keys from "./keys.json";
-import { getUserId } from "./common.mjs";
+import { updateLastConnection } from "./helpers/auth/updateLastConnection.mjs";
+import { updateToken } from "./common.mjs";
 const { secret } = keys;
 
 const verifyToken = async (req, res) => {
@@ -28,52 +29,55 @@ const checkAuthToken = async (token, userName) => {
     };
   }
   return await jwt.verify(token, secret, async (err, decoded) => {
-    if (err) {
-      const userId = await getUserId(userName);
-      let text = `UPDATE users SET last_connection = '${Math.floor(
-        Date.now()
-      )}' WHERE user_id = '${userId}'`;
+    const userId = await getUserIdFromToken(token);
+    if (!err) {
+      const text = `SELECT token FROM users WHERE user_name = $1`;
+      const values = [userName];
       return await client
-        .query(text)
-        .then(() => {
-          return {
-            validToken: false,
-            message: "Stop playing with our localStorage 😤"
-          };
+        .query(text, values)
+        .then(async ({ rows }) => {
+          if (rows.length > 0 && rows[0].token === token) {
+            return {
+              validToken: true
+            };
+          } else {
+            await updateLastConnection(userId);
+            await updateToken(userId, null);
+            return {
+              validToken: false,
+              message: "Stop playing with our localStorage 😤"
+            };
+          }
         })
-        .catch(e => {
+        .catch(async e => {
           console.error(e.stack);
+          await updateLastConnection(userId);
+          await updateToken(userId, null);
           return {
             validToken: false,
             message: "Stop playing with our localStorage 😤"
           };
         });
     } else {
-      const text = `SELECT * FROM users WHERE user_name = $1`;
-      const values = [userName];
-      const response = await client
-        .query(text, values)
-        .then(async ({ rowCount }) => {
-          if (rowCount === 1) {
-            return {
-              validToken: true
-            };
-          }
-          return {
-            validToken: false,
-            message: "Stop playing with our localStorage 😤"
-          };
-        })
-        .catch(e => {
-          console.error(e);
-          return {
-            validToken: false,
-            message: "Stop playing with our localStorage 😤"
-          };
-        });
-      return response;
+      await updateLastConnection(userId);
+      await updateToken(userId, null);
+      return {
+        validToken: false,
+        message: "Stop playing with our localStorage 😤"
+      };
     }
   });
+};
+
+const getUserIdFromToken = async token => {
+  return await client
+    .query(`SELECT user_id FROM users WHERE token = $1`, [token])
+    .then(({ rows }) => {
+      if (rows.length > 0) return rows[0].user_id;
+    })
+    .catch(e => {
+      console.error(e.stack);
+    });
 };
 
 export { verifyToken, tokenMiddleware, checkAuthToken };

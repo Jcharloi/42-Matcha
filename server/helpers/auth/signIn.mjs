@@ -11,6 +11,7 @@ import {
   getUserTags
 } from "../profile/getUserInfos.mjs";
 import { updateLastConnection } from "./updateLastConnection.mjs";
+import { updateToken } from "../../common.mjs";
 
 const connection = async (req, res) => {
   if (req.body.userName && validPassword(req.body.password)) {
@@ -32,6 +33,7 @@ const connection = async (req, res) => {
                     expiresIn: "2h"
                   }
                 );
+                await updateToken(userId, token);
                 let userInfos = {};
                 userInfos = await getUserInfos(userId);
                 userInfos.pictures = await getUserPictures(userId);

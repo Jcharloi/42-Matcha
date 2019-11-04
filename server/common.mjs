@@ -240,6 +240,14 @@ const getSocketId = (clients, name) => {
   return getSocketId;
 };
 
+const updateToken = async (userId, token) => {
+  await client
+    .query(`UPDATE users SET token = $1 WHERE user_id = $2`, [token, userId])
+    .catch(e => {
+      console.error(e.stack);
+    });
+};
+
 export {
   getUserCoordinatesByCity,
   getUserCityByCoordinates,
@@ -253,5 +261,6 @@ export {
   checkMutualLikes,
   filterByBlockedUser,
   filterByIncompletedUser,
-  getSocketId
+  getSocketId,
+  updateToken
 };
