@@ -204,7 +204,6 @@ class TopMenu extends React.Component<Props, TState> {
               onChange={this.onChange}
               onClose={this.toggleCounter}
               onHover={this.toggleCounter}
-              simple
               item
             />
           </div>
