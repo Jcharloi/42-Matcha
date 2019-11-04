@@ -152,6 +152,7 @@ class Home extends React.Component<User, HState> {
     return (
       <div>
         <TopMenu current="home" />
+        <div className="topmenu-buffer"></div>
         <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />
           <Divider className="divider-match" />
