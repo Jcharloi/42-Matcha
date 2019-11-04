@@ -3,6 +3,9 @@
   background-image: linear-gradient(to top right, rgb(255, 42, 149), #fa5751e8);
   width: 101%;
   z-index: 100;
+  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .logo {
