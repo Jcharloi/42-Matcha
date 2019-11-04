@@ -108,16 +108,12 @@ router.put("/message/get-all-messages", getAllMessages);
 router.put("/message/read-message", readMessage);
 router.put("/message/get-messages-people", getMessagesPeople);
 router.post("/message/send-new-message", sendNewMessage);
+router.put("/profile/get-notification", getNotification);
+router.put("/profile/saw-notification", sawNotification);
+
 router.get("/public/profile-pictures/:id", (req, res) => {
   const pictureName = req.params.id;
   const absolutePath = path.resolve("./public/profile-pictures/" + pictureName);
-  res.sendFile(absolutePath);
-});
-router.put("/profile/get-notification", getNotification);
-router.put("/profile/saw-notification", sawNotification);
-router.get("/public/fake-pictures/:id", (req, res) => {
-  const pictureName = req.params.id;
-  const absolutePath = path.resolve("./public/fake-pictures/" + pictureName);
   res.sendFile(absolutePath);
 });
 

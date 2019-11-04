@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import client from "../sql/sql.mjs";
+import fileType from "file-type";
 
 const compareTag = (tagsList, potentialUserTag) => {
   tagsList.map((tag, index) => {
@@ -10,13 +11,20 @@ const compareTag = (tagsList, potentialUserTag) => {
   return tagsList;
 };
 
-const validFile = (name, size, type) => {
-  if (!name) {
+const validFile = (name, size, data, type) => {
+  let ab = new ArrayBuffer(data.length);
+  let view = new Uint8Array(ab);
+  for (var i = 0; i < data.length; ++i) {
+    view[i] = data[i];
+  }
+  const fileRes = fileType(ab);
+  if (!name || !fileRes) {
     return false;
   }
   if (
     !type ||
-    (type !== "image/png" && type !== "image/jpeg" && type !== "image/jpg")
+    (type !== "image/png" && type !== "image/jpeg" && type !== "image/jpg") ||
+    (fileRes.ext !== "png" && fileRes.ext !== "jpeg" && fileRes.ext !== "jpg")
   ) {
     return false;
   }

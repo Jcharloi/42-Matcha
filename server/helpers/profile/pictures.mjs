@@ -8,8 +8,8 @@ import { getUserId, createRandomId } from "../../common.mjs";
 
 const uploadPictures = async (req, res) => {
   if (req.files && Object.keys(req.files).length > 0 && req.body.main) {
-    const { name, size, mimetype: type } = req.files.file;
-    if (validFile(name, size, type)) {
+    const { name, size, data, mimetype: type } = req.files.file;
+    if (validFile(name, size, data, type)) {
       const userId = await getUserId(req.body.userName);
       if (!userId) {
         res.send({ validated: false });
