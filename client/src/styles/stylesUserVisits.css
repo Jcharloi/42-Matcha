@@ -2,6 +2,7 @@
   display: block;
   margin-right: 1rem !important;
   object-fit: contain;
+  max-height: 6rem;
 }
 
 .visit-container {

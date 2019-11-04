@@ -178,6 +178,7 @@
   width: 4rem !important;
   margin-left: 1rem;
   cursor: pointer;
+  max-height: 4rem;
 }
 
 .name-profile {
