@@ -52,6 +52,9 @@
 
 /*Sort and filter buttons*/
 
+.topmenu-buffer {
+  height: 100px;
+}
 .container-sort {
   display: flex;
   justify-content: center;
