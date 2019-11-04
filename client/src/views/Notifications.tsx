@@ -128,6 +128,8 @@ class Notification extends React.Component<NumberOf, NState> {
                       ? "disliked"
                       : notif.notif_type === "message"
                       ? "messaged"
+                      : notif.notif_type === "like"
+                      ? "liked"
                       : "visited"}
                     {` your profile`}
                     &nbsp;
