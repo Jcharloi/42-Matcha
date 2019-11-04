@@ -44,6 +44,10 @@ interface State {
   messageTags?: string;
 }
 
+const myDebounce = debounce(500, (func, value1, value2) => {
+  func(value1, value2);
+});
+
 class FilterInterval extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -205,9 +209,7 @@ class FilterInterval extends React.Component<Props, State> {
               defaultValue={[this.state.startAge, this.state.endAge]}
               onChange={value => {
                 this.props.setLoading();
-                debounce(500, value => {
-                  this.setAgeInterval(value[0], value[1]);
-                })(value);
+                myDebounce(this.setAgeInterval, value[0], value[1]);
               }}
             />
             <span>
@@ -228,9 +230,7 @@ class FilterInterval extends React.Component<Props, State> {
               defaultValue={[this.state.startLoc, this.state.endLoc]}
               onChange={value => {
                 this.props.setLoading();
-                debounce(500, value => {
-                  this.setLocInterval(value[0], value[1]);
-                })(value);
+                myDebounce(this.setLocInterval, value[0], value[1]);
               }}
             />
             <span>
@@ -251,9 +251,7 @@ class FilterInterval extends React.Component<Props, State> {
               defaultValue={[this.state.startPop, this.state.endPop]}
               onChange={value => {
                 this.props.setLoading();
-                debounce(500, value => {
-                  this.setPopInterval(value[0], value[1]);
-                })(value);
+                myDebounce(this.setPopInterval, value[0], value[1]);
               }}
             />
             <span>
