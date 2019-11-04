@@ -281,7 +281,7 @@ class ShowMessages extends React.Component<Props, State> {
             )}
           </div>
           <div className="message-typing">
-            <Form className="form-textarea">
+            <Form className="form-textarea-message">
               <TextArea
                 className="textarea-message"
                 value={this.state.newMessage}
