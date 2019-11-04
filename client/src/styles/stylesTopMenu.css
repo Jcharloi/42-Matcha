@@ -34,7 +34,19 @@
   .right.menu.mobile {
     margin-top: 5px !important;
     display: block !important;
+    /* border: 2px solid red; */
   }
+
+  .ui.active.visible.item.simple.dropdown text {
+    border: 2px solid red !important;
+    /* color: white !important; */
+    display: none !important;
+  }
+
+  div[role="listbox"] > div[role="alert"] {
+    display: none !important;
+  }
+
   .mobile.counter {
     position: absolute;
     display: block !important;
