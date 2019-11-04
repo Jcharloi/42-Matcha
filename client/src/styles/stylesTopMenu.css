@@ -31,6 +31,13 @@
 }
 
 @media only screen and (max-width: 1100px) {
+  .menu.mobile.right > div[role="listbox"] {
+    width: 70px;
+  }
+  div[role="listbox"] > .icon.list.ul {
+    position: relative;
+    color: rgb(255, 238, 238);
+  }
   .left.menu {
     display: none !important;
   }
@@ -48,21 +55,24 @@
   div[role="listbox"] > div[role="alert"] {
     display: none !important;
   }
+  .menu.transition.visible > div:nth-of-type(n + 0) {
+    margin: 0 0 0 0 !important;
+  }
 
   .mobile.counter {
     position: absolute;
     display: block !important;
     overflow: hidden !important;
-    top: 15px;
-    right: 40px !important;
+    top: 17px;
+    right: 15px !important;
     /* border: 0px solid blue !important; */
   }
   .mobile.counter.open {
     position: absolute;
     display: block !important;
     overflow: hidden !important;
-    top: 270px;
-    right: 0px !important;
+    top: 280px;
+    right: 150px !important;
     z-index: 40;
     /* border: 0px solid blue !important; */
   }
