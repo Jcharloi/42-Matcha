@@ -200,8 +200,10 @@ class TopMenu extends React.Component<Props, TState> {
             <Dropdown
               icon="list ul"
               options={options}
-              onClick={this.toggleCounter}
+              onOpen={this.toggleCounter}
               onChange={this.onChange}
+              onClose={this.toggleCounter}
+              onHover={this.toggleCounter}
               simple
               item
             />
