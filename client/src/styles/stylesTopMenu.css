@@ -1,3 +1,10 @@
+.ui.secondary.big.menu {
+  position: fixed;
+  background-image: linear-gradient(to top right, rgb(255, 42, 149), #fa5751e8);
+  width: 101%;
+  z-index: 100;
+}
+
 .logo {
   width: 60px;
 }
@@ -12,10 +19,11 @@
 
 .item-page {
   cursor: pointer;
+  color: rgb(255, 238, 238) !important;
 }
 
 .item-page:hover {
-  background-color: rgb(238, 236, 236) !important;
+  background-color: rgb(228, 35, 67) !important;
 }
 
 .right.menu.mobile {
@@ -35,12 +43,6 @@
     margin-top: 5px !important;
     display: block !important;
     /* border: 2px solid red; */
-  }
-
-  .ui.active.visible.item.simple.dropdown text {
-    border: 2px solid red !important;
-    /* color: white !important; */
-    display: none !important;
   }
 
   div[role="listbox"] > div[role="alert"] {
