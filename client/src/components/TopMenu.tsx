@@ -264,7 +264,7 @@ class TopMenu extends React.Component<Props, TState> {
                 </Link>
               )}
               <div
-                className="ui red button"
+                className="ui red button menu"
                 onClick={() => {
                   this.handleDisconnect();
                   this.emptyOtherProfile();
