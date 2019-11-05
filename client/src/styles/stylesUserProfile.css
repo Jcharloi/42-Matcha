@@ -49,8 +49,18 @@
   justify-content: center;
   align-items: center;
 }
+@media screen and (max-width: 700px) {
+  .left-container {
+    display: flex;
+    width: 100%;
+  }
+}
 
 @media screen and (max-width: 1300px) {
+  .left-container {
+    display: flex;
+    /* width: 100%; */
+  }
   .left-container-child {
     margin-left: 25%;
   }
