@@ -83,7 +83,7 @@ class Preferences extends React.Component<Props, PState> {
         </div>
         <div className="container-preferences">
           <div className="preferences">
-            <div>
+            <div className="container-div-preferences">
               <Icon name="neuter" />
               <span className="text-preferences">I am a</span>
               {this.props.isOther ? (

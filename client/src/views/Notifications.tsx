@@ -97,6 +97,7 @@ class Notification extends React.Component<NumberOf, NState> {
     return (
       <div>
         <TopMenu current="notifications" />
+        <div className="topmenu-buffer"></div>
         <div className="notification-container">
           <Feed>
             {this.state.notificationArray.map((notif, index) => (

@@ -108,6 +108,7 @@ class AdminReports extends React.Component<{}, AState> {
     return (
       <div>
         <TopMenu current="Reports" />
+        <div className="topmenu-buffer"></div>
         <div className="reports-container">
           <Feed>
             {this.state.reportArray.map((report, index) => (

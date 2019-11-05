@@ -1,5 +1,5 @@
 .mct-o {
-  margin-left: 28rem;
+  margin-left: 6rem;
 }
 
 .title-container-tag {
@@ -17,6 +17,12 @@
   margin-top: 3rem;
   width: 38rem;
   margin-left: 3rem;
+}
+
+.t-c-o {
+  margin-top: 3rem;
+  width: 38rem;
+  margin-left: 11rem;
 }
 
 .tag-value {
@@ -50,15 +56,25 @@
 
 @media screen and (max-width: 1300px) {
   .mct-o {
-    width: 50%;
-    margin-left: 30%;
+    margin-left: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5rem;
+  }
+
+  .t-c-o {
+    margin-left: unset;
+    width: 80%;
   }
 
   .title-container-tag {
     width: unset;
+    margin-left: unset;
   }
 
   .tag-container {
-    width: 45%;
+    width: 80%;
+    margin-bottom: 5rem;
   }
 }

@@ -276,7 +276,7 @@ class Tags extends React.Component<Props, TState> {
             Some tags that represents me
           </Header>
         </div>
-        <div className="tag-container">
+        <div className={this.props.isOther ? "t-c-o" : "tag-container"}>
           {this.state.tagsUser &&
             this.state.tagsUser.map((tag: UserTags) => (
               <div
