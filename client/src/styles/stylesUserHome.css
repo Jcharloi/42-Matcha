@@ -121,7 +121,8 @@ h5 {
 
 .range {
   display: flex;
-  width: 65% !important;
+  width: 100% !important;
+  max-width: 800px;
 }
 
 .tagList {
@@ -140,7 +141,7 @@ h5 {
 }
 
 .container-range .range span {
-  padding: 0 10px 0 30px;
+  padding: 0px 0px 1px 5px !important;
 }
 
 .ui.compact.menu {
