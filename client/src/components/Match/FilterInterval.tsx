@@ -187,6 +187,9 @@ class FilterInterval extends React.Component<Props, State> {
                   this.setOrientation(value);
                 }}
               >
+                <option value="Gender" disabled>
+                  Gender
+                </option>
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
                 <option value="Other">Other</option>

@@ -40,7 +40,7 @@ class SearchMatch extends React.Component<User, HState> {
       endLoc: 1000,
       startPop: 0,
       endPop: 100,
-      preference: "Man",
+      preference: "Gender",
       tagsName: [],
       isLoading: false,
       clearList: false,
@@ -139,7 +139,7 @@ class SearchMatch extends React.Component<User, HState> {
       endLoc: 1000,
       startPop: 0,
       endPop: 100,
-      preference: "Man",
+      preference: "Gender",
       tagsName: []
     });
   };
