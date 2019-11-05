@@ -1,6 +1,6 @@
 .ui.secondary.big.menu {
   position: fixed;
-  background-image: linear-gradient(to top right, rgb(255, 42, 149), #fa5751e8);
+  background-image: linear-gradient(to top right, #faa13cce 40%, #dd65b7d5);
   width: 101%;
   z-index: 100;
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
@@ -26,9 +26,12 @@
 }
 
 .item-page:hover {
-  background-color: rgb(228, 35, 67) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
+.ui.red.button {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
 .right.menu.mobile {
   display: none !important;
 }

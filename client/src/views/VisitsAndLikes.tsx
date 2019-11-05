@@ -59,6 +59,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
     return (
       <div>
         <TopMenu current={this.state.current} />
+        <div className="topmenu-buffer"></div>
         <div className="visit-container">
           <Feed>
             {this.state.userInfoAll.map((user, index) => (

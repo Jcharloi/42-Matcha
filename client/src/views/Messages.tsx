@@ -272,6 +272,9 @@ class Messages extends React.Component<Props, MState> {
             )}
           </div>
         )}
+        {!this.props.littleMessages ? (
+          <div className="topmenu-buffer"></div>
+        ) : null}
         {!this.state.isLoading && this.state.displayHistory && (
           <HistoryMessages
             users={this.state.historyUsers}
