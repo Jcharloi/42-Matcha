@@ -243,7 +243,9 @@ class App extends React.Component<VerifiedUser, AppState> {
   render() {
     /*
     Partie front :
-    - Responsive
+    - Infinite scroll
+    - Responsive messages
+    - Notifications dans l'ordre
     - TOUS LES TESTS ET C'EST FINI !!!
     
     Partie back :

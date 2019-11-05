@@ -7,6 +7,8 @@
 .notification-container {
   display: flex;
   justify-content: center;
+  padding: 0 1.5rem;
+  margin-bottom: 4rem;
 }
 
 .notification-user-container-unseen {
@@ -20,7 +22,6 @@
 
 .notification-user-container {
   margin-top: 1.5rem !important;
-  /* z-index: 400; */
   padding: 0.5em !important;
 }
 

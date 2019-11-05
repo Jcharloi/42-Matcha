@@ -127,6 +127,7 @@
   height: 80rem;
   display: flex;
   justify-content: center;
+  margin-bottom: 5rem;
 }
 
 .container-message-little {
@@ -282,4 +283,40 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .container-user {
+    width: 100%;
+  }
+
+  .date-history {
+    margin-left: 1rem;
+  }
+
+  /* 
+  .container-message {
+    height: 100vh;
+  } */
+
+  .container-conv {
+    width: 90%;
+    border: unset;
+  }
+
+  .icon-message {
+    position: absolute;
+    left: 0;
+    top: 2.5rem;
+    padding: 1.5rem;
+  }
+
+  /*.show-messages {
+    max-height: 100vh;
+    min-height: 100vh;
+  }
+
+  .form-textarea-message {
+    margin-bottom: 5rem !important;
+  } */
 }

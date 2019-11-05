@@ -60,12 +60,17 @@
   .topmenu-buffer {
     height: 80px;
   }
+
+  .ui.modal > .actions {
+    padding: 1rem;
+  }
 }
 
 .container-sort {
   display: flex;
   justify-content: center;
   height: 50px;
+  margin-bottom: 2rem;
 }
 
 .divider-match {
@@ -76,6 +81,7 @@
 .button-modal {
   display: flex;
   justify-content: space-around;
+  padding-bottom: 1rem;
 }
 
 .container-all-match {
@@ -84,7 +90,7 @@
   flex-wrap: wrap;
   justify-content: center;
   height: 100%;
-  margin-bottom: 10urem;
+  margin-bottom: 5rem;
 }
 
 /*Inside the modal*/
@@ -158,6 +164,7 @@ h5 {
   height: 100%;
   width: 100%;
   left: 0;
+  padding: 1rem;
 }
 
 .container-little-messages {
