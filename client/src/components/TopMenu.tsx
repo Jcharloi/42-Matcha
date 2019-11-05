@@ -189,14 +189,30 @@ class TopMenu extends React.Component<Props, TState> {
           </div>
 
           <div className="right menu mobile">
-            {this.props.numberOf.numberNotifications > 0 && (
+            {this.props.numberOf.numberNotifications +
+              this.props.numberOf.numberMessages >
+              0 && (
               <Label className="mobile counter" color="red" size="mini">
-                {this.props.numberOf.numberNotifications}
+                {this.props.numberOf.numberNotifications +
+                  this.props.numberOf.numberMessages}
               </Label>
             )}
             {this.state.showCounter ? (
-              <Label className="mobile counter open" color="red" size="mini">
+              <Label
+                className="mobile counter notif open"
+                color="red"
+                size="mini"
+              >
                 {this.props.numberOf.numberNotifications}
+              </Label>
+            ) : null}
+            {this.state.showCounter ? (
+              <Label
+                className="mobile counter msg open"
+                color="red"
+                size="mini"
+              >
+                {this.props.numberOf.numberMessages}
               </Label>
             ) : null}
 

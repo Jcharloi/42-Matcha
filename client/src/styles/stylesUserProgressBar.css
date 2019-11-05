@@ -14,3 +14,13 @@
 .p-o {
   width: -webkit-fill-available;
 }
+
+@media screen and (max-width: 420px) {
+  .bar-progress {
+    display: flex;
+    justify-content: center;
+    height: 10%;
+    min-width: 300% !important;
+    max-width: 30rem !important;
+  }
+}

@@ -20,7 +20,7 @@
 }
 
 .preferences {
-  width: 45rem;
+  width: 100%;
   display: flex;
   justify-content: space-evenly;
   height: 2rem;

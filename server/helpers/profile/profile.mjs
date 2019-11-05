@@ -14,6 +14,7 @@ import { getUserCoordinatesByCity } from "../../common.mjs";
 import { getUserId } from "../../common.mjs";
 
 const changePersonalInfos = async (req, res) => {
+  var format = /[!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?]|[0-9]/;
   if (
     req.body.firstName &&
     req.body.lastName &&
@@ -23,6 +24,14 @@ const changePersonalInfos = async (req, res) => {
     (await checkMailAlreadyExisted(req.body.mail, req.body.userName))
   ) {
     let { lat, lon } = await getUserCoordinatesByCity(req.body.city);
+    if (req.body.city.match(format) || req.body.city.length > 45) {
+      res.send({
+        validated: false,
+        message:
+          "Your city isn't valid because it contains special character, or is longer than 45 characters"
+      });
+      return;
+    }
     if (!lat || !lon) {
       res.send({
         validated: false,
