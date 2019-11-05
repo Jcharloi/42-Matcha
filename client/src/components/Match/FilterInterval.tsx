@@ -63,7 +63,7 @@ class FilterInterval extends React.Component<Props, State> {
       tags: []
     };
   }
-  timer!: any;
+  timer!: NodeJS.Timeout;
 
   componentDidMount = () => {
     Axios.put("http://localhost:5000/profile/get-all-tags", {
@@ -160,7 +160,6 @@ class FilterInterval extends React.Component<Props, State> {
   componentWillUnmount = () => {
     if (this.timer) {
       clearTimeout(this.timer);
-      this.timer = null;
     }
   };
 

@@ -162,6 +162,7 @@ class Messages extends React.Component<Props, MState> {
                 if (!receiverRead && sentPosition !== this.props.user.user_id) {
                   unReadMessages.push(messageId);
                 }
+                return 1;
               }
             );
             if (unReadMessages.length > 0) {
@@ -240,7 +241,7 @@ class Messages extends React.Component<Props, MState> {
             })
           );
         }
-        return;
+        return 1;
       });
     }
   };

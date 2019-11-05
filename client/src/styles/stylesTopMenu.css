@@ -52,7 +52,6 @@
   .right.menu.mobile {
     margin-top: 5px !important;
     display: block !important;
-    /* border: 2px solid red; */
   }
 
   div[role="listbox"] > div[role="alert"] {
@@ -68,7 +67,6 @@
     overflow: hidden !important;
     top: 17px;
     right: 15px !important;
-    /* border: 0px solid blue !important; */
   }
   .mobile.counter.open {
     position: absolute;
@@ -77,6 +75,5 @@
     top: 280px;
     right: 150px !important;
     z-index: 40;
-    /* border: 0px solid blue !important; */
   }
 }

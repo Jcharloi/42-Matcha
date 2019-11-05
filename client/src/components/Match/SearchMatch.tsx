@@ -48,6 +48,7 @@ class SearchMatch extends React.Component<User, HState> {
       copyUserMatch: []
     };
   }
+  timer!: NodeJS.Timeout;
 
   sortByIndex = (indexBy: string) => {
     if (this.state.userMatchInfo.length <= 0) {
@@ -141,6 +142,21 @@ class SearchMatch extends React.Component<User, HState> {
       preference: "Man",
       tagsName: []
     });
+  };
+
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.messageHome && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messageHome) {
+      this.timer = setTimeout(() => this.setState({ messageHome: "" }), 4000);
+    }
   };
 
   public render() {

@@ -93,9 +93,11 @@ class Preferences extends React.Component<Props, PState> {
                   value={this.state.gender ? this.state.gender : ""}
                   onChange={({ target: { value } }) => this.setGender(value)}
                 >
-                  <option value="" disabled>
-                    Gender
-                  </option>
+                  {!this.state.gender && (
+                    <option value="" disabled>
+                      Gender
+                    </option>
+                  )}
                   <option value="Man">Man</option>
                   <option value="Woman">Woman</option>
                   <option value="Other">Other</option>

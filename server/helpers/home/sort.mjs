@@ -40,7 +40,7 @@ const sortByIndex = (req, res) => {
   } else {
     res.send({
       validated: false,
-      message: "Wrong index"
+      message: "Wrong index or maybe there are no users available"
     });
   }
 };

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
 import { deleteUser } from "../App";
+import { debounce } from "throttle-debounce";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/Match/UserCard";
@@ -46,6 +47,7 @@ class Home extends React.Component<User, HState> {
       copyUserMatch: []
     };
   }
+  timer!: NodeJS.Timeout;
 
   componentDidMount = () => {
     Axios.put("http://localhost:5000/home/get-users-by-preference/", {
@@ -148,9 +150,34 @@ class Home extends React.Component<User, HState> {
     this.setState({ isLoading: true });
   };
 
+  componentWillUnmount = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.messageHome && this.timer) {
+      clearTimeout(this.timer);
+    }
+    if (this.state.messageHome) {
+      this.timer = setTimeout(() => this.setState({ messageHome: "" }), 4000);
+    }
+  };
+
+  infiniteScroll = () =>
+    debounce(100, () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        //
+      }
+    });
+
   public render() {
     return (
-      <div>
+      <div onScroll={this.infiniteScroll()}>
         <TopMenu current="home" />
         <div className="container-sort">
           <SortIndex sortByIndex={this.sortByIndex} />

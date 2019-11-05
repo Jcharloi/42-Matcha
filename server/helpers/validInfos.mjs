@@ -12,11 +12,7 @@ const compareTag = (tagsList, potentialUserTag) => {
 };
 
 const validFile = (name, size, data, type) => {
-  let ab = new ArrayBuffer(data.length);
-  let view = new Uint8Array(ab);
-  for (var i = 0; i < data.length; ++i) {
-    view[i] = data[i];
-  }
+  let ab = new Uint8Array(data);
   const fileRes = fileType(ab);
   if (!name || !fileRes) {
     return false;
