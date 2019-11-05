@@ -58,38 +58,36 @@ const checkMailAlreadyExisted = async (mail, userName) => {
 };
 
 const validCurrentPassword = async (userName, currentPassword) => {
-  let answer;
   const text = `SELECT password_hash FROM users WHERE user_name = $1`;
   const values = [userName];
-  await client
+  return await client
     .query(text, values)
     .then(async ({ rowCount, rows }) => {
       if (rowCount === 1) {
-        await bcrypt
+        return await bcrypt
           .compare(currentPassword, rows[0].password_hash)
           .then(response => {
-            answer = response;
+            return response;
           })
           .catch(e => {
             console.error(e.stack);
-            answer = false;
+            return false;
           });
       } else {
-        answer = false;
+        return false;
       }
     })
     .catch(e => {
       console.error(e.stack);
-      anwer = false;
+      return false;
     });
-  return answer;
 };
 
 const validPassword = password => {
   let regex = new RegExp(
     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
   );
-  if (!password || !regex.test(password)) {
+  if (!password || !regex.test(password) || password.length > 20) {
     return false;
   }
   return true;

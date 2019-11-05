@@ -5,7 +5,9 @@
 .title-container-tag {
   margin-top: 4rem;
   width: 110%;
+  margin-left: 11rem;
 }
+
 .title {
   font-size: 2rem !important;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -14,6 +16,7 @@
 .tag-container {
   margin-top: 3rem;
   width: 38rem;
+  margin-left: 3rem;
 }
 
 .tag-value {

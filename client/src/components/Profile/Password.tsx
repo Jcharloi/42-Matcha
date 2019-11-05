@@ -2,7 +2,7 @@ import * as React from "react";
 import Axios from "axios";
 import { deleteUser } from "../../App";
 
-import { Button, Header, Icon } from "semantic-ui-react";
+import { Button, Header, Icon, Input } from "semantic-ui-react";
 import "../../styles/stylesUserPassword.css";
 
 interface State {
@@ -56,23 +56,27 @@ class Password extends React.Component<{}, State> {
         <div className="container-password">
           <div className="block">
             <Icon name="user secret" size="large" color="black" />
-            <input
+            <Input
               className="input-value"
               type="password"
               placeholder="Current password"
               onChange={({ target: { value } }) =>
                 this.setcurrentPassword(value)
               }
+              maxLength="20"
             />
           </div>
           <div className="ui divider" />
           <div className="block">
             <Icon name="user secret" size="large" color="black" />
-            <input
+            <Input
               className="input-value"
               type="password"
               placeholder="New password"
-              onChange={({ target: { value } }) => this.setNewPassword(value)}
+              onChange={({ target: { value } }: any) =>
+                this.setNewPassword(value)
+              }
+              maxLength="20"
             />
           </div>
           <Button
