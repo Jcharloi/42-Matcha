@@ -275,7 +275,6 @@ class TopMenu extends React.Component<Props, TState> {
             </div>
           </div>
         </div>
-        <div className="topmenu-buffer"></div>
       </div>
     );
   }

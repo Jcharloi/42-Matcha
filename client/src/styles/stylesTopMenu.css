@@ -1,6 +1,6 @@
 .ui.secondary.big.menu {
   position: fixed;
-  background-image: linear-gradient(to top right, rgb(255, 42, 149), #fa5751e8);
+  background-image: linear-gradient(to top right, #2a49d1, #5900ffda);
   width: 101%;
   z-index: 100;
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);

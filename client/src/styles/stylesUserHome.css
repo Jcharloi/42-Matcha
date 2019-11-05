@@ -55,6 +55,12 @@
 .topmenu-buffer {
   height: 100px;
 }
+@media only screen and (max-width: 1050px) {
+  .topmenu-buffer {
+    height: 80px;
+  }
+}
+
 .container-sort {
   display: flex;
   justify-content: center;
