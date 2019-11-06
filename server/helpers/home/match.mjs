@@ -15,6 +15,8 @@ import {
   filterByIncompletedUser
 } from "../../common.mjs";
 
+let userMatchInfo = [];
+
 const compareTag = (myTags, tagUser) => {
   return (
     myTags.findIndex(myTag => {
@@ -65,7 +67,7 @@ const getUsersByPreference = async (req, res) => {
     await client
       .query(text)
       .then(async ({ rowCount, rows }) => {
-        let userMatchInfo = [];
+        if (userMatchInfo.length > 0) userMatchInfo = [];
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
             scoreDistance: 0,
@@ -102,10 +104,12 @@ const getUsersByPreference = async (req, res) => {
           delete user["longitude"];
           delete user["latitude"];
         });
-        res.send({ validated: true, userMatchInfo });
+        res.send({
+          validated: true
+        });
       })
       .catch(e => {
-        console.error(e);
+        console.error(e.stack);
         res.send({
           validated: false,
           message: "We got a problem with our database, please try again"
@@ -138,4 +142,4 @@ const getMatchByOrientation = ({ gender, preference }) => {
   return text;
 };
 
-export { getUsersByPreference };
+export { getUsersByPreference, userMatchInfo };

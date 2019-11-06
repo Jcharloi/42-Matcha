@@ -62,6 +62,7 @@ import {
   sendNewMessage
 } from "./helpers/message/message.mjs";
 import { deleteUser } from "./helpers/admin/deleteUser.mjs";
+import { loadUsersRoute } from "./helpers/home/loadUsers.mjs";
 
 router.all("/admin/*", tokenMiddleware);
 router.all("/profile/*", tokenMiddleware);
@@ -101,6 +102,7 @@ router.post("/profile/visit", visitedUser);
 router.post("/profile/sanctioning-user", sanctioningUser);
 router.put("/profile/change-password", changePassword);
 router.put("/home/get-users-by-preference", getUsersByPreference);
+router.put("/home/load-users-match", loadUsersRoute);
 router.put("/home/sort-by-index", sortByIndex);
 router.put("/home/filter-by-interval", filterByInterval);
 router.put("/search/get-users-by-search", getUsersBySearch);

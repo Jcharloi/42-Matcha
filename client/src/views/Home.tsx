@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { State } from "../redux/types/types";
 import { User } from "../models/models";
 import { deleteUser } from "../App";
-import { debounce } from "throttle-debounce";
+import InfiniteScroll from "react-infinite-scroller";
 
 import TopMenu from "../components/TopMenu";
 import UserCard from "../components/Match/UserCard";
@@ -24,6 +24,9 @@ interface HState {
   endPop: number;
   tagsName: Array<string>;
   isLoading: boolean;
+  isInterval: boolean;
+  offset: number;
+  hasMore: boolean;
   clearList: boolean;
   userMatchInfo: Array<User>;
   copyUserMatch: Array<User>;
@@ -42,6 +45,9 @@ class Home extends React.Component<User, HState> {
       endPop: 100,
       tagsName: [],
       isLoading: true,
+      isInterval: false,
+      offset: 0,
+      hasMore: true,
       clearList: false,
       userMatchInfo: [],
       copyUserMatch: []
@@ -56,10 +62,7 @@ class Home extends React.Component<User, HState> {
       gender: this.props.gender,
       preference: this.props.orientation
     })
-      .then(({ data: { validated, message, userMatchInfo } }) => {
-        if (validated) {
-          this.setState({ userMatchInfo, copyUserMatch: userMatchInfo });
-        }
+      .then(({ data: { message } }) => {
         this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
@@ -97,7 +100,7 @@ class Home extends React.Component<User, HState> {
     endPop: number,
     tagsName: Array<string>
   ) => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, isInterval: true });
     Axios.put("http://localhost:5000/home/filter-by-interval/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -136,6 +139,7 @@ class Home extends React.Component<User, HState> {
   clearMatch = () => {
     this.setState({
       userMatchInfo: this.state.copyUserMatch,
+      isInterval: false,
       startAge: 18,
       endAge: 100,
       startLoc: 0,
@@ -165,19 +169,36 @@ class Home extends React.Component<User, HState> {
     }
   };
 
-  infiniteScroll = () =>
-    debounce(100, () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
-      ) {
-        //
-      }
-    });
+  loadMatchedUsers = async () => {
+    if (!this.state.isLoading && !this.state.isInterval) {
+      await Axios.put("http://localhost:5000/home/load-users-match", {
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name"),
+        offset: this.state.offset
+      }).then(({ data: { validToken, newUsersMatchInfo } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          this.state.userMatchInfo.push(...newUsersMatchInfo);
+          this.setState({
+            copyUserMatch: this.state.userMatchInfo,
+            userMatchInfo: this.state.userMatchInfo,
+            hasMore: newUsersMatchInfo.length === 10,
+            offset: this.state.offset + 10,
+            isLoading: false
+          });
+        }
+      });
+    }
+  };
 
   public render() {
     return (
-      <div onScroll={this.infiniteScroll()}>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={this.loadMatchedUsers}
+        hasMore={this.state.hasMore}
+      >
         <TopMenu current="home" />
         <div className="topmenu-buffer"></div>
         <div className="container-sort">
@@ -215,7 +236,7 @@ class Home extends React.Component<User, HState> {
             <p>{this.state.messageHome}</p>
           </div>
         )}
-      </div>
+      </InfiniteScroll>
     );
   }
 }

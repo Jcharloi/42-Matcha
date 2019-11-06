@@ -63,7 +63,7 @@ class VisitsAndLikes extends React.Component<{}, VState> {
         <div className="visit-container">
           <Feed>
             {this.state.userInfoAll.map((user, index) => (
-              <Feed.Event key={user.user_name} className="user-container">
+              <Feed.Event key={user.user_id} className="user-container">
                 <Image
                   className="avatar-visit"
                   avatar
