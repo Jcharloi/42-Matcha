@@ -193,6 +193,7 @@ class Home extends React.Component<User, HState> {
   };
 
   public render() {
+    console.log(this.state.userMatchInfo);
     return (
       <InfiniteScroll
         pageStart={0}

@@ -68,7 +68,7 @@ const getNotification = async (req, res) => {
   if (!user_id) {
     res.send({ validated: false });
   } else {
-    let text = `SELECT sender_id, notification.date, notif_type, seen, path from notification JOIN profile_picture ON sender_id = user_id WHERE receiver_id = $1 AND main = true ORDER BY seen ASC`;
+    let text = `SELECT sender_id, notification.date, notif_type, seen, path from notification JOIN profile_picture ON sender_id = user_id WHERE receiver_id = $1 AND main = true ORDER BY seen ASC, date DESC`;
     let values = [user_id];
     let notificationArray = [];
     await client
