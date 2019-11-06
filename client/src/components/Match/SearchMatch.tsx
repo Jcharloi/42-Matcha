@@ -90,40 +90,47 @@ class SearchMatch extends React.Component<User, HState> {
     tagsName: Array<string>,
     preference: string
   ) => {
-    Axios.put("http://localhost:5000/search/get-users-by-search/", {
-      userName: localStorage.getItem("user_name"),
-      token: localStorage.getItem("token"),
-      preference,
-      startAge: startAge.toString(),
-      endAge: endAge.toString(),
-      startLoc: startLoc.toString(),
-      endLoc: endLoc.toString(),
-      startPop: startPop.toString(),
-      endPop: endPop.toString(),
-      tagsName
-    })
-      .then(({ data: { validToken, validated, message, userMatchInfo } }) => {
-        if (validToken === false) {
-          deleteUser();
-        } else {
-          if (validated) {
-            this.setState({ userMatchInfo });
-          }
-          this.setState({
-            messageHome: message,
-            isLoading: false,
-            startAge,
-            endAge,
-            startLoc,
-            endLoc,
-            startPop,
-            endPop,
-            preference,
-            tagsName
-          });
-        }
+    if (preference === "Gender") {
+      this.setState({
+        isLoading: false,
+        messageHome: "You need to provide a gender"
+      });
+    } else {
+      Axios.put("http://localhost:5000/search/get-users-by-search/", {
+        userName: localStorage.getItem("user_name"),
+        token: localStorage.getItem("token"),
+        preference,
+        startAge: startAge.toString(),
+        endAge: endAge.toString(),
+        startLoc: startLoc.toString(),
+        endLoc: endLoc.toString(),
+        startPop: startPop.toString(),
+        endPop: endPop.toString(),
+        tagsName
       })
-      .catch(err => console.error(err));
+        .then(({ data: { validToken, validated, message, userMatchInfo } }) => {
+          if (validToken === false) {
+            deleteUser();
+          } else {
+            if (validated) {
+              this.setState({ userMatchInfo });
+            }
+            this.setState({
+              messageHome: message,
+              isLoading: false,
+              startAge,
+              endAge,
+              startLoc,
+              endLoc,
+              startPop,
+              endPop,
+              preference,
+              tagsName
+            });
+          }
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   setLoading = () => {

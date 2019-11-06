@@ -2,7 +2,6 @@
   width: 110%;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   position: relative;
-  left: 30px;
 }
 
 .media-container-preferences {
@@ -39,7 +38,6 @@ select {
 
 .form-textarea {
   width: 100%;
-  left: 30px;
 }
 
 .bio {
@@ -68,12 +66,20 @@ select {
     padding-top: 10%;
     margin: unset !important;
     width: unset !important;
-    left: 0px;
     font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   }
 
   .mcp-o {
-    margin: 1rem 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+    width: 100%;
+  }
+
+  .bio-other {
+    width: 400px;
+    padding: 1.2rem;
   }
 
   .container-preferences {
@@ -81,16 +87,29 @@ select {
     flex-direction: column;
     align-items: center;
   }
+
   .media-container-preferences {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+
   .form-textarea {
     width: 400px;
   }
+
   .button-edit-preferences {
     width: 220px;
     margin: 2rem 0 0 -30px !important;
+  }
+
+  .preferences {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container-div-preferences {
+    margin-bottom: 1rem;
   }
 }
