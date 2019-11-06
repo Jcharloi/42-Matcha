@@ -39,9 +39,13 @@ class Profile extends React.Component<Props> {
   };
 
   public render() {
+    let style = {
+      height: "70px"
+    };
     return (
       <div>
         <TopMenu current={this.props.isOther ? "" : "profile"} />
+        <div style={style}></div>
         <img
           className="profile-background"
           src={
