@@ -3,6 +3,8 @@ import Axios from "axios";
 import { State } from "../../redux/types/types";
 import { User } from "../../models/models";
 import { deleteUser } from "../../App";
+import { connect } from "react-redux";
+import InfiniteScroll from "react-infinite-scroller";
 
 import TopMenu from "../TopMenu";
 import UserCard from "./UserCard";
@@ -11,7 +13,6 @@ import FilterInterval from "./FilterInterval";
 import ModalFilter from "./ModalFilter";
 
 import "../../styles/stylesUserHome.css";
-import { connect } from "react-redux";
 import { Divider } from "semantic-ui-react";
 
 interface HState {
@@ -21,9 +22,12 @@ interface HState {
   endLoc: number;
   startPop: number;
   endPop: number;
+  previousPreference: string;
   preference: string;
   tagsName: Array<string>;
   isLoading: boolean;
+  offset: number;
+  hasMore: boolean;
   clearList: boolean;
   userMatchInfo: Array<User>;
   copyUserMatch: Array<User>;
@@ -40,9 +44,12 @@ class SearchMatch extends React.Component<User, HState> {
       endLoc: 1000,
       startPop: 0,
       endPop: 100,
+      previousPreference: "Gender",
       preference: "Gender",
       tagsName: [],
-      isLoading: false,
+      isLoading: true,
+      offset: 0,
+      hasMore: true,
       clearList: false,
       userMatchInfo: [],
       copyUserMatch: []
@@ -108,14 +115,21 @@ class SearchMatch extends React.Component<User, HState> {
         endPop: endPop.toString(),
         tagsName
       })
-        .then(({ data: { validToken, validated, message, userMatchInfo } }) => {
+        .then(({ data: { validToken, message } }) => {
           if (validToken === false) {
             deleteUser();
           } else {
-            if (validated) {
-              this.setState({ userMatchInfo });
-            }
             this.setState({
+              userMatchInfo:
+                preference !== this.state.previousPreference
+                  ? []
+                  : this.state.userMatchInfo,
+              offset:
+                preference !== this.state.previousPreference
+                  ? 0
+                  : this.state.offset,
+              hasMore:
+                preference !== this.state.previousPreference ? true : false,
               messageHome: message,
               isLoading: false,
               startAge,
@@ -125,7 +139,8 @@ class SearchMatch extends React.Component<User, HState> {
               startPop,
               endPop,
               preference,
-              tagsName
+              tagsName,
+              previousPreference: preference
             });
           }
         })
@@ -166,9 +181,36 @@ class SearchMatch extends React.Component<User, HState> {
     }
   };
 
+  loadMatchedUsers = () => {
+    if (!this.state.isLoading) {
+      Axios.put("http://localhost:5000/search/load-users-search", {
+        token: localStorage.getItem("token"),
+        userName: localStorage.getItem("user_name"),
+        offset: this.state.offset
+      }).then(({ data: { validToken, newUsersMatchInfo } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          this.state.userMatchInfo.push(...newUsersMatchInfo);
+          this.setState({
+            copyUserMatch: this.state.userMatchInfo,
+            userMatchInfo: this.state.userMatchInfo,
+            hasMore: newUsersMatchInfo.length === 10,
+            offset: this.state.offset + 10,
+            isLoading: false
+          });
+        }
+      });
+    }
+  };
+
   public render() {
     return (
-      <div>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={this.loadMatchedUsers}
+        hasMore={this.state.hasMore}
+      >
         <TopMenu current="search" />
         <div className="topmenu-buffer"></div>
         <div className="container-sort">
@@ -206,7 +248,7 @@ class SearchMatch extends React.Component<User, HState> {
             <p>{this.state.messageHome}</p>
           </div>
         )}
-      </div>
+      </InfiniteScroll>
     );
   }
 }

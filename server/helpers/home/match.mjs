@@ -17,6 +17,14 @@ import {
 
 let userMatchInfo = [];
 
+const loadUsersMatch = (req, res) => {
+  const newOffset = parseInt(req.body.offset);
+  const newUsers = userMatchInfo;
+  res.send({
+    newUsersMatchInfo: newUsers.slice(newOffset, newOffset + 10)
+  });
+};
+
 const compareTag = (myTags, tagUser) => {
   return (
     myTags.findIndex(myTag => {
@@ -142,4 +150,4 @@ const getMatchByOrientation = ({ gender, preference }) => {
   return text;
 };
 
-export { getUsersByPreference, userMatchInfo };
+export { getUsersByPreference, loadUsersMatch };

@@ -169,9 +169,9 @@ class Home extends React.Component<User, HState> {
     }
   };
 
-  loadMatchedUsers = async () => {
+  loadMatchedUsers = () => {
     if (!this.state.isLoading && !this.state.isInterval) {
-      await Axios.put("http://localhost:5000/home/load-users-match", {
+      Axios.put("http://localhost:5000/home/load-users-match", {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name"),
         offset: this.state.offset
@@ -193,7 +193,6 @@ class Home extends React.Component<User, HState> {
   };
 
   public render() {
-    console.log(this.state.userMatchInfo);
     return (
       <InfiniteScroll
         pageStart={0}

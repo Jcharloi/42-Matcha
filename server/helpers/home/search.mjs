@@ -15,6 +15,16 @@ import {
 } from "../../common.mjs";
 import { calculateCommonTags } from "./match.mjs";
 
+let userMatchInfo = [];
+
+const loadUsersSearch = (req, res) => {
+  const newOffset = parseInt(req.body.offset);
+  const newUsers = userMatchInfo;
+  res.send({
+    newUsersMatchInfo: newUsers.slice(newOffset, newOffset + 10)
+  });
+};
+
 const getUsersBySearch = async (req, res) => {
   const startAge = parseInt(req.body.startAge);
   const endAge = parseInt(req.body.endAge);
@@ -42,7 +52,7 @@ const getUsersBySearch = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rows, rowCount }) => {
-        let userMatchInfo = [];
+        if (userMatchInfo.length > 0) userMatchInfo = [];
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
             scoreDistance: 0,
@@ -100,7 +110,7 @@ const getUsersBySearch = async (req, res) => {
           delete user["longitude"];
           delete user["latitude"];
         });
-        res.send({ validated: true, userMatchInfo });
+        res.send({ validated: true });
       })
       .catch(e => {
         console.error(e.stack);
@@ -120,4 +130,4 @@ const selectGender = gender => {
   else return ` WHERE`;
 };
 
-export { getUsersBySearch };
+export { getUsersBySearch, loadUsersSearch };
