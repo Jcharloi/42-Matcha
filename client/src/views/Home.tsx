@@ -176,6 +176,7 @@ class Home extends React.Component<User, HState> {
     });
 
   public render() {
+    console.log(this.state.userMatchInfo);
     return (
       <div onScroll={this.infiniteScroll()}>
         <TopMenu current="home" />
