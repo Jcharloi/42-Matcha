@@ -70,8 +70,10 @@ class Personal extends React.Component<Props, PState> {
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
 
   async componentDidMount() {
+    this._isMounted = true;
     if (!this.state.city) {
       var getPosition = async (options = {}) => {
         return new Promise((resolve, reject) => {
@@ -80,13 +82,13 @@ class Personal extends React.Component<Props, PState> {
       };
       await getPosition()
         .then(async ({ coords: { latitude, longitude } }: any) => {
-          this.setState({ latitude, longitude });
+          this._isMounted && this.setState({ latitude, longitude });
         })
         .catch(async () => {
           await Axios("http://api.ipify.org?format=jsonp&callback=?")
             .then(async data => {
               const dataSplit = data.data.split('"');
-              this.setState({ ip: dataSplit[3] });
+              this._isMounted && this.setState({ ip: dataSplit[3] });
             })
             .catch(err => {
               console.error(err.message);
@@ -102,9 +104,10 @@ class Personal extends React.Component<Props, PState> {
       })
         .then(({ data: { validated, userInfos } }) => {
           if (validated) {
-            this.setState({
-              city: userInfos.city
-            });
+            this._isMounted &&
+              this.setState({
+                city: userInfos.city
+              });
             const newData = {
               ...this.props.user,
               city: this.state.city
@@ -161,6 +164,7 @@ class Personal extends React.Component<Props, PState> {
 
   componentWillUnmount = () => {
     if (this.timer) clearTimeout(this.timer);
+    this._isMounted = false;
   };
 
   componentDidUpdate = (previousProps: Props) => {
@@ -425,7 +429,8 @@ class Personal extends React.Component<Props, PState> {
                           updateUserAuth({ isAuth: true, isCompleted })
                         );
                         if (this.timer) clearTimeout(this.timer);
-                        this.setState({ messagePersonal: message });
+                        this._isMounted &&
+                          this.setState({ messagePersonal: message });
                       }
                     })
                     .catch(error => console.error(error));

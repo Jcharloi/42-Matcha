@@ -37,6 +37,11 @@ class Pictures extends React.Component<Props, PicturesState> {
     };
   }
   timer!: any;
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   uploadPicture = ({ target }: any) => {
     if (target.files && target.files.length > 0) {
@@ -57,9 +62,7 @@ class Pictures extends React.Component<Props, PicturesState> {
         );
         Axios.post("http://localhost:5000/profile/upload-pictures/", data)
           .then(
-            async ({
-              data: { validToken, validated, fileName, date, message }
-            }) => {
+            ({ data: { validToken, validated, fileName, date, message } }) => {
               if (validToken === false) {
                 deleteUser();
               } else {
@@ -98,14 +101,15 @@ class Pictures extends React.Component<Props, PicturesState> {
                     clearTimeout(this.timer);
                     this.timer = null;
                   }
-                  this.setState({
-                    pictures: newData.pictures,
-                    picturesNb: isUnknownPicture
-                      ? this.state.picturesNb
-                      : this.state.picturesNb + 1
-                  });
+                  this._isMounted &&
+                    this.setState({
+                      pictures: newData.pictures,
+                      picturesNb: isUnknownPicture
+                        ? this.state.picturesNb
+                        : this.state.picturesNb + 1
+                    });
                 }
-                this.setState({ messagePictures: message });
+                this._isMounted && this.setState({ messagePictures: message });
               }
             }
           )
@@ -144,15 +148,16 @@ class Pictures extends React.Component<Props, PicturesState> {
               pictures: newPictures
             };
             store.dispatch(insertUserProfile(newData));
-            this.setState({ pictures: newData.pictures });
+            this._isMounted && this.setState({ pictures: newData.pictures });
           }
           if (this.timer) {
             clearTimeout(this.timer);
             this.timer = null;
           }
-          this.setState({
-            messagePictures: message
-          });
+          this._isMounted &&
+            this.setState({
+              messagePictures: message
+            });
         }
       })
       .catch(error => console.error(error));
@@ -169,7 +174,7 @@ class Pictures extends React.Component<Props, PicturesState> {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name")
       })
-        .then(async ({ data: { validToken, validated, message } }) => {
+        .then(({ data: { validToken, validated, message } }) => {
           if (validToken === false) {
             deleteUser();
           } else {
@@ -183,18 +188,19 @@ class Pictures extends React.Component<Props, PicturesState> {
                 ...this.props.user,
                 pictures: newPictures
               };
-              this.setState({
-                pictures: newData.pictures,
-                pictureIndex: 0,
-                picturesNb: this.state.picturesNb - 1
-              });
+              this._isMounted &&
+                this.setState({
+                  pictures: newData.pictures,
+                  pictureIndex: 0,
+                  picturesNb: this.state.picturesNb - 1
+                });
               store.dispatch(insertUserProfile(newData));
             }
             if (this.timer) {
               clearTimeout(this.timer);
               this.timer = null;
             }
-            this.setState({ messagePictures: message });
+            this._isMounted && this.setState({ messagePictures: message });
           }
         })
         .catch(error => console.error(error));
@@ -244,6 +250,7 @@ class Pictures extends React.Component<Props, PicturesState> {
   componentWillUnmount = () => {
     clearTimeout(this.timer);
     this.timer = null;
+    this._isMounted = false;
   };
 
   validFile = (file: File): { valid: boolean; message?: string } => {

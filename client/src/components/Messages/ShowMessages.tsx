@@ -53,8 +53,10 @@ class ShowMessages extends React.Component<Props, State> {
       newMessage: ""
     };
   }
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
     this.receiveNewMessages();
     this.scrollToBottom();
   };
@@ -65,6 +67,7 @@ class ShowMessages extends React.Component<Props, State> {
 
   componentWillUnmount = () => {
     socket.removeListener("New message", this.initNewMessage);
+    this._isMounted = false;
   };
 
   scrollToBottom() {
@@ -143,7 +146,7 @@ class ShowMessages extends React.Component<Props, State> {
             deleteUser();
           } else {
             if (validated) {
-              this.setState({ newMessage: "" });
+              this._isMounted && this.setState({ newMessage: "" });
             }
           }
         })

@@ -36,9 +36,11 @@ class Tags extends React.Component<Props, TState> {
     };
   }
   timer!: any;
+  _isMounted = false;
 
-  async componentDidMount() {
-    await Axios.post(`http://localhost:5000/profile/get-tags`, {
+  componentDidMount() {
+    this._isMounted = true;
+    Axios.post(`http://localhost:5000/profile/get-tags`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
@@ -47,9 +49,10 @@ class Tags extends React.Component<Props, TState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({
-              tagsList: userInfos.tagsList
-            });
+            this._isMounted &&
+              this.setState({
+                tagsList: userInfos.tagsList
+              });
           }
         }
       })
@@ -77,25 +80,27 @@ class Tags extends React.Component<Props, TState> {
                   id: tagId,
                   name
                 });
-                this.setState({
-                  tagsList: this.state.tagsList
-                });
+                this._isMounted &&
+                  this.setState({
+                    tagsList: this.state.tagsList
+                  });
               }
               const newData = {
                 ...this.props.user,
                 tags: this.state.tagsUser
               };
               store.dispatch(insertUserProfile(newData));
-              this.setState({
-                tagsList: this.state.tagsList,
-                tagsUser: newData.tags
-              });
+              this._isMounted &&
+                this.setState({
+                  tagsList: this.state.tagsList,
+                  tagsUser: newData.tags
+                });
             }
             if (this.timer) {
               clearTimeout(this.timer);
               this.timer = null;
             }
-            this.setState({ messageTags: message });
+            this._isMounted && this.setState({ messageTags: message });
           }
         })
         .catch(error => console.error(error));
@@ -139,10 +144,11 @@ class Tags extends React.Component<Props, TState> {
             store.dispatch(insertUserProfile(newData));
             const tags = this.state.tagsList;
             tags.splice(index, 1);
-            this.setState({
-              tagsList: tags,
-              tagsUser: newData.tags
-            });
+            this._isMounted &&
+              this.setState({
+                tagsList: tags,
+                tagsUser: newData.tags
+              });
             let isCompleted = isProfileCompleted(
               this.props.user.city,
               this.props.user.gender,
@@ -161,9 +167,10 @@ class Tags extends React.Component<Props, TState> {
             clearTimeout(this.timer);
             this.timer = null;
           }
-          this.setState({
-            messageTags: message
-          });
+          this._isMounted &&
+            this.setState({
+              messageTags: message
+            });
         }
       })
       .catch(error => console.error(error));
@@ -210,15 +217,16 @@ class Tags extends React.Component<Props, TState> {
                   isCompleted
                 })
               );
-              this.setState({ tagsUser: newData.tags });
+              this._isMounted && this.setState({ tagsUser: newData.tags });
             }
             if (this.timer) {
               clearTimeout(this.timer);
               this.timer = null;
             }
-            this.setState({
-              messageTags: message
-            });
+            this._isMounted &&
+              this.setState({
+                messageTags: message
+              });
           }
         })
         .catch(error => console.error(error));
@@ -249,6 +257,7 @@ class Tags extends React.Component<Props, TState> {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this._isMounted = false;
   };
 
   componentDidUpdate = (previousProps: Props) => {

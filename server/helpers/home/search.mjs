@@ -21,11 +21,12 @@ const loadUsersSearch = (req, res) => {
   const newOffset = parseInt(req.body.offset);
   const newUsers = userMatchInfo;
   res.send({
-    newUsersMatchInfo: newUsers.slice(newOffset, newOffset + 10)
+    newUsersMatchInfo: newUsers.slice(0, newOffset + 10)
   });
 };
 
 const getUsersBySearch = async (req, res) => {
+  userMatchInfo = [];
   const startAge = parseInt(req.body.startAge);
   const endAge = parseInt(req.body.endAge);
   const startLoc = parseInt(req.body.startLoc);
@@ -52,7 +53,6 @@ const getUsersBySearch = async (req, res) => {
     await client
       .query(text, values)
       .then(async ({ rows, rowCount }) => {
-        if (userMatchInfo.length > 0) userMatchInfo = [];
         for (let i = 0; i < rowCount; i++) {
           userMatchInfo.push({
             scoreDistance: 0,
@@ -110,7 +110,7 @@ const getUsersBySearch = async (req, res) => {
           delete user["longitude"];
           delete user["latitude"];
         });
-        res.send({ validated: true });
+        res.send({ validated: true, filterLength: userMatchInfo.length });
       })
       .catch(e => {
         console.error(e.stack);

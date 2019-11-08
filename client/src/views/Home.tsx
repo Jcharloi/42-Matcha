@@ -54,8 +54,11 @@ class Home extends React.Component<User, HState> {
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
+
     Axios.put("http://localhost:5000/home/get-users-by-preference/", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -63,7 +66,8 @@ class Home extends React.Component<User, HState> {
       preference: this.props.orientation
     })
       .then(({ data: { message } }) => {
-        this.setState({ messageHome: message, isLoading: false });
+        this._isMounted &&
+          this.setState({ messageHome: message, isLoading: false });
       })
       .catch(err => console.error(err));
   };
@@ -83,9 +87,10 @@ class Home extends React.Component<User, HState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ userMatchInfo });
+            this._isMounted && this.setState({ userMatchInfo });
           }
-          this.setState({ messageHome: message, isLoading: false });
+          this._isMounted &&
+            this.setState({ messageHome: message, isLoading: false });
         }
       })
       .catch(err => console.error(err));
@@ -118,19 +123,20 @@ class Home extends React.Component<User, HState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ userMatchInfo });
+            this._isMounted && this.setState({ userMatchInfo });
           }
-          this.setState({
-            messageHome: message,
-            isLoading: false,
-            startAge,
-            endAge,
-            startLoc,
-            endLoc,
-            startPop,
-            endPop,
-            tagsName
-          });
+          this._isMounted &&
+            this.setState({
+              messageHome: message,
+              isLoading: false,
+              startAge,
+              endAge,
+              startLoc,
+              endLoc,
+              startPop,
+              endPop,
+              tagsName
+            });
         }
       })
       .catch(err => console.error(err));
@@ -155,6 +161,8 @@ class Home extends React.Component<User, HState> {
   };
 
   componentWillUnmount = () => {
+    this._isMounted = false;
+
     if (this.timer) {
       clearTimeout(this.timer);
     }
@@ -180,13 +188,14 @@ class Home extends React.Component<User, HState> {
           deleteUser();
         } else {
           this.state.userMatchInfo.push(...newUsersMatchInfo);
-          this.setState({
-            copyUserMatch: this.state.userMatchInfo,
-            userMatchInfo: this.state.userMatchInfo,
-            hasMore: newUsersMatchInfo.length === 10,
-            offset: this.state.offset + 10,
-            isLoading: false
-          });
+          this._isMounted &&
+            this.setState({
+              copyUserMatch: this.state.userMatchInfo,
+              userMatchInfo: this.state.userMatchInfo,
+              hasMore: newUsersMatchInfo.length === 10,
+              offset: this.state.offset + 10,
+              isLoading: false
+            });
         }
       });
     }

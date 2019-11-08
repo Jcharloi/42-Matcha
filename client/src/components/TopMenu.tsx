@@ -16,6 +16,7 @@ import "../styles/stylesTopMenu.css";
 interface TState {
   showCounter: boolean;
 }
+
 interface Props {
   current?: string;
   user: User;

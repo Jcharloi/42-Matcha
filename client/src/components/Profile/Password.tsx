@@ -20,6 +20,11 @@ class Password extends React.Component<{}, State> {
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   setcurrentPassword = (currentPassword: string) => {
     this.setState({ currentPassword });
@@ -43,6 +48,7 @@ class Password extends React.Component<{}, State> {
 
   componentWillUnmount = () => {
     clearTimeout(this.timer);
+    this._isMounted = false;
   };
 
   public render() {
@@ -103,7 +109,8 @@ class Password extends React.Component<{}, State> {
                       deleteUser();
                     } else {
                       if (this.timer) clearTimeout(this.timer);
-                      this.setState({ messagePassword: message });
+                      this._isMounted &&
+                        this.setState({ messagePassword: message });
                     }
                   })
                   .catch(error => console.error(error));

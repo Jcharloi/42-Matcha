@@ -17,6 +17,15 @@ class RemoveAccount extends React.Component<{}, State> {
       messageRemove: ""
     };
   }
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+  };
 
   handleModalVisibility = (visible: boolean) => {
     this.setState({ visible });
@@ -34,7 +43,8 @@ class RemoveAccount extends React.Component<{}, State> {
         if (validated) {
           history.push("/");
         } else {
-          this.setState({ visible: false, messageRemove: message });
+          this._isMounted &&
+            this.setState({ visible: false, messageRemove: message });
         }
       }
     });

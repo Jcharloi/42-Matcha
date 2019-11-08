@@ -31,6 +31,11 @@ class Preferences extends React.Component<Props, PState> {
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   setGender = (gender: string) => {
     this.setState({ gender });
@@ -50,6 +55,7 @@ class Preferences extends React.Component<Props, PState> {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+    this._isMounted = false;
   };
 
   componentDidUpdate = (previousProps: Props) => {
@@ -181,7 +187,7 @@ class Preferences extends React.Component<Props, PState> {
                           updateUserAuth({ isAuth: true, isCompleted })
                         );
                         if (this.timer) clearTimeout(this.timer);
-                        this.setState({
+                        this._isMounted && this.setState({
                           messagePreference: message
                         });
                       }

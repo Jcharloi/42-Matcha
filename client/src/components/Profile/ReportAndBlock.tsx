@@ -32,6 +32,11 @@ class ReportAndBlock extends React.Component<Props, State> {
     };
   }
   timer!: any;
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   handleModalVisibility = (visible: boolean) => {
     this.setState({ visible });
@@ -49,7 +54,8 @@ class ReportAndBlock extends React.Component<Props, State> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ visible: false, messageReport: message });
+            this._isMounted &&
+              this.setState({ visible: false, messageReport: message });
             history.push("/home");
           }
         }
@@ -68,6 +74,7 @@ class ReportAndBlock extends React.Component<Props, State> {
   componentWillUnmount = () => {
     clearTimeout(this.timer);
     this.timer = null;
+    this._isMounted = false;
   };
 
   public render() {

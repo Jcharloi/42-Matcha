@@ -28,11 +28,11 @@ class ModalFilter extends React.Component<Props, State> {
     if (!this.props.isLoading) this.setState({ visible: false });
   };
 
-  clearEverything = () => {
+  clearEverything = async () => {
     this.setState({
       openedOnce: this.props.disableInfoText
     });
-    this.props.clearMatch();
+    await this.props.clearMatch();
     this.closeModal();
   };
 

@@ -38,8 +38,10 @@ class SignIn extends React.Component<Props, State> {
       validated: false
     };
   }
+  _isMounted = false;
 
-  async componentDidMount() {
+  componentDidMount() {
+    this._isMounted = true;
     if (window.location.search === "?register=true") {
       this.setState({
         validated: true,
@@ -86,10 +88,12 @@ class SignIn extends React.Component<Props, State> {
               );
               history.push("/profile");
             } else {
-              this.setState({ message, validated: false, loading: false });
+              this._isMounted &&
+                this.setState({ message, validated: false, loading: false });
             }
           } else {
-            this.setState({ message, validated: false, loading: false });
+            this._isMounted &&
+              this.setState({ message, validated: false, loading: false });
           }
         })
         .catch(error => console.error(error));
@@ -104,6 +108,10 @@ class SignIn extends React.Component<Props, State> {
 
   setPassword = (password: string) => {
     this.setState({ password });
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

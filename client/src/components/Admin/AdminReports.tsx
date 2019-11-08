@@ -27,8 +27,11 @@ class AdminReports extends React.Component<{}, AState> {
       redirect: ""
     };
   }
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
+
     Axios.put(`http://localhost:5000/admin/get-reports`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
@@ -38,7 +41,7 @@ class AdminReports extends React.Component<{}, AState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ reportArray });
+            this._isMounted && this.setState({ reportArray });
           }
         }
       })
@@ -82,12 +85,13 @@ class AdminReports extends React.Component<{}, AState> {
             })
               .then(() => {
                 if (targetUser !== "IAmAnAdmin")
-                  this.setState({
-                    reportArray: this.state.reportArray.filter(reports => {
-                      if (reports.reported_user !== targetUser) return true;
-                      return false;
-                    })
-                  });
+                  this._isMounted &&
+                    this.setState({
+                      reportArray: this.state.reportArray.filter(reports => {
+                        if (reports.reported_user !== targetUser) return true;
+                        return false;
+                      })
+                    });
               })
               .catch(err => console.error(err));
           }
@@ -102,6 +106,10 @@ class AdminReports extends React.Component<{}, AState> {
       return reported_user === targetUser ? report_nb++ : report_nb;
     });
     return report_nb;
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

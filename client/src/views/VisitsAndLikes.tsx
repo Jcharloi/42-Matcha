@@ -31,8 +31,10 @@ class VisitsAndLikes extends React.Component<{}, VState> {
           : ""
     };
   }
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
     Axios.post(`http://localhost:5000/profile/get-user-${this.state.current}`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token"),
@@ -43,11 +45,15 @@ class VisitsAndLikes extends React.Component<{}, VState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ userInfoAll, visitDate });
+            this._isMounted && this.setState({ userInfoAll, visitDate });
           }
         }
       })
       .catch(err => console.error(err));
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   selectProfile = (otherUser: User) => {

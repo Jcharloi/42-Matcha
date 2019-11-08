@@ -67,8 +67,10 @@ class Messages extends React.Component<Props, MState> {
       sender: { senderName: "", id: "", picture: "", lastConnection: "" }
     };
   }
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
     if (
       window.location.pathname &&
       window.location.pathname.search("/messages/") !== -1
@@ -93,11 +95,12 @@ class Messages extends React.Component<Props, MState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({
-              isLoading: false,
-              displayHistory: true,
-              historyUsers: usersMessage
-            });
+            this._isMounted &&
+              this.setState({
+                isLoading: false,
+                displayHistory: true,
+                historyUsers: usersMessage
+              });
             this.receiveAllMessages();
           }
         }
@@ -150,12 +153,13 @@ class Messages extends React.Component<Props, MState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({
-              isLoading: false,
-              displayHistory: false,
-              allMessages,
-              sender: user
-            });
+            this._isMounted &&
+              this.setState({
+                isLoading: false,
+                displayHistory: false,
+                allMessages,
+                sender: user
+              });
             let unReadMessages: Array<string> = [];
             this.state.allMessages.map(
               ({ messageId, sentPosition, receiverRead }) => {
@@ -248,6 +252,7 @@ class Messages extends React.Component<Props, MState> {
 
   componentWillUnmount = () => {
     socket.removeListener("New history", this.initNewHistory);
+    this._isMounted = false;
   };
 
   handleDisplayLittle = () => {

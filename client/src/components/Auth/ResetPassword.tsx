@@ -32,8 +32,10 @@ class ResetPassword extends React.Component<{}, State> {
       validated: false
     };
   }
+  _isMounted = false;
 
   componentDidMount() {
+    this._isMounted = true;
     const url = window.location.search;
     if (url && url === "?reset=false") {
       this.setState({
@@ -56,7 +58,7 @@ class ResetPassword extends React.Component<{}, State> {
         mail: this.state.mail
       })
         .then(({ data: { message, validated } }) => {
-          this.setState({ message, validated });
+          this._isMounted && this.setState({ message, validated });
         })
         .catch(error => console.error(error));
     } else {
@@ -74,7 +76,7 @@ class ResetPassword extends React.Component<{}, State> {
       };
       await Axios.put("http://localhost:5000/new-password", body)
         .then(({ data: { redirect, message } }) => {
-          this.setState({ message, validated: redirect });
+          this._isMounted && this.setState({ message, validated: redirect });
           if (redirect) {
             setTimeout(
               () => window.location.replace("http://localhost:3000/sign-in"),
@@ -95,6 +97,10 @@ class ResetPassword extends React.Component<{}, State> {
 
   setPassword = (password: string) => {
     this.setState({ password });
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

@@ -30,11 +30,9 @@ class Profile extends React.Component<Props> {
         token: localStorage.getItem("token"),
         userName: localStorage.getItem("user_name"),
         visitedUser: this.props.user.user_name
-      })
-        .then(() => {})
-        .catch(error => {
-          console.log("Error : ", error.message);
-        });
+      }).catch(error => {
+        console.log("Error : ", error.message);
+      });
     }
   };
 

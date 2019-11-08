@@ -64,15 +64,17 @@ class FilterInterval extends React.Component<Props, State> {
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
     Axios.put("http://localhost:5000/profile/get-all-tags", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
       .then(({ data: { validated, message, tags } }) => {
         if (validated) {
-          this.setState({ tags });
+          this._isMounted && this.setState({ tags });
         }
         this.setState({ messageTags: message });
       })
@@ -85,58 +87,82 @@ class FilterInterval extends React.Component<Props, State> {
     this.setState({
       preference: value
     });
-    this.props.byInterval(
-      this.state.startAge,
-      this.state.endAge,
-      this.state.startLoc,
-      this.state.endLoc,
-      this.state.startPop,
-      this.state.endPop,
-      this.state.list,
-      value
-    );
+    if (value) {
+      this.props.byInterval(
+        this.state.startAge,
+        this.state.endAge,
+        this.state.startLoc,
+        this.state.endLoc,
+        this.state.startPop,
+        this.state.endPop,
+        this.state.list,
+        value
+      );
+    } else if (!value && this.state.preference === "Gender") {
+      this.setState({
+        messageTags: "You need to provide a gender"
+      });
+    }
   };
 
   setAgeInterval = (startAge: number, endAge: number) => {
     this.setState({ startAge, endAge });
-    this.props.byInterval(
-      startAge,
-      endAge,
-      this.state.startLoc,
-      this.state.endLoc,
-      this.state.startPop,
-      this.state.endPop,
-      this.state.list,
-      this.state.preference
-    );
+    if (this.state.preference === "Gender") {
+      this.setState({
+        messageTags: "You need to provide a gender"
+      });
+    } else {
+      this.props.byInterval(
+        startAge,
+        endAge,
+        this.state.startLoc,
+        this.state.endLoc,
+        this.state.startPop,
+        this.state.endPop,
+        this.state.list,
+        this.state.preference
+      );
+    }
   };
 
   setLocInterval = (startLoc: number, endLoc: number) => {
     this.setState({ startLoc, endLoc });
-    this.props.byInterval(
-      this.props.startAge,
-      this.props.endAge,
-      startLoc,
-      endLoc,
-      this.state.startPop,
-      this.state.endPop,
-      this.state.list,
-      this.state.preference
-    );
+    if (this.state.preference === "Gender") {
+      this.setState({
+        messageTags: "You need to provide a gender"
+      });
+    } else {
+      this.props.byInterval(
+        this.props.startAge,
+        this.props.endAge,
+        startLoc,
+        endLoc,
+        this.state.startPop,
+        this.state.endPop,
+        this.state.list,
+        this.state.preference
+      );
+    }
   };
 
   setPopInterval = (startPop: number, endPop: number) => {
     this.setState({ startPop, endPop });
-    this.props.byInterval(
-      this.state.startAge,
-      this.state.endAge,
-      this.state.startLoc,
-      this.state.endLoc,
-      startPop,
-      endPop,
-      this.state.list,
-      this.state.preference
-    );
+    if (this.state.preference === "Gender") {
+      this.setState({
+        messageTags: "You need to provide a gender"
+      });
+    } else {
+      this.props.byInterval(
+        this.state.startAge,
+        this.state.endAge,
+        this.state.startLoc,
+        this.state.endLoc,
+        startPop,
+        endPop,
+        this.state.list,
+        this.state.preference
+      );
+    }
   };
 
   setTags = (name: string) => {
@@ -145,22 +171,29 @@ class FilterInterval extends React.Component<Props, State> {
     } else {
       this.state.list.splice(this.state.list.indexOf(name), 1);
     }
-    this.props.byInterval(
-      this.state.startAge,
-      this.state.endAge,
-      this.state.startLoc,
-      this.state.endLoc,
-      this.state.startPop,
-      this.state.endPop,
-      this.state.list.length > 0 ? this.state.list : [],
-      this.state.preference
-    );
+    if (this.state.preference === "Gender") {
+      this.setState({
+        messageTags: "You need to provide a gender"
+      });
+    } else {
+      this.props.byInterval(
+        this.state.startAge,
+        this.state.endAge,
+        this.state.startLoc,
+        this.state.endLoc,
+        this.state.startPop,
+        this.state.endPop,
+        this.state.list.length > 0 ? this.state.list : [],
+        this.state.preference
+      );
+    }
   };
 
   componentWillUnmount = () => {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+    this._isMounted = false;
   };
 
   componentDidUpdate = () => {

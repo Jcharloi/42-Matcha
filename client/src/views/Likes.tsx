@@ -26,7 +26,10 @@ class Likes extends React.Component<User, VState> {
       userLikesInfo: []
     };
   }
+  _isMounted = false;
+
   componentDidMount = () => {
+    this._isMounted = true;
     Axios.post("http://localhost:5000/profile/get-user-likes", {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
@@ -36,11 +39,15 @@ class Likes extends React.Component<User, VState> {
           deleteUser();
         } else {
           if (validated) {
-            this.setState({ userLikesInfo });
+            this._isMounted && this.setState({ userLikesInfo });
           }
         }
       })
       .catch(err => console.error(err));
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

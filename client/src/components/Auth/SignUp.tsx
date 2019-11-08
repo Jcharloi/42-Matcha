@@ -42,6 +42,11 @@ class SignUp extends React.Component<{}, State> {
       validated: false
     };
   }
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   register = async () => {
     this.setState({ loading: true });
@@ -50,7 +55,8 @@ class SignUp extends React.Component<{}, State> {
       let { message, loading, validated, ...body } = { ...this.state };
       await Axios.post("http://localhost:5000/inscription", body)
         .then(({ data: { message, validated } }) => {
-          this.setState({ message, validated, loading: false });
+          this._isMounted &&
+            this.setState({ message, validated, loading: false });
         })
         .catch(error => console.error(error));
     } else {
@@ -89,6 +95,10 @@ class SignUp extends React.Component<{}, State> {
 
   setPassword = (password: string) => {
     this.setState({ password });
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

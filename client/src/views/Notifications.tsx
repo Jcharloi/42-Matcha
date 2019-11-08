@@ -33,15 +33,17 @@ class Notification extends React.Component<NumberOf, NState> {
       current: "notifications"
     };
   }
+  _isMounted = false;
 
   componentDidMount = () => {
+    this._isMounted = true;
     Axios.put(`http://localhost:5000/profile/get-notification`, {
       userName: localStorage.getItem("user_name"),
       token: localStorage.getItem("token")
     })
       .then(({ data: { notificationArray, validated } }) => {
         if (validated) {
-          this.setState({ notificationArray });
+          this._isMounted && this.setState({ notificationArray });
         }
       })
       .catch(err => console.error(err));
@@ -86,11 +88,15 @@ class Notification extends React.Component<NumberOf, NState> {
                 numberNotifications: this.props.numberNotifications - 1
               })
             );
-            this.setState({ notificationArray });
+            this._isMounted && this.setState({ notificationArray });
           }
         })
         .catch(err => console.error(err));
     });
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {

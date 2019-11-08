@@ -27,10 +27,9 @@ interface HState {
   tagsName: Array<string>;
   isLoading: boolean;
   offset: number;
-  hasMore: boolean;
+  filterLength: number;
   clearList: boolean;
   userMatchInfo: Array<User>;
-  copyUserMatch: Array<User>;
   messageHome?: string;
 }
 
@@ -49,13 +48,17 @@ class SearchMatch extends React.Component<User, HState> {
       tagsName: [],
       isLoading: true,
       offset: 0,
-      hasMore: true,
+      filterLength: 0,
       clearList: false,
-      userMatchInfo: [],
-      copyUserMatch: []
+      userMatchInfo: []
     };
   }
   timer!: NodeJS.Timeout;
+  _isMounted = false;
+
+  componentDidMount = () => {
+    this._isMounted = true;
+  };
 
   sortByIndex = (indexBy: string) => {
     if (this.state.userMatchInfo.length <= 0) {
@@ -78,9 +81,10 @@ class SearchMatch extends React.Component<User, HState> {
             deleteUser();
           } else {
             if (validated) {
-              this.setState({ userMatchInfo });
+              this._isMounted && this.setState({ userMatchInfo });
             }
-            this.setState({ messageHome: message, isLoading: false });
+            this._isMounted &&
+              this.setState({ messageHome: message, isLoading: false });
           }
         })
         .catch(err => console.error(err));
@@ -97,39 +101,27 @@ class SearchMatch extends React.Component<User, HState> {
     tagsName: Array<string>,
     preference: string
   ) => {
-    if (preference === "Gender") {
-      this.setState({
-        isLoading: false,
-        messageHome: "You need to provide a gender"
-      });
-    } else {
-      Axios.put("http://localhost:5000/search/get-users-by-search/", {
-        userName: localStorage.getItem("user_name"),
-        token: localStorage.getItem("token"),
-        preference,
-        startAge: startAge.toString(),
-        endAge: endAge.toString(),
-        startLoc: startLoc.toString(),
-        endLoc: endLoc.toString(),
-        startPop: startPop.toString(),
-        endPop: endPop.toString(),
-        tagsName
-      })
-        .then(({ data: { validToken, message } }) => {
-          if (validToken === false) {
-            deleteUser();
-          } else {
+    Axios.put("http://localhost:5000/search/get-users-by-search/", {
+      userName: localStorage.getItem("user_name"),
+      token: localStorage.getItem("token"),
+      preference,
+      startAge: startAge.toString(),
+      endAge: endAge.toString(),
+      startLoc: startLoc.toString(),
+      endLoc: endLoc.toString(),
+      startPop: startPop.toString(),
+      endPop: endPop.toString(),
+      tagsName
+    })
+      .then(({ data: { validToken, message, filterLength } }) => {
+        if (validToken === false) {
+          deleteUser();
+        } else {
+          this._isMounted &&
             this.setState({
-              userMatchInfo:
-                preference !== this.state.previousPreference
-                  ? []
-                  : this.state.userMatchInfo,
-              offset:
-                preference !== this.state.previousPreference
-                  ? 0
-                  : this.state.offset,
-              hasMore:
-                preference !== this.state.previousPreference ? true : false,
+              userMatchInfo: [],
+              offset: 0,
+              filterLength,
               messageHome: message,
               isLoading: false,
               startAge,
@@ -142,19 +134,21 @@ class SearchMatch extends React.Component<User, HState> {
               tagsName,
               previousPreference: preference
             });
-          }
-        })
-        .catch(err => console.error(err));
-    }
+        }
+      })
+      .catch(err => console.error(err));
   };
 
   setLoading = () => {
     this.setState({ isLoading: true });
   };
 
-  clearMatch = () => {
-    this.setState({
-      userMatchInfo: this.state.copyUserMatch,
+  clearMatch = async () => {
+    await this.setState({
+      isLoading: false,
+      userMatchInfo: [],
+      offset: 0,
+      filterLength: 0,
       startAge: 18,
       endAge: 100,
       startLoc: 0,
@@ -170,6 +164,7 @@ class SearchMatch extends React.Component<User, HState> {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+    this._isMounted = false;
   };
 
   componentDidUpdate = () => {
@@ -191,14 +186,12 @@ class SearchMatch extends React.Component<User, HState> {
         if (validToken === false) {
           deleteUser();
         } else {
-          this.state.userMatchInfo.push(...newUsersMatchInfo);
-          this.setState({
-            copyUserMatch: this.state.userMatchInfo,
-            userMatchInfo: this.state.userMatchInfo,
-            hasMore: newUsersMatchInfo.length === 10,
-            offset: this.state.offset + 10,
-            isLoading: false
-          });
+          this._isMounted &&
+            this.setState({
+              userMatchInfo: newUsersMatchInfo,
+              offset: this.state.offset + 10,
+              isLoading: false
+            });
         }
       });
     }
@@ -209,7 +202,7 @@ class SearchMatch extends React.Component<User, HState> {
       <InfiniteScroll
         pageStart={0}
         loadMore={this.loadMatchedUsers}
-        hasMore={this.state.hasMore}
+        hasMore={this.state.filterLength - this.state.offset > 0}
       >
         <TopMenu current="search" />
         <div className="topmenu-buffer"></div>

@@ -28,13 +28,15 @@ class Like extends React.Component<Props, State> {
       isMatched: false
     };
   }
+  _isMounted = false;
 
   componentDidMount = async () => {
     this.handleMatchAndLike(false);
+    this._isMounted = true;
   };
 
-  handleMatchAndLike = async (toggle: boolean) => {
-    await Axios.put("http://localhost:5000/profile/check-like-and-match", {
+  handleMatchAndLike = (toggle: boolean) => {
+    Axios.put("http://localhost:5000/profile/check-like-and-match", {
       token: localStorage.getItem("token"),
       userName: localStorage.getItem("user_name"),
       targetUser: this.props.otherUser.user_name,
@@ -56,11 +58,12 @@ class Like extends React.Component<Props, State> {
                 insertOtherProfile({ ...this.props.otherUser, score: score })
               );
             }
-            this.setState({
-              alreadyLiked: selfLikedTarget,
-              isLiked: targetLikedSelf,
-              isMatched: matched
-            });
+            this._isMounted &&
+              this.setState({
+                alreadyLiked: selfLikedTarget,
+                isLiked: targetLikedSelf,
+                isMatched: matched
+              });
           }
         }
       )
@@ -71,6 +74,10 @@ class Like extends React.Component<Props, State> {
 
   redirectMessage = () => {
     history.push(`/messages/${this.props.otherUser.user_name}`);
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   public render() {
