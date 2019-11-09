@@ -40,10 +40,7 @@ app.use(async (req, res, next) => {
 
 let clients = [];
 io.on("connection", socket => {
-  console.log("User connected");
-
   socket.on("disconnect", () => {
-    console.log("User disconnect");
     if (clients.length > 0) {
       clients = clients.filter(client => client.socketId !== socket.id);
     }
@@ -51,16 +48,13 @@ io.on("connection", socket => {
 
   socket.on("send-user-name", userName => {
     clients.push({ userName, socketId: socket.id });
-    console.log("finished pushing -> ", clients);
   });
 
   socket.on("create-room", room => {
-    console.log("Created room : ", room);
     socket.join(room);
   });
 
   socket.on("leave-room", room => {
-    console.log("Leaving room : ", room);
     socket.leave(room);
   });
 });
