@@ -241,15 +241,6 @@ class App extends React.Component<VerifiedUser, AppState> {
   };
 
   render() {
-    /*
-    Partie front :
-    - Infinite scroll
-    - Responsive messages
-    - Notifications dans l'ordre
-    - TOUS LES TESTS ET C'EST FINI !!!
-    
-    Partie back :
-    */
     return (
       <div>
         {this.state.showNotif && (
