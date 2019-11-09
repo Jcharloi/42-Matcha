@@ -144,6 +144,7 @@ class ResetPassword extends React.Component<{}, State> {
                       onChange={({ target: { value } }) => {
                         this.setPassword(value);
                       }}
+                      maxLength="20"
                     />
                   </Form.Field>
                 )}
@@ -198,11 +199,11 @@ function validPassword(password?: string): { valid: boolean; message: string } {
   let regex = new RegExp(
     /(?=^.{8,}$)((?!.*\s)(?=.*[A-Z])(?=.*[a-z]))((?=(.*\d){1,})|(?=(.*\W){1,}))^.*$/
   );
-  if (!password || !regex.test(password)) {
+  if (!password || password.length > 20 || !regex.test(password)) {
     return {
       valid: false,
       message:
-        "Your new password needs to be 8+ characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
+        "Your new password needs to be 8+ < 20 characters and containing at least 1 caps, 1 lowercase AND 1 number or special char"
     };
   }
   return { valid: true, message: "" };

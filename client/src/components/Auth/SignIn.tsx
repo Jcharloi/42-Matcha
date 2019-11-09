@@ -143,6 +143,7 @@ class SignIn extends React.Component<Props, State> {
                   onChange={({ target: { value } }) => {
                     this.setPassword(value);
                   }}
+                  maxLength="20"
                 />
               </Form.Field>
             </div>
@@ -189,7 +190,7 @@ function validForm({
   userName,
   password
 }: State): { valid: boolean; message: string } {
-  if (!userName || !password) {
+  if (!userName || !password || password.length > 20) {
     return { valid: false, message: "You need to fill the fields correctly" };
   }
   return { valid: true, message: "" };

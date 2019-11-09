@@ -30,8 +30,9 @@
 }
 
 .ui.red.button.menu {
-  background-color: rgba(0, 0, 0, 0.2) !important;
+  background-color: rgba(253, 15, 15, 0.192) !important;
 }
+
 .right.menu.mobile {
   display: none !important;
 }
@@ -40,10 +41,12 @@
   .menu.mobile.right > div[role="listbox"] {
     width: 70px;
   }
+
   div[role="listbox"] > .icon.list.ul {
     position: relative;
     color: rgb(255, 238, 238);
   }
+
   .left.menu {
     display: none !important;
   }
@@ -60,6 +63,7 @@
   div[role="listbox"] > div[role="alert"] {
     display: none !important;
   }
+
   .menu.transition.visible > div:nth-of-type(n + 0) {
     margin: 0 0 0 0 !important;
   }
@@ -71,6 +75,7 @@
     top: 17px;
     right: 15px !important;
   }
+
   .mobile.counter.notif.open {
     position: absolute;
     display: block !important;
@@ -79,6 +84,7 @@
     right: 150px !important;
     z-index: 40;
   }
+
   .mobile.counter.msg.open {
     position: absolute;
     display: block !important;

@@ -49,6 +49,11 @@ select {
 .bio-other {
   margin-top: 2rem;
   width: 115%;
+  max-height: 15rem;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .button-edit-preferences {
