@@ -107,7 +107,10 @@ pgtools
                 let cities = [];
                 for (let i = 0; i < results.length; i++) {
                   cities.push({
-                    city: capitalizeFirstLetter(results[i].location.city)
+                    city:
+                      results[i].location.city === "Orléans"
+                        ? "Paris"
+                        : capitalizeFirstLetter(results[i].location.city)
                   });
                 }
                 return cities;
@@ -116,7 +119,7 @@ pgtools
                 console.error(e.stack);
               });
             const adminUserId = await createAdminAccount();
-            for (let i = 0; i < 1000; i++) {
+            for (let i = 0; i < 20; i++) {
               const indexPicture = Math.floor(Math.random() * pictures.length);
               const indexPicture2 = Math.floor(Math.random() * pictures.length);
               const indexTag = Math.floor(Math.random() * tags.length);
