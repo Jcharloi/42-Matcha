@@ -14,7 +14,7 @@ Go to **client** and **server** folders and make `npm i` inside both of them
 
 At this point, if you launch `npm start` in **server** folder, you will get two errors because you need to create the two necessary files that I won't push on Github.
 
-- Make `cd server/sql/`, create a file named `dbKeys.json` and put a template like this inside : `{"userName": userNamedB, "password": passwordDb}`, then you write your right credentials so postgresSql can connect to the database named **matcha**. Make sure this database exists before.
+- Make `cd server/sql/`, create a file named `dbKeys.json` and put a template like this inside : `{"userName": userNamedB, "password": passwordDb}`, then write your right credentials so postgresSql can connect to the database named **matcha**. Make sure this database exists before.
 
 - At the root of **server**, you will also need a file named `keys.json` (with all my API keys) but you will have to ask me 'cause I won't write my keys here 🤔
 
