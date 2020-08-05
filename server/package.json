@@ -23,7 +23,7 @@
     "cors": "^2.8.5",
     "cuid": "^2.1.6",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.6-alpha.6",
+    "express-fileupload": "^1.1.9",
     "faker": "^4.1.0",
     "file-type": "^12.4.0",
     "geodist": "^0.2.1",
